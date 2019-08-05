@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
+<head>
+    <title>密码服务</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
+    <style>
+        input.inputStyle2 {
+            font-size: 18px;
+            height: 36px;
+            width: 60%;
+            text-indent: 0.5em;
+        }
+    </style>
+    <script>
+        function checkPwdModify() {
+            var form = document.getElementById("pwdModifyForm");
+            if (form.oldPassword.value == "" || form.newPassword1.value == "" || form.newPassword2.value == "") {
+                alert("原密码和新密码都需要填写，请补充未填写的信息");
+                window.event.returnValue = false;//验证失败不提交action
+                // return false;
+            }
+            else if (form.newPassword1.value != form.newPassword2.value) {
+                alert("两次输入密码不一致！请核对后再提交修改");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (form.newPassword1.value.length < 8 || form.newPassword1.value.length > 32) {
+                alert("新密码至少8个字符，且不能超过32个字符");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (!/^\w+$/.test(form.newPassword1.value)) {
+                alert("密码只能由字母、数字和下划线组成");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (form.newPassword1.value == form.oldPassword.value) {
+                alert("您的新密码与原密码一致，不需要修改");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+        }
+
+        function submitOnMouseUpPwdModify() {
+            var modifySubmit = document.getElementById("pwdModifySubmit");
+            modifySubmit.style.backgroundColor = "#EE7700";
+        }
+
+        function submitOnMouseLeavePwdModify() {
+            var modifySubmit = document.getElementById("pwdModifySubmit");
+            modifySubmit.style.backgroundColor = "#FFA500";
+        }
+
+        function submitOnMouseUpBack() {
+            var modifySubmit = document.getElementById("back");
+            modifySubmit.style.backgroundColor = "#EE7700";
+        }
+
+        function submitOnMouseLeaveBack() {
+            var modifySubmit = document.getElementById("back");
+            modifySubmit.style.backgroundColor = "#FFA500";
+        }
+    </script>
+</head>
+
+<body>
+<div id="header">
+    <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
+    <br/>
+    <div style="float: left;width: 60%;text-align: left">
+        <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
+    </div>
+    <div style="float: left;width: 40%;text-align: right">
+        <span style="color: darkgrey;font-size: 18px">您好！<td th:text="${object.objectName}"></td></span>
+        <a href="/objectLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
+        <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
+    </div>
+</div>
+
+<!--<hr width="100%" color="#0080FF" size="2"/>-->
+
+<div class="head-nav">
+    <!--<div class="head-nav-con clearFloat">-->
+    <div class="head-nav-con">
+        <ul>
+            <li><a href="/indexObject">首&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li><a href="/objInfoHallOnTime">实时监测信息</a></li>
+            <li><a href="/objInfoHallHistory">历史监测信息</a></li>
+            <li><a href="/healthCenter/objAccountBasicInfo">账户信息</a></li>
+            <li><a href="/healthCenter/objAccountPwdModify">密码服务</a></li>
+        </ul>
+    </div>
+</div>
+
+<div style="width: 100%">
+    <h1 style="text-align: center;color: blue;">密码服务</h1>
+</div>
+<div style="width: 100%;min-height: 80%">
+    <div style="align-self: center">
+        <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
+        <form id="pwdModifyForm" name="pwdModifyForm" action="/healthCenter/objAccountPwdModifyResult"
+              accept-charset="utf-8" method="post"
+              style="text-align:center;" onsubmit="checkPwdModify()">
+            <div class="d" style="height:450px;background-color:white;width:950px;
+        border: 1px solid lightgrey;margin: auto;">
+                <br/>
+                <p style="font-size: 28px;text-align: left;text-indent: 2em;color: blue">&nbsp密码修改
+                </p>
+                <p style="text-align: left;text-indent: 5.7em;margin-top: 15px">
+                    <span class="pwdModifyReminder" style="text-align: left;font-size: 28px">原密码:</span>
+                    <input type="password" id="oldPassword" name="oldPassword" placeholder="在此输入原来的密码"
+                           onfocus="this.ready()" onmouseout="this.blur()" class="inputStyle2"/>
+                </p>
+                <p style="text-align: left;text-indent: 5.7em;margin-top: 15px">
+                    <span class="pwdModifyReminder" style="text-align: left;font-size: 28px">新密码:</span>
+                    <input type="password" id="newPassword1" name="newPassword1" placeholder="在此输入新密码"
+                           onfocus="this.ready()" onmouseout="this.blur()" class="inputStyle2"/>
+                </p>
+                <p style="text-align: left;text-indent: 4em;margin-top: 15px">
+                    <span class="pwdModifyReminder" style="text-align: left;font-size: 28px">确认密码:</span>
+                    <input type="password" id="newPassword2" name="newPassword2" placeholder="再次输入新密码以核实"
+                           onfocus="this.ready()" onmouseout="this.blur()" class="inputStyle2"/>
+                </p>
+                <!--<input type="submit" id="pwdModifySubmit" name="pwdModifySubmit"-->
+                <!--style="font-size: 18px;height: 50px;width: 60%;background-color: #FFA500;border: none;color: white"-->
+                <!--value="提交修改" onmouseover="submitOnMouseUpPwdModify()" onmouseleave="submitOnMouseLeavePwdModify()"/>-->
+                <nobr>
+                    <!--使用button，绕过form提交检查返回上一页面-->
+                    <input type="button" id="back" name="back"
+                           style="font-size: 18px;height: 50px;width: 120px;background-color: #FFA500;border: none;color: white;margin-top: 30px;margin-right:120px"
+                           value="取消并返回" onmouseover="submitOnMouseUpBack()" onmouseleave="submitOnMouseLeaveBack()"
+                           onclick="history.back(-1);"/>
+                    <!--onclick="document.referrer"-->
+                    <input type="submit" id="pwdModifySubmit" name="pwdModifySubmit"
+                           style="font-size: 18px;height: 50px;width: 120px;background-color: #FFA500;border: none;color: white;margin-top: 30px;margin-left: 120px"
+                           value="保存修改" onmouseover="submitOnMouseUpPwdModify()"
+                           onmouseleave="submitOnMouseLeavePwdModify()"/>
+                </nobr>
+            </div>
+        </form>
+    </div>
+</div>
+
+<iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"
+        th:src="@{/master/footer.html}"></iframe>
+</body>
+</html>
