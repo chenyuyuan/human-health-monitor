@@ -143,7 +143,7 @@ public class SocketTask implements Runnable {
 //        byte[] orderByte = orderString.getBytes();
         OutputStream os = socket.getOutputStream();
         os.write(orderByte);
-        os.flush();
+        os.flush(); // ***********
         System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
         //字节读取
         // 装饰流BufferedReader封装输入流（接收客户端的流）
@@ -489,7 +489,7 @@ public class SocketTask implements Runnable {
                                             tags.put("objectId",equipmentData.getObjectId());
                                             tags.put("sendTime",timeString);
 //                                            java.lang.Object highBloodPressureObj = highBloodPressure;////
-                                            fields.put("highPressure",highBloodPressure);////
+                                            fields.put("highPressure", highBloodPressure);////
 //                                            java.lang.Object lowBloodPressureObj = lowBloodPressure;////
                                             fields.put("lowPressure", lowBloodPressure);////
                                             fields.put("heartRate",heartRate);

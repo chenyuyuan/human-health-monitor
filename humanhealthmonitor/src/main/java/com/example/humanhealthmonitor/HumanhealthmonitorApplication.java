@@ -25,7 +25,7 @@ import static com.example.humanhealthmonitor.MsgQueue.*;
 @MapperScan("com.example.humanhealthmonitor.mapper")
 //@ComponentScan(basePackages = "com.example.humanhealthmonitor")
 public class HumanhealthmonitorApplication {
-//    public static ServerSocket serverSocket;//////////////
+    //    public static ServerSocket serverSocket;//////////////
 
     public static void main(String[] args) {
         SpringApplication.run(HumanhealthmonitorApplication.class, args);
