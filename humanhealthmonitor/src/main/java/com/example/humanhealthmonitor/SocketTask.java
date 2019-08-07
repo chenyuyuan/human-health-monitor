@@ -268,7 +268,8 @@ public class SocketTask implements Runnable {
 
         AlarmLog alarmLog = new AlarmLog();
         Equipment equipmentData;//added0521
-        //从网管发来的只带一个字节有效数据的帧长度就是10，比这个小的就是坏掉的或无关的
+        //从网关
+        // 发来的只带一个字节有效数据的帧长度就是10，比这个小的就是坏掉的或无关的
         while (byteArrayList.size() >= 10) {
             if (byteArrayList.get(0) == (byte) 0xFE && byteArrayList.get(1) == (byte) 0xFE) {
                 int dataLength = byteToUsignedValue(byteArrayList.get(4)) * 256 + byteToUsignedValue(byteArrayList.get(5));//获取传感器数据长度
