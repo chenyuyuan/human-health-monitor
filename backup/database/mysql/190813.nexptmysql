@@ -1,0 +1,192 @@
+{
+    "Version": 1.0,
+    "General": {
+        "Project": "",
+        "ProjectOwnerNavicatID": "",
+        "Server": "hhm",
+        "Catalog": "",
+        "Schema": "health_monitor",
+        "ExportType": "SQL",
+        "ExportDirectoryBookmark": "",
+        "ExportDirectoryPath": "",
+        "TargetCodepage": 65001,
+        "AddTimeStamp": false,
+        "TimeStampFormat": "",
+        "IncludeTitle": true,
+        "FieldDelimiter": "\t",
+        "DateFormat": "DMY",
+        "DateSeparator": "/",
+        "ZeroPaddingDate": false,
+        "TimeSeparator": ":",
+        "DecimalSeparator": ".",
+        "TextQualifier": "\"",
+        "RowDelimiter": "CRLF",
+        "XMLFormat": "Element",
+        "UseBase64": true,
+        "AppendRecord": true,
+        "BlankIfZero": false,
+        "ContinueOnError": true
+    },
+    "Objects": [
+        {
+            "Object": {
+                "Name": "admin",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "admin",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\admin.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "adminLog",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "adminLog",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\adminLog.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "alarmLog",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "alarmLog",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\alarmLog.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "alarmNormalValue",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "alarmNormalValue",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\alarmNormalValue.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "alarmSpecialValue",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "alarmSpecialValue",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\alarmSpecialValue.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "equipment",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "equipment",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\equipment.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "equipmentIndex",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "equipmentIndex",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\equipmentIndex.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "equipmentType",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "equipmentType",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\equipmentType.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "mainPic",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "mainPic",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\mainPic.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "netmaskInfo",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "netmaskInfo",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\netmaskInfo.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "news",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "news",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\news.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "object",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "object",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\object.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "objectLog",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "objectLog",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\objectLog.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "objectResourceUse",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "objectResourceUse",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\objectResourceUse.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "user",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "user",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\user.sql",
+            "AllFields": true,
+            "Fields": []
+        },
+        {
+            "Object": {
+                "Name": "userLog",
+                "ObjectType": "Table_MYSQL"
+            },
+            "TargetName": "userLog",
+            "TargetFilePath": "C:\\Users\\Cyuyuan\\Desktop\\userLog.sql",
+            "AllFields": true,
+            "Fields": []
+        }
+    ]
+}

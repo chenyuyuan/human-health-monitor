@@ -1,0 +1,11 @@
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (1, '体温最高警戒值', 'Temperature01', 2, 1, b'1', 37, '摄氏度(℃)');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (2, '体温最低警戒值', 'Temperature01', 2, 2, b'0', 36, '摄氏度(℃)');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (3, '环境温度最高警戒值', 'Temperature01', 1, 3, b'1', 50, '摄氏度(℃)');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (4, '环境温度最低警戒值', 'Temperature01', 1, 4, b'0', -30, '摄氏度(℃)');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (5, '血氧浓度最低警戒值', 'BloodOxygen01', 1, 1, b'0', 94, '%');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (6, '收缩压最高警戒值', 'BloodPressure01', 2, 1, b'1', 140, 'mmHg');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (7, '收缩压最低警戒值', 'BloodPressure01', 2, 2, b'0', 90, 'mmHg');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (8, '舒张压最高警戒值', 'BloodPressure01', 3, 3, b'1', 90, 'mmHg');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (9, '舒张压最低警戒值', 'BloodPressure01', 3, 4, b'0', 60, 'mmHg');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (10, '心率最高警戒值', 'BloodPressure01', 1, 5, b'1', 160, '次/分钟');
+INSERT INTO `alarmNormalValue`(`valueId`, `valueName`, `eqpType`, `indexSeq`, `serial`, `valueType`, `value`, `measurementUnit`) VALUES (11, '心率最低警戒值', 'BloodPressure01', 1, 6, b'0', 50, '次/分钟');

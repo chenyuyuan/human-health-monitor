@@ -1,0 +1,3 @@
+INSERT INTO `equipment`(`eqpId`, `objectId`, `eqpName`, `eqpType`, `netmaskId`, `deviceSerial`, `special`, `registerDate`) VALUES ('A00020201', 'hitwhob001', 'hitwhob001_血压设备', 'BloodPressure01', 1, 0, b'1', '2019-03-02');
+INSERT INTO `equipment`(`eqpId`, `objectId`, `eqpName`, `eqpType`, `netmaskId`, `deviceSerial`, `special`, `registerDate`) VALUES ('A00030101', 'hitwhob001', 'hitwhob001_温度设备', 'Temperature01', 1, 1, b'0', '2019-03-02');
+INSERT INTO `equipment`(`eqpId`, `objectId`, `eqpName`, `eqpType`, `netmaskId`, `deviceSerial`, `special`, `registerDate`) VALUES ('A00060302', 'hitwhob001', 'hitwhob001_血氧设备', 'BloodOxygen01', 1, 2, b'0', '2019-03-02');
