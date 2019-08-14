@@ -193,6 +193,40 @@ public class UserEquipmentController {
         return "monitorCenter/equipmentAdd";
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //监测中心-添加设备结果
+    @RequestMapping("/monitorCenter/equipmentCancelResult")
+    public String equipmentCancelResult(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException, InterruptedException {
+
+
+        return "monitorCenter/equipmentCancel";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     //监测中心-设备信息管理
     @RequestMapping("/monitorCenter/equipmentInfoManage")
     public String equipmentInfoManage(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException {
