@@ -207,7 +207,7 @@ public class UserEquipmentController {
 
 
 
-    //监测中心-添加设备结果
+    //监测中心-删除设备结果
     @RequestMapping("/monitorCenter/equipmentCancelResult")
     public String equipmentCancelResult(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException, InterruptedException {
 
@@ -394,6 +394,13 @@ public class UserEquipmentController {
         Equipment equipment = new Equipment();
         equipment.setEqpId(eqpId);
         equipmentService.updateEquipmentOnlyObject(equipment);
+        // 改为删除
+
+
+
+        
+
+
 
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();

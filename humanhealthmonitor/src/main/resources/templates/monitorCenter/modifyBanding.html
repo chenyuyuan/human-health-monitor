@@ -16,6 +16,10 @@
             var searchSubmit = document.getElementById("modifyBandingSubmit");
             searchSubmit.style.backgroundColor = "#FFA500";
         }
+
+        function cancelBanding() {
+            alert("已解绑！");
+        }
     </script>
 </head>
 
@@ -113,9 +117,10 @@
             </p>
             <p style="text-align: right;margin-right: 20%;margin-top: 50px">
                 <span style="font-size: 20px;color: black">高级选项：</span>
-                <input type="submit" formaction="/monitorCenter/onlyUnBanding"
+                <input type="submit"  formaction="/monitorCenter/onlyUnBanding"
                        style="font-size: 18px;height: 50px;width: 20%;background-color: #FFA500;border: none;color: white;margin-left: 10%"
-                       value="解除绑定"/>
+                       value="解除绑定" onclick="cancelBinding()"
+                       onmouseleave="submitOnMouseLeaveModifyBanding()"/>
             </p>
             <p style="text-align: right;margin-right: 20%">
                 <span style="font-size: 20px;color: blue">备注：仅解除绑定，不换绑其他对象。</span>
