@@ -22,6 +22,12 @@ public interface EquipmentMapper {
     @Update("update equipment set objectId=#{objectId} where eqpId=#{eqpId}")
     int updateEquipmentOnlyObject(Equipment equipment);
 
+
+    // 监测设备更换绑定人(yuan)
+    @Update("delete from equipment where eqpId=#{eqpId}")
+    int deleteEquipmentOnlyObject(@Param("netmaskId") int eqpId);
+
+
     //监测设备名称修改
     @Update("update equipment set eqpName=#{eqpName} where eqpId=#{eqpId}")
     int updateEquipmentName(Equipment equipment);

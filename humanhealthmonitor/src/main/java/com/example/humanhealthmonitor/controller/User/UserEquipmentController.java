@@ -198,35 +198,6 @@ public class UserEquipmentController {
 
 
 
-
-
-
-
-
-
-
-
-
-    //监测中心-删除设备结果
-    @RequestMapping("/monitorCenter/equipmentCancelResult")
-    public String equipmentCancelResult(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException, InterruptedException {
-
-
-        return "monitorCenter/equipmentCancel";
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
     //监测中心-设备信息管理
     @RequestMapping("/monitorCenter/equipmentInfoManage")
     public String equipmentInfoManage(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException {
@@ -390,15 +361,18 @@ public class UserEquipmentController {
 
         //取回页面设备Id
         String eqpId = request.getParameter("eqpIdInModifyBanding");
-        //设置objectId为null以解除绑定
+
+        // 👇modify by yuan
+        // // 设置objectId为null以解除绑定
         Equipment equipment = new Equipment();
         equipment.setEqpId(eqpId);
         equipmentService.updateEquipmentOnlyObject(equipment);
         // 改为删除
+        // equipmentService.deleteEquipmentOnlyObject(epqId);
 
 
 
-        
+
 
 
 
