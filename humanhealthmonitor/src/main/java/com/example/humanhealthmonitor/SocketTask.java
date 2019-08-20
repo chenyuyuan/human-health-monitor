@@ -344,6 +344,13 @@ public class SocketTask implements Runnable {
                             if(orderType == 2)//云平台操作添加设备的回传消息，有这个消息说明网关查找设备成功//6字节
                             {
                                 int deviceSerialNew = byteToUsignedValue(dataList.get(5));//顺序号
+
+                                // yuan: deviceSerialNew = 0表示网关查找设备失败
+                                if(deviceSerialNew == 0) {
+                                    // 失败后的处理
+
+                                }
+
                                 String eqpId = "";
                                 for(int i = 0;i < 5;i++)
                                 {
@@ -356,8 +363,8 @@ public class SocketTask implements Runnable {
                                 Equipment newEquipment = new Equipment();
                                 newEquipment.setEqpId(eqpId);
                                 newEquipment.setEqpName(eqpId);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
-//                                newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-//                                newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+                                // newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+                                // newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
                                 newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
