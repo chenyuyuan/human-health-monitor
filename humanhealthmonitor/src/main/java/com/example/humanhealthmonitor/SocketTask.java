@@ -348,7 +348,7 @@ public class SocketTask implements Runnable {
                                 // yuan: deviceSerialNew = 0表示网关查找设备失败
                                 if(deviceSerialNew == 0) {
                                     // 失败后的处理
-
+                                    
                                 }
 
                                 String eqpId = "";
