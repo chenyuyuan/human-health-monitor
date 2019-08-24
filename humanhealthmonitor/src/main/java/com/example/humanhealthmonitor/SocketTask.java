@@ -350,28 +350,30 @@ public class SocketTask implements Runnable {
                                     // 失败后的处理
                                     
                                 }
+                                else {
+                                    String eqpId = "";
+                                    for(int i = 0;i < 5;i++)
+                                    {
+                                        eqpId = eqpId + byteToHexStringSocketTask(dataList.get(i));
+                                    }
+                                    eqpId = eqpId.substring(1,10).toUpperCase();//左闭右开，不包括10位置，一共10-1字符
+                                    System.out.println("SocketTask"+taskNum+": eqpId add success: "+eqpId);
 
-                                String eqpId = "";
-                                for(int i = 0;i < 5;i++)
-                                {
-                                    eqpId = eqpId + byteToHexStringSocketTask(dataList.get(i));
+                                    //这块转移到接收解析那块
+                                    Equipment newEquipment = new Equipment();
+                                    newEquipment.setEqpId(eqpId);
+                                    newEquipment.setEqpName(eqpId);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
+                                    // newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+                                    // newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+                                    newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
+                                    newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
+                                    newEquipment.setNetmaskId(netMaskId);
+                                    newEquipment.setDeviceSerial(deviceSerialNew);
+                                    socketTask.equipmentService.insertEquipment(newEquipment);
+
                                 }
-                                eqpId = eqpId.substring(1,10).toUpperCase();//左闭右开，不包括10位置，一共10-1字符
-                                System.out.println("SocketTask"+taskNum+": eqpId add success: "+eqpId);
-
-                                //这块转移到接收解析那块
-                                Equipment newEquipment = new Equipment();
-                                newEquipment.setEqpId(eqpId);
-                                newEquipment.setEqpName(eqpId);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
-                                // newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-                                // newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-                                newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
-                                newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
-                                newEquipment.setNetmaskId(netMaskId);
-                                newEquipment.setDeviceSerial(deviceSerialNew);
-                                socketTask.equipmentService.insertEquipment(newEquipment);
 
                                 break;//退出while循环，此方法结束
                             }
