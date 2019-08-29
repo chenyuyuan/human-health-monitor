@@ -261,8 +261,34 @@ public class SocketTask implements Runnable {
         return str;
     }
 
-    public void handleOrder1Response(byte[] responseContent) {
+    public int byteArrayToInt (byte[] byteArray, int start, int end) {
+        if(byteArray == null || byteArray.length == 0 || start > end || start < 0 || end >= byteArray.length) return -1;
+        int res = 0;
+        byte[] a = new byte[4];
+        int i = a.length - 1, j = byteArray.length - 1;
+        for (; i >= 0; --i, --j) {
+            if(j >= 0)
+                a[i] = byteArray[j];
+            else
+                a[i] = 0;
+        }
+        int v0 = (a[0] & 0xff) << 24;
+        int v1 = (a[1] & 0xff) << 16;
+        int v2 = (a[2] & 0xff) << 8;
+        int v3 = (a[3] & 0xff) << 0;
 
+        return v0 + v1 + v2 + v3;
+    }
+
+    public String byteArrayToString (byte[] byteArray, int radix, int start, int end) {
+
+    }
+
+    public void handleOrder1Response(byte[] responseContent) {
+        int communicationMethod = responseContent[0];  // 通信类型
+        //int netMaskID = byteArrayToInt(responseContent, 1, responseContent.length - 1);  // 网关ID
+        char[] 
+        String netMaskID = byteArrayToString(responseContent,10 , 1, responseContent.length - 1);
     }
     public void handleOrder2Response(byte[] responseContent) {
 
@@ -306,7 +332,7 @@ public class SocketTask implements Runnable {
             if (byteArrayList.get(byteArrayList.size() - 2) != (byte) 0xAA || byteArrayList.get(byteArrayList.size() - 1) != (byte) 0xBB) {
                 break;
             }
-            
+
 
             // 将回复信息放到responseContent
             for (int i = 0; i < responseLength;++i) {
