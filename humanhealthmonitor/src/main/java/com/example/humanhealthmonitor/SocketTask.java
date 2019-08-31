@@ -9,6 +9,7 @@ import com.example.humanhealthmonitor.CloudMsgUtil;
 
 import java.io.*;
 //import java.lang.Object;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -280,32 +281,154 @@ public class SocketTask implements Runnable {
         return v0 + v1 + v2 + v3;
     }
 
-    public String byteArrayToString (byte[] byteArray, int radix, int start, int end) {
+    /**
+     * 将byte[]转为各种进制的字符串
+     * @param radix 基数可以转换进制的范围(2-36)，从Character.MIN_RADIX到Character.MAX_RADIX，超出范围后变为10进制
+     * @return 转换后的字符串
+     */
+    public String byteArrayToString (byte[] byteArray, int radix) {
+        return new BigInteger(1, byteArray).toString(radix);
+    }
+
+
+    // 人体红外线传感器： 2字节环境温度 + 2字节体温
+    public void processDataType1(byte[] byteArrayData) {
+        double ambientTemp ,bodyTemp;
+
+
+    }
+    // 血压设备： 1字节心率 + 1字节收缩压(systolic pressure) + 1字节舒张压(diastolic pressure)
+    public void processDataType2(byte[] byteArrayData) {
+        int heartRate = byteToUnsignedValue(byteArrayData[0]);
+        int systolicPressure = byteToUnsignedValue(byteArrayData[1]);
+        int diastolicPressure = byteToUnsignedValue(byteArrayData[2]);
+
+    }
+    // 血氧设备： 血氧饱和度(简写SpO2)
+    public void processDataType3(byte[] byteArrayData) {
+        double SpO2;
+
+    }
+    // 床垫： 2字节心跳 + 2字节呼吸 + 2字节温度 + 1字节动作
+    public void processDataType4(byte[] byteArrayData){
+        int heartRate, breathFrequency, temp, action;
 
     }
 
+
+    // 1位通信类型 + n位网关号
     public void handleOrder1Response(byte[] responseContent) {
         int communicationMethod = responseContent[0];  // 通信类型
         //int netMaskID = byteArrayToInt(responseContent, 1, responseContent.length - 1);  // 网关ID
-        char[] 
-        String netMaskID = byteArrayToString(responseContent,10 , 1, responseContent.length - 1);
-    }
-    public void handleOrder2Response(byte[] responseContent) {
+
+        // 将网关号所在的字节拷贝到字节数组charArrayNetmaskID上
+        byte[] charArrayNetmaskID = new byte[responseContent.length - 1];
+        System.arraycopy(responseContent, 1, charArrayNetmaskID, 0, charArrayNetmaskID.length);
+        String netMaskID = byteArrayToString(charArrayNetmaskID,10);
 
     }
+    // n位设备ID + 1位标识
+    public void handleOrder2Response(byte[] responseContent) {
+        int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
+        byte[] charArrayDeviceID = new byte[responseContent.length - 1];
+        System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
+        String deviceID = byteArrayToString(charArrayDeviceID, 16);
+
+    }
+    // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据
     public void handleOrder3Response(byte[] responseContent) {
+        int deviceIDLength = byteToUnsignedValue(responseContent[0]);
+        int timestampLength = 4;
+        int sensorDataLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 + timestampLength + 1 - 1]);
+
+        byte[] byteArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+
+        byte[] byteArrayTimestamp = new byte[timestampLength];
+        System.arraycopy(responseContent, deviceIDLength + 2, byteArrayTimestamp, 0, byteArrayTimestamp.length);
+        String timestamp = byteArrayToString(byteArrayTimestamp, 10);
+
+        byte[] byteArraySensorData = new byte[sensorDataLength];
+        System.arraycopy(responseContent, deviceIDLength + timestampLength + 3 , byteArraySensorData, 0, byteArraySensorData.length);
+
+        //
+        String sensortype = deviceID.substring(5,7);
+
+        if (sensortype == "01") {
+            processDataType1(byteArraySensorData);
+        }
+        if (sensortype == "02") {
+            processDataType2(byteArraySensorData);
+        }
+        if (sensortype == "03") {
+            processDataType3(byteArraySensorData);
+        }
+        if (sensortype == "04") {
+            processDataType4(byteArraySensorData);
+        }
 
     }
     public void handleOrder4Response(byte[] responseContent) {
+        int deviceIDLength = byteToUnsignedValue(responseContent[0]);
+        int timestampLength = 4;
+        int sensorDataLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 + timestampLength + 1 - 1]);
+
+        byte[] byteArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+
+        byte[] byteArrayTimestamp = new byte[timestampLength];
+        System.arraycopy(responseContent, deviceIDLength + 2, byteArrayTimestamp, 0, byteArrayTimestamp.length);
+        String timestamp = byteArrayToString(byteArrayTimestamp, 10);
+
+        byte[] byteArraySensorData = new byte[sensorDataLength];
+        System.arraycopy(responseContent, deviceIDLength + timestampLength + 3 , byteArraySensorData, 0, byteArraySensorData.length);
+
+        //
+        String sensortype = deviceID.substring(5,7);
+
+        if (sensortype == "01") {
+            processDataType1(byteArraySensorData);
+        }
+        if (sensortype == "02") {
+            processDataType2(byteArraySensorData);
+        }
+        if (sensortype == "03") {
+            processDataType3(byteArraySensorData);
+        }
+        if (sensortype == "04") {
+            processDataType4(byteArraySensorData);
+        }
 
     }
+
     public void handleOrder5Response(byte[] responseContent) {
+        int flag = byteToUnsignedValue(responseContent[0]);
 
     }
+
     public void handleOrder6Response(byte[] responseContent) {
+        int netMaskIDLength = byteToUnsignedValue(responseContent[0]);
+        int deviceIDLength = byteToUnsignedValue(responseContent[1 + netMaskIDLength + 1 - 1]);
+
+        byte[] byteArrayNetMaskID = new byte[netMaskIDLength];
+        System.arraycopy(responseContent, 1, byteArrayNetMaskID, 0, byteArrayNetMaskID.length);
+        String netmaskID = byteArrayToString(byteArrayNetMaskID, 10);
+        byte[] byteArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, netMaskIDLength + 2, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+        byte[] byteArrayTimestamp = new byte[4];
+        System.arraycopy(responseContent, netMaskIDLength + deviceIDLength + 2, byteArrayNetMaskID, 0, 4);
+        int timestamp = byteArrayToInt(byteArrayTimestamp, 0, byteArrayTimestamp.length - 1);
 
     }
+
     public void handleOrder7Response(byte[] responseContent) {
+        int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
+        byte[] byteArrayDeviceID = new byte[responseContent.length - 1];
+        System.arraycopy(responseContent, 0, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
 
     }
 
@@ -320,7 +443,7 @@ public class SocketTask implements Runnable {
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
-            byte[] responseContent = new byte[responseLength];
+            byte[] responseContent = new byte[responseLength - 1];  // 不包括校验和(扣掉1位校验和)
             int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
             if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
@@ -334,16 +457,31 @@ public class SocketTask implements Runnable {
             }
 
 
+            // 检查校验和
+            int check = 0;
+            for (byte b : responseContent) {
+                check = check + b;
+                if(check > 256) {
+                    check = check % 256;
+                }
+            }
+            if (check != checkSum) {
+                break;
+            }
+
+
+
+
             // 将回复信息放到responseContent
-            for (int i = 0; i < responseLength;++i) {
+            for (int i = 0; i < responseLength - 1;++i) {
                 responseContent[i] = byteArrayList.get(i + 3);
             }
 
             if (orderType == 1) {
-                handleOrder1Response(responseContent);
+                handleOrder1Response(responseContent);  // responseContent包括1位通信类型和n位网关号
             }
             else if (orderType == 2) {
-                handleOrder2Response(responseContent);
+                handleOrder2Response(responseContent);  // responseContent包括5位设备ID和1位成功失败标识
             }
             else if (orderType == 3) {
                 handleOrder3Response(responseContent);
@@ -359,341 +497,6 @@ public class SocketTask implements Runnable {
             }
             else if (orderType == 7) {
                 handleOrder7Response(responseContent);
-            }
-
-            if (byteArrayList.size() >= (dataLength + 6 + 3))//字节总长度达不到，证明数据损坏，这里的9是数据前6后3附加字节总长
-            {
-                if (byteArrayList.get(dataLength + 9 - 2) == (byte) 0xAA && byteArrayList.get(dataLength + 9 - 1) == (byte) 0xBB)//验证结尾格式AABB
-                {
-                    //校验和计算
-                    int check = 0;
-                    for (int i = 0; i < dataLength; i++) {
-                        check += byteArrayList.get(i + 6);
-                    }
-                    check = Math.abs(check) % 64;
-                    if (check == byteArrayList.get(dataLength + 9 - 3))//比对数据发送前后的校验和，一致则继续，不一致说明数据传输错误//这里需要判断包长会否大于大dataLength+9-3，防止出错
-                    {
-                        System.out.println("SocketTask"+taskNum+": check pass...");
-                        int netMaskId = byteToUnsignedValue(byteArrayList.get(2));//这里要注意，网关id是按0x11字面16转10进制的值17来与上面对应
-
-                        //修改或维持发来消息的网关状态为MODBUS
-                        if(protocolState[netMaskId-1] != 1)
-                        {
-                            protocolState[netMaskId-1] = 1;
-                            System.out.println("SocketTask"+taskNum+": change protocolState of netMask "+netMaskId + " to 1(MODBUS)...");
-                        }
-
-                        System.out.println("SocketTask"+taskNum+": netMaskId: " + netMaskId + "  orderType: " + orderType);
-                        List<Byte> dataList = byteArrayList.subList(6, 6 + dataLength);//取出校验成功的数据区数据，放到dataList中，数据长度为datalength而不是datalength+1
-
-                        if(orderType == 6)//设备号与网关顺序号对应关系修正
-                        {
-                            int deviceNum = dataList.size()/6;
-                            List<Byte> miniDataList = new ArrayList<>();
-                            for (int j = 0;j < deviceNum;j++)
-                            {
-                                miniDataList = dataList.subList(6*j,6*j+6);//不包括最后一个值
-                                int deviceSerialNew = byteToUnsignedValue(miniDataList.get(5));//顺序号
-                                String eqpId = "";
-                                for(int i = 0;i < 5;i++)
-                                {
-                                    eqpId += byteToHexStringSocketTask(miniDataList.get(i));
-                                }
-                                eqpId = eqpId.substring(1,10).toUpperCase();//左闭右开，不包括10位置，一共10-1字符
-                                System.out.println("SocketTask"+taskNum+": order06 eqpId: "+eqpId);
-
-                                Equipment equipment1 = socketTask.equipmentService.queryEquipmentByEqpId(eqpId);
-                                if (equipment1 == null)
-                                {
-                                    System.out.println("SocketTask"+taskNum+": order06 equipment1 null");
-                                }else{
-                                    System.out.println("SocketTask"+taskNum+": order06 equipment1 not null");
-                                    int deviceNetMaskId = equipment1.getNetmaskId();
-                                    if(deviceNetMaskId != netMaskId)
-                                    {
-                                        equipment1.setNetmaskId(netMaskId);
-                                        socketTask.equipmentService.updateEquipmentNetMaskId(equipment1);
-                                        System.out.println("SocketTask"+taskNum+": order06 a netMaskId updated,,,deviceNum="+deviceNum);
-                                    }
-                                    int deviceSerialOrigin = equipment1.getDeviceSerial();
-                                    if (deviceSerialOrigin != deviceSerialNew)
-                                    {
-                                        equipment1.setDeviceSerial(deviceSerialNew);
-                                        socketTask.equipmentService.updateEquipmentDeviceSerial(equipment1);
-                                        System.out.println("SocketTask"+taskNum+": order06 a deviceSerial updated,,,deviceNum="+deviceNum);
-                                    }
-                                }
-
-                            }
-                            break;//退出while循环，此方法结束
-                        }
-
-                        if(orderType == 2)//云平台操作添加设备的回传消息，有这个消息说明网关查找设备成功//6字节
-                        {
-                            int deviceSerialNew = byteToUnsignedValue(dataList.get(5));//顺序号
-
-                            // yuan: deviceSerialNew = 0表示网关查找设备失败
-                            if(deviceSerialNew == 0) {
-                                // 失败后的处理
-
-                            }
-                            else {
-                                String eqpId = "";
-                                for(int i = 0;i < 5;i++)
-                                {
-                                    eqpId = eqpId + byteToHexStringSocketTask(dataList.get(i));
-                                }
-                                eqpId = eqpId.substring(1,10).toUpperCase();//左闭右开，不包括10位置，一共10-1字符
-                                System.out.println("SocketTask"+taskNum+": eqpId add success: "+eqpId);
-
-                                //这块转移到接收解析那块
-                                Equipment newEquipment = new Equipment();
-                                newEquipment.setEqpId(eqpId);
-                                newEquipment.setEqpName(eqpId);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
-                                // newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-                                // newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-                                newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
-                                newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
-                                newEquipment.setNetmaskId(netMaskId);
-                                newEquipment.setDeviceSerial(deviceSerialNew);
-                                socketTask.equipmentService.insertEquipment(newEquipment);
-
-                            }
-
-                            break;//退出while循环，此方法结束
-                        }
-                        int validLength = 0;//存储有效数据长度
-                        //存储时间
-                        byte[] timeByte = new byte[7];
-                        String timeString = "";
-
-                        //连接InfluxDB
-                        influxDBConnector = new InfluxDBConnector("Andy","123456",
-                                "http://140.143.232.52:8086","health_data");
-                        influxDBConnector.connectToDatabase();
-                        influxDBConnector.setRetentionPolicy();
-                        Map<String, String> tags = new HashMap<>();
-                        Map<String, java.lang.Object> fields = new HashMap<>();
-
-                        //传感器数据解析
-                        while (dataList.size() >= 13) {
-                            int deviceSerial = byteToUnsignedValue(dataList.get(0));//数据对应的在网关数据区的序号
-                            validLength = byteToUnsignedValue(dataList.get(1));//获取有效数据长度
-                            System.out.println("SocketTask"+taskNum+": deviceSerial: " + deviceSerial + "  validLength: " + validLength);
-                            //根据deviceSerial查询数据库，获知设备类型，根据设备类型case解码
-                            equipmentData = socketTask.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-                            int typeNum = -1;
-                            if (equipmentData != null)
-                            {
-                                System.out.println("SocketTask"+taskNum+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-                                //更新设备对应的object的dataCount数据加1
-                                ObjectResourceUse objectResourceUse = socketTask.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                if(objectResourceUse != null)
-                                {
-                                    objectResourceUse.setDataCount(objectResourceUse.getDataCount()+1);
-                                    socketTask.objectResouceUseService.updateObjectResourceUseOnlyDataCount(objectResourceUse);
-                                }else {
-                                    String year = date.substring(0,4);
-                                    String month = date.substring(5,7);
-                                    ObjectResourceUse newObjectResourceUse = new ObjectResourceUse();
-                                    newObjectResourceUse.setObjectId(equipmentData.getObjectId());
-                                    newObjectResourceUse.setYearMonth(yearMonth);
-                                    java.sql.Date beginDate=java.sql.Date.valueOf(yearMonth+"-01");
-                                    newObjectResourceUse.setBeginDate(beginDate);
-                                    java.sql.Date endDate = beginDate;
-                                    if(month.equals("01")||month.equals("03")||month.equals("05")||month.equals("07")||
-                                            month.equals("08")||month.equals("10")||month.equals("12"))
-                                    {
-                                        endDate = java.sql.Date.valueOf(yearMonth+"-31");
-                                    }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11"))
-                                    {
-                                        endDate = java.sql.Date.valueOf(yearMonth+"-30");
-                                    }else if(month.equals("02"))
-                                    {
-                                        if(Integer.valueOf(year)%100 == 0)
-                                        {
-                                            if (Integer.valueOf(year)%400 == 0)
-                                            {
-                                                endDate = java.sql.Date.valueOf(yearMonth+"-29");
-                                            }
-                                            else
-                                            {
-                                                endDate = java.sql.Date.valueOf(yearMonth+"-28");
-                                            }
-                                        }else {
-                                            if (Integer.valueOf(year)%4 == 0)
-                                            {
-                                                endDate = java.sql.Date.valueOf(yearMonth+"-29");
-                                            }else {
-                                                endDate = java.sql.Date.valueOf(yearMonth+"-28");
-                                            }
-                                        }
-                                    }else
-                                    {
-                                        System.out.println("SocketTask: resourceUse endDate month error...");
-                                    }
-                                    newObjectResourceUse.setEndDate(endDate);
-                                    newObjectResourceUse.setMsgCount(0);
-                                    newObjectResourceUse.setOnlineTimeLength(0);
-                                    newObjectResourceUse.setDataCount(0);
-                                    objectResouceUseService.insertObjectResourceUse(newObjectResourceUse);
-
-                                    newObjectResourceUse.setDataCount(1);
-                                    socketTask.objectResouceUseService.updateObjectResourceUseOnlyDataCount(newObjectResourceUse);
-                                }
-
-
-                                //判断设备类型
-                                if (equipmentData.getEqpType().equals("BloodPressure01"))
-                                {
-                                    typeNum = 0;
-                                }else if (equipmentData.getEqpType().equals("Temperature01"))
-                                {
-                                    typeNum = 1;
-                                }else if (equipmentData.getEqpType().equals("BloodOxygen01"))
-                                {
-                                    typeNum = 2;
-                                }
-                            }
-
-                            switch (typeNum) {
-                                case 0:
-                                    int highBloodPressure = byteToUnsignedValue(dataList.get(2));
-                                    int lowBloodPressure = byteToUnsignedValue(dataList.get(3));
-                                    int heartRate = byteToUnsignedValue(dataList.get(4));
-                                    for (int i = 0; i < 7; i++) {
-                                        timeByte[i] = dataList.get(i + 5);
-                                    }
-                                    timeString = bytesToHexString(timeByte);
-                                    System.out.println("SocketTask"+taskNum+": BloodPressure... " + "highBloodPressure: " + highBloodPressure + "  lowBloodPressure: " +
-                                            lowBloodPressure + "  heartBeat: " + heartRate + " bloodPressureTimeString: " + timeString);
-
-                                    //数据过滤
-                                    if (highBloodPressure == 255 && lowBloodPressure == 255 && heartRate==255)
-                                    {
-                                        System.out.println("SocketTask"+taskNum+": invalid BloodPressure01 255 data...");
-                                    }else{
-//                                            equipmentData = socketTask.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-//                                            System.out.println("SocketTask"+taskNum+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-
-                                        //插入新数据到influxDB
-                                        tags.clear();
-                                        fields.clear();
-                                        tags.put("netmaskId", String.valueOf(netMaskId));
-                                        tags.put("eqpId", equipmentData.getEqpId());
-                                        tags.put("objectId",equipmentData.getObjectId());
-                                        tags.put("sendTime",timeString);
-//                                            java.lang.Object highBloodPressureObj = highBloodPressure;////
-                                        fields.put("highPressure", highBloodPressure);////
-//                                            java.lang.Object lowBloodPressureObj = lowBloodPressure;////
-                                        fields.put("lowPressure", lowBloodPressure);////
-                                        fields.put("heartRate",heartRate);
-                                        influxDBConnector.insertData("bloodPressure", tags, fields);
-
-
-                                    }
-                                    break;
-                                case 1:
-                                    int bodyTemperatureInt = byteToUnsignedValue(dataList.get(2)) * 256 + byteToUnsignedValue(dataList.get(3));
-                                    float bodyTemperature = (float) bodyTemperatureInt / 100;
-                                    int envTemperatureInt = byteToUnsignedValue(dataList.get(4)) * 256 + byteToUnsignedValue(dataList.get(5));
-                                    float envTemperature = (float) envTemperatureInt / 100;
-                                    for (int i = 0; i < 7; i++) {
-                                        timeByte[i] = dataList.get(i + 6);
-                                    }
-                                    timeString = bytesToHexString(timeByte);
-                                    System.out.println("SocketTask"+taskNum+": Temperature... " + "bodyTemperature: " + bodyTemperature + "  envTemperature: " +
-                                            envTemperature + " temperatureTimeString: " + timeString);
-                                    //数据过滤
-                                    if (bodyTemperature == 0 && envTemperature == 0)
-                                    {
-                                        System.out.println("SocketTask"+taskNum+": invalid Temperature01 0 data...");
-                                    }else{
-                                        equipmentData = socketTask.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-                                        System.out.println("SocketTask"+taskNum+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-
-                                        //插入新数据到influxDB
-                                        tags.clear();
-                                        fields.clear();
-                                        tags.put("netmaskId", String.valueOf(netMaskId));
-                                        tags.put("eqpId", equipmentData.getEqpId());
-                                        tags.put("objectId",equipmentData.getObjectId());
-//                                        tags.put("eqpId", "A00030101");
-//                                        tags.put("objectId","hitwhob001");
-                                        tags.put("sendTime",timeString);
-                                        fields.put("bodyTemp",bodyTemperature);
-                                        fields.put("envTemp",envTemperature);
-                                        influxDBConnector.insertData("temperature", tags, fields);
-
-                                    }
-                                    break;
-                                case 2:
-                                    int bloodOxygenDegree = byteToUnsignedValue(dataList.get(2));
-                                    for (int i = 0; i < 7; i++) {
-                                        timeByte[i] = dataList.get(i + 3);
-                                    }
-                                    timeString = bytesToHexString(timeByte);
-                                    System.out.println("SocketTask"+taskNum+": BloodOxygen... " + "bodyOxygenDegree: " + bloodOxygenDegree + " timeString: " +
-                                            timeString);
-                                    //数据过滤
-                                    if (bloodOxygenDegree == 0)
-                                    {
-                                        System.out.println("SocketTask"+taskNum+": invalid BloodOxygen01 0 data...");
-                                    }else {
-                                        equipmentData = socketTask.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-                                        System.out.println("SocketTask"+taskNum+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-                                        //插入新数据到influxDB
-                                        tags.clear();
-                                        fields.clear();
-                                        tags.put("netmaskId", String.valueOf(netMaskId));
-                                        tags.put("eqpId", equipmentData.getEqpId());
-                                        tags.put("objectId",equipmentData.getObjectId());
-//                                        tags.put("eqpId", "A00060302");
-//                                        tags.put("objectId","hitwhob001");
-                                        tags.put("sendTime",timeString);
-                                        fields.put("spo2",bloodOxygenDegree);
-                                        influxDBConnector.insertData("bloodOxygen", tags, fields);
-
-                                    }
-
-                                    break;
-                                default:
-                                    System.out.println("SocketTask"+taskNum+": Exception: unknown device type...");
-                                    break;
-                            }
-                            dataList = dataList.subList(13, dataList.size());//去掉已经处理的13个字节，进入下一个循环
-                        }
-                        //内圈while处理完之后
-                        System.out.println("SocketTask"+taskNum+": Info: data section analyze completed...");
-                        //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-                        if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续，针对的是一个数据包内多个回复帧的情况
-                        {
-                            byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                        }
-                        else//如果数据分析完毕，直接跳出外圈while循环
-                        {
-                            System.out.println("SocketTask"+taskNum+": Info: package analyze completed....");
-                            break;
-                        }
-                        //校验和验证，验证成功继续，然后是判断设备类型，这里先简易地写死，00是血压，01是温度。02是血氧，
-                        //然后把数据库里面的设备号改成网关一样的，或者设备上加字段，设备号之外再加网关和网关内设备序号
-                        //取出数据后存入influxdb
-
-                    } else {//校验和错误，去掉最前面的一个字节，进入下一个循环
-                        System.out.println("SocketTask"+taskNum+": data check error...");
-                        byteArrayList.remove(0);
-                    }
-                } else {//结尾格式不是AABB，证明数据损坏，去掉最前面的一个字节，进入下一个循环
-                    System.out.println("SocketTask"+taskNum+": package tail is broken...");
-                    byteArrayList.remove(0);
-                }
-
-            } else {//字节总长度达不到，证明数据可能损坏，去掉最前面的一个字节，进入下一个循环
-                System.out.println("SocketTask"+taskNum+": package length error compared to dataLength, maybe package is broken...");
-                byteArrayList.remove(0);
-//                    break;
             }
 
         }
