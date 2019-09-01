@@ -83,7 +83,7 @@ public class UserEquipmentController {
                 //组装查询命令
                 String startStr = "FEFE";
                 String dataLengthStr = "08";//有效数据字节数
-                String repairString = "0";//补齐字节
+                // String repairString = "0";//补齐字节
                 String orderTypeStr = "02";
                 String endStr = "AABB";
                 for(int i = 0;i <32;i++)
@@ -106,7 +106,7 @@ public class UserEquipmentController {
                             checkCalStr = "0"+checkCalStr;
                         }
 
-                        String deviceRegisterOrder = startStr + dataLengthStr + netMaskIdStr + orderTypeStr + repairString +
+                        String deviceRegisterOrder = startStr + dataLengthStr + netMaskIdStr + orderTypeStr +
                                 eqpId + checkCalStr + endStr;
                         //根据该网关使用的协议发送查询命令
                         sendMessage(i+1,deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
@@ -114,7 +114,7 @@ public class UserEquipmentController {
                     }
                     else
                     {
-//                        System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
+//                      System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
                     }
                 }
                 //等待返回设备添加结果，sleep一段时间后查找数据库，如果查到了就返回注册成功//网关验证注册时使用此块语句
@@ -380,8 +380,8 @@ public class UserEquipmentController {
         PrintWriter out = response.getWriter();
         out.print("<script language=\"javascript\">alert('解除绑定成功！');</script>");
 
-//        judgeIfHasEquipmentAndSetPage(request,response,user);
-        //取出用户关联的监测对象的所有设备信息
+        // judgeIfHasEquipmentAndSetPage(request,response,user);
+        // 取出用户关联的监测对象的所有设备信息
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByUserId(user.getUserId());
 
         if (equipmentList.size() == 0)//如果没有设备，提示先添加设备

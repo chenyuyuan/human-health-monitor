@@ -468,9 +468,7 @@ public class SocketTask implements Runnable {
             if (check != checkSum) {
                 break;
             }
-
-
-
+            
 
             // 将回复信息放到responseContent
             for (int i = 0; i < responseLength - 1;++i) {

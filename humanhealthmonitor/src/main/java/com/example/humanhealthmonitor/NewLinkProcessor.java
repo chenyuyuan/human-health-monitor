@@ -19,7 +19,7 @@ public class NewLinkProcessor implements Runnable{
 
     private Socket socket;
 
-    public void setSocket(Socket socket){//added0521
+    public void setSocket(Socket socket){ //added0521
         this.socket = socket;
     }
 
@@ -33,8 +33,8 @@ public class NewLinkProcessor implements Runnable{
 
     // 与客户端Socket进行通信
     private void handleSocket() throws Exception {
-//        HealthDataProcessor healthDataProcessor = new HealthDataProcessor();//实例化信息处理类
-        //如果收到了信息就把信息打印出来
+        // HealthDataProcessor healthDataProcessor = new HealthDataProcessor();//实例化信息处理类
+        // 如果收到了信息就把信息打印出来
         PrintWriter pw = null;
         System.out.println("NewLinkProcessor: "+socket.getInetAddress() + " has already linked...");
         pw = new PrintWriter(socket.getOutputStream());
@@ -45,7 +45,7 @@ public class NewLinkProcessor implements Runnable{
 //        {
 //            Thread.sleep(1000);//1秒
 //        }
-        String orderString = "FEFE0400010001AABB";//询问网关号，固定命令
+        String orderString = "FEFE040101AABB";//询问网关号，固定命令
         byte[] orderByte = toByteArray(orderString);
 
 //        byte[] orderByte = orderString.getBytes();
@@ -135,18 +135,15 @@ public class NewLinkProcessor implements Runnable{
         while (byteArrayList.size() >= 10) {
             if (byteArrayList.get(0) == (byte) 0xFE && byteArrayList.get(1) == (byte) 0xFE) {
                 int dataLength = byteToUsignedValue(byteArrayList.get(4)) * 256 + byteToUsignedValue(byteArrayList.get(5));//获取传感器数据长度
-                if (byteArrayList.size() >= (dataLength + 6 + 3))//字节总长度达不到，证明数据损坏，这里的9是数据前6后3附加字节总长
-                {
-                    if (byteArrayList.get(dataLength + 9 - 2) == (byte) 0xAA && byteArrayList.get(dataLength + 9 - 1) == (byte) 0xBB)//验证结尾格式AABB
-                    {
+                if (byteArrayList.size() >= (dataLength + 6 + 3)) {//字节总长度达不到，证明数据损坏，这里的9是数据前6后3附加字节总长
+                    if (byteArrayList.get(dataLength + 9 - 2) == (byte) 0xAA && byteArrayList.get(dataLength + 9 - 1) == (byte) 0xBB) {//验证结尾格式AABB
                         //校验和计算
                         int check = 0;
                         for (int i = 0; i < dataLength; i++) {
                             check += byteArrayList.get(i + 6);
                         }
                         check = Math.abs(check) % 64;
-                        if (check == byteArrayList.get(dataLength + 9 - 3))//比对数据发送前后的校验和，一致则继续，不一致说明数据传输错误//这里需要判断包长会否大于大dataLength+9-3，防止出错
-                        {
+                        if (check == byteArrayList.get(dataLength + 9 - 3)) {//比对数据发送前后的校验和，一致则继续，不一致说明数据传输错误//这里需要判断包长会否大于大dataLength+9-3，防止出错
                             System.out.println("NewLinkProcessor: check pass...");
 //                            int netMaskId = byteToUsignedValue(byteArrayList.get(2));//伪网关id，00
                             int orderType = byteToUsignedValue(byteArrayList.get(3));//04是全部设备信息，03是指定设备信息
