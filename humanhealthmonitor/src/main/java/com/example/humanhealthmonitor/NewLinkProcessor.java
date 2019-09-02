@@ -156,12 +156,10 @@ public class NewLinkProcessor implements Runnable{
                             System.out.println("NewLinkProcessor: netMaskId: "+netMaskId);
                             //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
                             socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
-                            if(socketTasks[netMaskId-1].getTaskNum() == netMaskId)//说明已经在运行
-                            {
+                            if(socketTasks[netMaskId-1].getTaskNum() == netMaskId) { //说明已经在运行
                                 System.out.println("NewLinkProcessor: conflict, netmask"+netMaskId+" already exist,please check your setting...");
                             }
-                            else
-                            {
+                            else {
                                 System.out.println("NewLinkProcessor: socketTasks"+netMaskId+" ready to start...");
 //                                socketTasks[netMaskId-1] = new SocketTask();
                                 socketTasks[netMaskId-1].setSocket(socket);
@@ -172,12 +170,10 @@ public class NewLinkProcessor implements Runnable{
                             //内圈while处理完之后
                             System.out.println("NewLinkProcessor: Info: data section analyze completed...");
                             //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-                            if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续，针对的是一个数据包内多个回复帧的情况
-                            {
+                            if(dataLength + 9 < byteArrayList.size()) {//如果小于，则截取然后继续，针对的是一个数据包内多个回复帧的情况
                                 byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
                             }
-                            else//如果数据分析完毕，直接跳出外圈while循环
-                            {
+                            else {//如果数据分析完毕，直接跳出外圈while循环
                                 System.out.println("NewLinkProcessor: Info: package analyze completed....");
                                 break;
                             }
