@@ -1,7 +1,6 @@
 package com.example.humanhealthmonitor;
 
 import com.example.humanhealthmonitor.pojo.*;
-import com.example.humanhealthmonitor.pojo.Object;
 import com.example.humanhealthmonitor.service.*;
 import com.github.qcloudsms.httpclient.HTTPException;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
@@ -30,8 +29,7 @@ import static com.example.humanhealthmonitor.MsgQueue.sendMsgQueue;
 /**
  * 用来处理Socket请求
  */
-//@Controller
-@Component///////
+@Component
 public class SocketTask implements Runnable {
 
     @Autowired
@@ -70,9 +68,9 @@ public class SocketTask implements Runnable {
         this.taskNum = taskNum;
     }
 
-//    SocketTask(Socket socket) {
-//        this.socket = socket;
-//    }//comment0521
+    //SocketTask(Socket socket) {
+    //    this.socket = socket;
+    //}//comment0521
     public void setSocket(Socket socket){//added0521
         this.socket = socket;
     }
@@ -90,16 +88,16 @@ public class SocketTask implements Runnable {
     }
     public void run() {
         try {
-//            socket = HumanhealthmonitorApplication.serverSocket.accept();////////////////
+        //socket = HumanhealthmonitorApplication.serverSocket.accept();////////////////
             handleSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // 与客户端Socket进行通信
+    //与客户端Socket进行通信
     private void handleSocket() throws Exception {
-//        HealthDataProcessor healthDataProcessor = new HealthDataProcessor();//实例化信息处理类
+        //HealthDataProcessor healthDataProcessor = new HealthDataProcessor();//实例化信息处理类
         //如果收到了信息就把信息打印出来
         System.out.println("SocketTask: taskNum: "+this.getTaskNum());
 
@@ -109,45 +107,42 @@ public class SocketTask implements Runnable {
         PrintWriter pw = null;
         System.out.println("SocketTask: "+socket.getInetAddress() + " transferred to socketTask...");
         pw = new PrintWriter(socket.getOutputStream());
-//        pw.println("FEFE0401040005AABB");
-//        pw.flush();
-//        String orderString = "FEFE0401040005AABB";
+        //pw.println("FEFE0401040005AABB");
+        //pw.flush();
+        //String orderString = "FEFE0401040005AABB";
         //询问网关上设备号和采集数组下标对应关系
         //组装查询命令
         String startStr = "FEFE04";
         String netMaskIdStr = String.valueOf(taskNum);
-        if (netMaskIdStr.length()==1)
-        {
+        if (netMaskIdStr.length()==1) {
             netMaskIdStr = "0"+netMaskIdStr;
         }
         String orderType = "06";
         int checkCal = 5 + taskNum;
         checkCal = Math.abs(checkCal)%64;//计算校验和
         String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
-        if(checkCalStr.length()==1)
-        {
+        if(checkCalStr.length()==1) {
             checkCalStr = "0"+checkCalStr;
         }
         String findSerialOrder = startStr + netMaskIdStr + orderType + "00" + checkCalStr + "AABB";
         System.out.println("SocketTask"+taskNum+": send findSerialOrder: "+findSerialOrder);
         sendMsgQueue.get(taskNum-1).offer(findSerialOrder);
 
-        while (sendMsgQueue.get(taskNum-1).size()==0)//为空则线程休眠//modified0524
-        {
+        while (sendMsgQueue.get(taskNum-1).size()==0) {//为空则线程休眠//modified0524
             Thread.sleep(1000);//1秒
         }
-//        String orderString = sendMsgQueue[taskNum-1].poll();//取出一条命令//modified0524
+        //String orderString = sendMsgQueue[taskNum-1].poll();//取出一条命令//modified0524
         String orderString = sendMsgQueue.get(taskNum-1).poll();//modified0524
 
         byte[] orderByte = toByteArray(orderString);
 
-//        byte[] orderByte = orderString.getBytes();
+        //byte[] orderByte = orderString.getBytes();
         OutputStream os = socket.getOutputStream();
         os.write(orderByte);
         os.flush(); // ***********
         System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
         //字节读取
-        // 装饰流BufferedReader封装输入流（接收客户端的流）
+        //装饰流BufferedReader封装输入流（接收客户端的流）
         BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
         DataInputStream dis = new DataInputStream(bis);
         byte[] bytes = new byte[1]; // 一次读取一个byte
@@ -163,22 +158,21 @@ public class SocketTask implements Runnable {
                 socketInfoProcess(byteArrayList);
 
                 //线程休眠
-//                Thread thread = new Thread(this);
-//                Thread.sleep(10000);
+                //Thread thread = new Thread(this);
+                //Thread.sleep(10000);
 
                 info = "";//将info清空
                 byteArrayList.clear();//字节列表清空
-//                orderString = "FEFE0401040005AABB";
-                while (sendMsgQueue.get(taskNum-1).isEmpty())//modified0524
-                {
+                //orderString = "FEFE0401040005AABB";
+                while (sendMsgQueue.get(taskNum-1).isEmpty()) {//modified0524
                     Thread.sleep(1000);
                 }
                 orderString = sendMsgQueue.get(taskNum-1).poll();//modified0524
                 orderByte = toByteArray(orderString);
-//                pw.println(orderString);
-//                pw.write(orderByte);
-//                pw.println(orderByte);
-//                pw.flush();
+                //pw.println(orderString);
+                //pw.write(orderByte);
+                //pw.println(orderByte);
+                //w.flush();
                 os.write(orderByte);
                 os.flush();
                 System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
@@ -251,12 +245,10 @@ public class SocketTask implements Runnable {
     }
 
     //int转为两位16进制字符串
-    public String byteToHexStringSocketTask(Byte b)
-    {
+    public String byteToHexStringSocketTask(Byte b) {
         int bInt = byteToUnsignedValue(b);
         String str = Integer.toHexString(bInt);
-        if(str.length()==1)
-        {
+        if(str.length()==1) {
             str = "0" + str;
         }
         return str;
@@ -388,6 +380,7 @@ public class SocketTask implements Runnable {
         //
         String sensortype = deviceID.substring(5,7);
 
+        // 由对应的方法处理数据
         if (sensortype == "01") {
             processDataType1(byteArraySensorData);
         }
@@ -438,8 +431,7 @@ public class SocketTask implements Runnable {
         String yearMonth = date.substring(0,7);//如2019-03
 
         Equipment equipmentData;//added0521
-        //从网关
-        // 发来的只带一个字节有效数据的帧长度就是10，比这个小的就是坏掉的或无关的
+        // 从网关发来的只带一个字节有效数据的帧长度就是8，比这个小的就是坏掉的或无关的
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度

@@ -20,12 +20,9 @@ public class HelpController {
 
     @RequestMapping("/help")
     public String help(HttpServletRequest request) {
-
 //        String userId = request.getParameter();
-//
 //        User user = new User();
 //        user.setUserId(userId);
-//
 //        userService.insertUser(user);
 //        LoginController loginController = new LoginController();
 //        loginController.Testttt();

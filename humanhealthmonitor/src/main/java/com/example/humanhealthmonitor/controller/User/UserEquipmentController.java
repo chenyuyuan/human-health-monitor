@@ -76,9 +76,7 @@ public class UserEquipmentController {
             String typeMatchString = equipmentTypeService.queryEquipmentTypeByEqpType(eqpType).getStringMatch();
             System.out.println("UserEquipmentController: typeMatchString: "+typeMatchString+" length: "+typeMatchString.length());
             if(eqpId.length() == typeMatchString.length() && eqpId.charAt(0) == typeMatchString.charAt(0) &&
-                    eqpId.charAt(5) == typeMatchString.charAt(5) &&
-                    eqpId.charAt(6) == typeMatchString.charAt(6))
-            {
+                    eqpId.charAt(5) == typeMatchString.charAt(5) && eqpId.charAt(6) == typeMatchString.charAt(6)) {
                 //验证通过，开始向网关发送命令查询设备
                 //组装查询命令
                 String startStr = "FEFE";
@@ -86,14 +84,10 @@ public class UserEquipmentController {
                 // String repairString = "0";//补齐字节
                 String orderTypeStr = "02";
                 String endStr = "AABB";
-                for(int i = 0;i <32;i++)
-                {
-                    if(protocolState[i] == 1 || protocolState[i] == 2)
-                    {
-
+                for(int i = 0;i <32;i++) {
+                    if(protocolState[i] == 1 || protocolState[i] == 2) {
                         String netMaskIdStr = Integer.toHexString(i+1);
-                        if(netMaskIdStr.length() == 1)
-                        {
+                        if(netMaskIdStr.length() == 1) {
                             netMaskIdStr = "0"+netMaskIdStr;
                         }
                         int checkCal = ( i + 1 ) + 2 + Integer.parseInt("0"+eqpId.charAt(0),16) +
@@ -101,8 +95,7 @@ public class UserEquipmentController {
                                 Integer.parseInt(eqpId.substring(5,7),16) + Integer.parseInt(eqpId.substring(7,9),16);
                         checkCal = Math.abs(checkCal)%64;//计算校验和
                         String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
-                        if(checkCalStr.length()==1)
-                        {
+                        if(checkCalStr.length()==1) {
                             checkCalStr = "0"+checkCalStr;
                         }
 
@@ -112,8 +105,7 @@ public class UserEquipmentController {
                         sendMessage(i+1,deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
                         System.out.println("UserEquipmentController: deviceRegisterOrder"+(i+1)+": "+deviceRegisterOrder);
                     }
-                    else
-                    {
+                    else {
 //                      System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
                     }
                 }
@@ -123,20 +115,17 @@ public class UserEquipmentController {
                 System.out.println("UserEquipmentController: the result of adding equipment is ready to get...");
                 //查询是否能在数据库中找到，找到了flagAdd置1，找不到置0
                 Equipment newAddEquipment = equipmentService.queryEquipmentByEqpId(eqpId);
-                if(newAddEquipment == null)
-                {
+                if(newAddEquipment == null) {
                     flagAdd = 0;
                 }
-                else
-                {
+                else {
                     flagAdd = 1;
                 }
 
 //                flagAdd=1;//非网关验证注册，而是直接注册时使用此语句
 
                 //查数据库决定成败
-                if(flagAdd == 1)
-                {
+                if(flagAdd == 1) {
                     Equipment newEquipment = new Equipment();
                     newEquipment.setEqpId(eqpId);
                     newEquipment.setEqpName(eqpName);
@@ -160,8 +149,7 @@ public class UserEquipmentController {
                     PrintWriter out = response.getWriter();
                     out.print("<script language=\"javascript\">alert('设备添加成功！');</script>");
                 }
-                else
-                {
+                else {
                     response.setContentType("text/html;charset=utf-8");
                     PrintWriter out = response.getWriter();
                     out.print("<script language=\"javascript\">alert('设备添加失败！请检查网关号是否正确、网络连通是否畅通后重新尝试添加');</script>");

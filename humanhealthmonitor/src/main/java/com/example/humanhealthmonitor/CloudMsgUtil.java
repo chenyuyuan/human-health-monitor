@@ -22,12 +22,10 @@ public class CloudMsgUtil {
                 templateId, params, smsSign, "", "");//单发// 签名参数未提供或者为空时，会使用默认签名发送短信
         System.out.println(result.toString());
         String reStr;//结果字符串
-        if(result.result == 0)
-        {
+        if(result.result == 0) {
             reStr = "send single message successfully";
         }
-        else
-        {
+        else {
             reStr = "!send  single message error";
         }
         System.out.println(reStr);
@@ -41,12 +39,10 @@ public class CloudMsgUtil {
                 templateId, params, smsSign, "", "");//群发// 签名参数未提供或者为空时，会使用默认签名发送短信
         System.out.println(result.toString());
         String reStr;//结果字符串
-        if(result.result == 0)
-        {
+        if(result.result == 0) {
             reStr = "send multi cloud message successfully";
         }
-        else
-        {
+        else {
             reStr = "!send multi message error";
         }
         System.out.println(reStr);

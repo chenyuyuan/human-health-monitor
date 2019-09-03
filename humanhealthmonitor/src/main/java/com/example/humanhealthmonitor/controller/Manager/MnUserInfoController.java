@@ -97,13 +97,11 @@ public class MnUserInfoController {
     }
 
     //获取警报短信量分时数据
-    public ArrayList<Integer> getAlarmMessageCountList()
-    {
+    public ArrayList<Integer> getAlarmMessageCountList() {
         ArrayList<Integer> alarmMessageCountList = new ArrayList<>();
         Timestamp beginTime;
         Timestamp endTime;
-        for (int i = 11; i >= 0;i--)
-        {
+        for (int i = 11; i >= 0;i--) {
             beginTime = java.sql.Timestamp.valueOf(dateformat.format((System.currentTimeMillis()-3600000*i-3600000)));
             endTime = java.sql.Timestamp.valueOf(dateformat.format((System.currentTimeMillis()-3600000*i)));
             alarmMessageCountList.add(alarmLogService.queryAlarmLogCountDuringCertainTime(beginTime,endTime));
@@ -112,8 +110,7 @@ public class MnUserInfoController {
     }
 
     //获取influxdb分时数据量
-    public ArrayList<Integer> getInfluxCountList()
-    {
+    public ArrayList<Integer> getInfluxCountList() {
         //连接InfluxDB
         influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
         influxDBConnector.connectToDatabase();
@@ -121,8 +118,7 @@ public class MnUserInfoController {
         ArrayList<Integer> influxCountList = new ArrayList<>();
         String startTimeString;
         String endTimeString;
-        for (int i = 11; i >= 0;i--)
-        {
+        for (int i = 11; i >= 0;i--) {
 //            QueryResult resultsTest =  influxDBConnector.queryData("select count(spo2) from bloodOxygen");
 //            System.out.println("test127: "+resultsTest);
 //            startTimeString = String.valueOf((System.currentTimeMillis()-3600000*(8+1+i))*1000000);//目前系统时间是北京时间，而influxDB的time字段是格林威治时间，相差8小时
@@ -143,23 +139,20 @@ public class MnUserInfoController {
             if(results.getResults().get(0).getSeries() == null){
 //                influxCountList.add(0);
                 count += 0;
-            }else
-            {
+            }else {
                 count += (int)(double)results.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//Object强转为int，原本是小数，转为int后舍弃小数
 //                influxCountList.add(count);
                 System.out.println("MnUserInfoHallController: count+"+count);
             }
             if(results2.getResults().get(0).getSeries() == null){
                 count += 0;
-            }else
-            {
+            } else {
                 count += (int)(double)results2.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//Object强转为int，原本是小数，转为int后舍弃小数
                 System.out.println("MnUserInfoHallController: count+"+count);
             }
             if(results3.getResults().get(0).getSeries() == null){
                 count += 0;
-            }else
-            {
+            } else {
                 count += (int)(double)results3.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//Object强转为int，原本是小数，转为int后舍弃小数
                 System.out.println("MnUserInfoHallController: count+"+count);
             }
@@ -255,14 +248,12 @@ public class MnUserInfoController {
         String searchKey = request.getParameter("searchKey");
 //        System.out.println(searchKey);
         List<User> userList = userService.queryUserByKey(searchKey, searchKey);
-        if (userList.size() == 0)//如果没有查到关键字相关的用户，给出提示
-        {
+        if (userList.size() == 0) {//如果没有查到关键字相关的用户，给出提示
 //            System.out.println("Line58");
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('未查找到相关用户')</script>");
-        } else//查到了符合关键字的用户，把列表传到页面
-        {
+        } else {//查到了符合关键字的用户，把列表传到页面
 //            System.out.println("Line65");
 //            System.out.println(userList.get(0).getUserId());
             request.setAttribute("userList", userList);
@@ -286,13 +277,11 @@ public class MnUserInfoController {
 //        String yearMonth = date.substring(0,7);//如2019-03
         String year = date.substring(0,4);
         String month = date.substring(5,7);
-        if (!month.equals("12"))//如果不是12月，年份-1，月份+1，为起始查询年月
-        {
+        if (!month.equals("12")) {//如果不是12月，年份-1，月份+1，为起始查询年月
             year = String.valueOf(Integer.valueOf(year)-1);
             month = String.format("%02d",Integer.valueOf(month)+1);//至少两位，不足补0
         }
-        else//如果现在是12月份，那么从1月开始取
-        {
+        else {//如果现在是12月份，那么从1月开始取
             month = "01";
         }
 //        System.out.println("start year: "+year+" month: "+month);
@@ -302,28 +291,23 @@ public class MnUserInfoController {
         ArrayList<Integer> influxCountList = new ArrayList<>();
         ArrayList<String> yearMonthList = new ArrayList<>();
         ObjectResourceUse objectResourceUse;
-        for (int i = 0; i < 12;i++)
-        {
+        for (int i = 0; i < 12;i++) {
             alarmMessageCountList.add(0);
             onlineTimeCountList.add(0);
             influxCountList.add(0);
             yearMonthList.add(year+"-"+month);
-            for (int j = 0;j < objectList.size();j++)
-            {
+            for (int j = 0;j < objectList.size(); j++) {
                 objectResourceUse = objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(objectList.get(j).getObjectId(),year+"-"+month);
-                if (objectResourceUse != null)
-                {
+                if (objectResourceUse != null) {
                     alarmMessageCountList.set(i,alarmMessageCountList.get(i) + objectResourceUse.getMsgCount());
                     onlineTimeCountList.set(i,onlineTimeCountList.get(i) + objectResourceUse.getOnlineTimeLength());
                     influxCountList.set(i,influxCountList.get(i) + objectResourceUse.getDataCount());
                 }
             }
-            if(!month.equals("12"))
-            {
+            if(!month.equals("12")) {
                 month = String.format("%02d",Integer.valueOf(month)+1);
             }
-            else//如果即将到达下一年，年份+1，月份从01开始
-            {
+            else {//如果即将到达下一年，年份+1，月份从01开始
                 month = "01";
                 year = String.valueOf(Integer.valueOf(year)+1);
             }
@@ -336,8 +320,7 @@ public class MnUserInfoController {
         request.setAttribute("onlineTimeCountList",onlineTimeCountList);
         request.setAttribute("influxCountList",influxCountList);
         String tmpStr;
-        for (int i = 0;i < yearMonthList.size();i++)
-        {
+        for (int i = 0;i < yearMonthList.size();i++) {
             tmpStr = yearMonthList.get(i);
             tmpStr = tmpStr.substring(0,4)+"."+tmpStr.substring(5,7);
             yearMonthList.set(i,tmpStr);

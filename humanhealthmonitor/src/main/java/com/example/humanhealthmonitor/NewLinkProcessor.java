@@ -38,23 +38,22 @@ public class NewLinkProcessor implements Runnable{
         PrintWriter pw = null;
         System.out.println("NewLinkProcessor: "+socket.getInetAddress() + " has already linked...");
         pw = new PrintWriter(socket.getOutputStream());
-//        pw.println("FEFE0401040005AABB");
-//        pw.flush();
-//        String orderString = "FEFE0401040005AABB";
-//        while (sendMsgQueue.isEmpty())//为空则线程休眠
-//        {
-//            Thread.sleep(1000);//1秒
-//        }
+        //pw.println("FEFE0401040005AABB");
+        //pw.flush();
+        //String orderString = "FEFE0401040005AABB";
+        //while (sendMsgQueue.isEmpty()){//为空则线程休眠
+        //    Thread.sleep(1000);//1秒
+        // }
         String orderString = "FEFE040101AABB";//询问网关号，固定命令
         byte[] orderByte = toByteArray(orderString);
 
-//        byte[] orderByte = orderString.getBytes();
+        //byte[] orderByte = orderString.getBytes();
         OutputStream os = socket.getOutputStream();
         os.write(orderByte);
         os.flush();
         System.out.println("NewLinkProcessor: Send: " + bytesToHexString(orderByte));
         //字节读取
-        // 装饰流BufferedReader封装输入流（接收客户端的流）
+        //装饰流BufferedReader封装输入流（接收客户端的流）
         BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
         DataInputStream dis = new DataInputStream(bis);
         byte[] bytes = new byte[1]; // 一次读取一个byte
@@ -67,22 +66,17 @@ public class NewLinkProcessor implements Runnable{
             if (dis.available() == 0) { //客户端一条信息结束
                 System.out.println("NewLinkProcessor: received: " + info);
                 System.out.println("NewLinkProcessor: received byteArrayList: " + byteArrayList);
-
-//                socket.shutdownInput();//added 2019/04/08关闭输入流//comment0524
-//                socket.shutdownOutput();//added 2019/04/10关闭输出流//comment0524
-
-                socketInfoProcess(byteArrayList);/////NullPointException line158,74,28
+                //socket.shutdownInput();//added 2019/04/08关闭输入流//comment0524
+                //socket.shutdownOutput();//added 2019/04/10关闭输出流//comment0524
+                socketInfoProcess(byteArrayList);//NullPointException line158,74,28
                 break;//added0526
             }
         }
-
-
         //关闭相对应的资源
-//        pw.close();//comment0524
-//        bis.close();//comment0524
-//        dis.close();//comment0524
-
-//        socket.close();
+        //pw.close();//comment0524
+        //bis.close();//comment0524
+        //dis.close();//comment0524
+        //socket.close();
         System.out.println("NewLinkProcessor: one newLinkProcessor close safely...");
     }
 
@@ -145,7 +139,7 @@ public class NewLinkProcessor implements Runnable{
                         check = Math.abs(check) % 64;
                         if (check == byteArrayList.get(dataLength + 9 - 3)) {//比对数据发送前后的校验和，一致则继续，不一致说明数据传输错误//这里需要判断包长会否大于大dataLength+9-3，防止出错
                             System.out.println("NewLinkProcessor: check pass...");
-//                            int netMaskId = byteToUsignedValue(byteArrayList.get(2));//伪网关id，00
+                            //int netMaskId = byteToUsignedValue(byteArrayList.get(2));//伪网关id，00
                             int orderType = byteToUsignedValue(byteArrayList.get(3));//04是全部设备信息，03是指定设备信息
                             System.out.println("NewLinkProcessor: orderType: " + orderType);
                             List<Byte> dataList = byteArrayList.subList(6, 6 + dataLength);//取出校验成功的数据区数据，放到dataList中
@@ -161,7 +155,7 @@ public class NewLinkProcessor implements Runnable{
                             }
                             else {
                                 System.out.println("NewLinkProcessor: socketTasks"+netMaskId+" ready to start...");
-//                                socketTasks[netMaskId-1] = new SocketTask();
+                                //socketTasks[netMaskId-1] = new SocketTask();
                                 socketTasks[netMaskId-1].setSocket(socket);
                                 socketTasks[netMaskId-1].setTaskNum(netMaskId);
                                 new Thread(socketTasks[netMaskId-1]).start();
@@ -181,31 +175,31 @@ public class NewLinkProcessor implements Runnable{
                             //然后把数据库里面的设备号改成网关一样的，或者设备上加字段，设备号之外再加网关和网关内设备序号
                             //取出数据后存入influxdb
 
-                        } else {//校验和错误，去掉最前面的一个字节，进入下一个循环
+                        } else { //校验和错误，去掉最前面的一个字节，进入下一个循环
                             System.out.println("NewLinkProcessor: data check error...");
                             byteArrayList.remove(0);
                         }
-                    } else {//结尾格式不是AABB，证明数据损坏，去掉最前面的一个字节，进入下一个循环
+                    } else { //结尾格式不是AABB，证明数据损坏，去掉最前面的一个字节，进入下一个循环
                         System.out.println("NewLinkProcessor: package tail is broken...");
                         byteArrayList.remove(0);
                     }
 
-                } else {//字节总长度达不到，证明数据可能损坏，去掉最前面的一个字节，进入下一个循环
+                } else { //字节总长度达不到，证明数据可能损坏，去掉最前面的一个字节，进入下一个循环
                     System.out.println("NewLinkProcessor: package length error compared to dataLength, maybe package is broken...");
                     byteArrayList.remove(0);
-//                    break;
+                    //break;
                 }
-//                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
+                //                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
                 //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-//                if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续
-//                {
-//                    byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-//                }
-//                else//否则直接跳出while循环
-//                {
-//                    System.out.println("Info: package is deserted...no valuable data...");
-//                    break;
-//                }
+                //                if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续
+                //                {
+                //                    byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
+                //                }
+                //                else//否则直接跳出while循环
+                //                {
+                //                    System.out.println("Info: package is deserted...no valuable data...");
+                //                    break;
+                //                }
             } else {//如果数据头不是FEFE，去掉前面的一个字节，进入下一个循环
                 byteArrayList.remove(0);
             }

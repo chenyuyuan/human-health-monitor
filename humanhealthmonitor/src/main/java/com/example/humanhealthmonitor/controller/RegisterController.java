@@ -25,13 +25,9 @@ public class RegisterController {
      */
     @RequestMapping("/register")
     public String register(HttpServletRequest request) {
-
-
 //        String userId = request.getParameter();
-//
 //        User user = new User();
 //        user.setUserId(userId);
-//
 //        userService.insertUser(user);
         return "register";
     }
@@ -41,7 +37,6 @@ public class RegisterController {
      */
     @RequestMapping("/registerSubmit")
     public String registerSubmit(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         //从页面取信息
         String userId = request.getParameter("userId");
         String userName = request.getParameter("userName");
@@ -80,8 +75,7 @@ public class RegisterController {
                 PrintWriter out = response.getWriter();
                 out.print("<script language=\"javascript\">alert('恭喜您，注册成功！');</script>");
                 //日志记录相关操作
-            } else//如果出现未知错误导致用户自身同id的监测对象注册失败，删除该用户并提示注册失败，请检查本地网络连接并重试
-            {
+            } else {//如果出现未知错误导致用户自身同id的监测对象注册失败，删除该用户并提示注册失败，请检查本地网络连接并重试
                 userService.deleteUserByUserId(userId);
                 response.setContentType("text/html;charset=utf-8");
                 PrintWriter out = response.getWriter();

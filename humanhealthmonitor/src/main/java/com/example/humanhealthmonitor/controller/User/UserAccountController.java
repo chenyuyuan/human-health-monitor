@@ -97,8 +97,7 @@ public class UserAccountController {
 //        System.out.println(newPassword);
 
         //查看原密码是否输入正确
-        if (oldPassword.equals(user.getPwd()))//如果输入正确，则修改密码成功
-        {
+        if (oldPassword.equals(user.getPwd())) { //如果输入正确，则修改密码成功
             //在数据库中更新用户密码(session中的密码未改变)
             user.setPwd(newPassword);
             userService.updateUserPassword(user);
@@ -110,8 +109,7 @@ public class UserAccountController {
             HttpSession session = request.getSession();
             session.removeAttribute("user");
             return "login";
-        } else//如果原密码错误，则提示用户原密码不对
-        {
+        } else { //如果原密码错误，则提示用户原密码不对
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('原密码不正确！密码修改失败');</script>");

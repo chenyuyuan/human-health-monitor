@@ -88,8 +88,7 @@ public class IndexObjectController {
             System.out.println("IndexObjectController: minuteOnlineTimeLength: "+minuteOnlineTimeLength);
             objectResourceUse.setOnlineTimeLength(objectResourceUse.getOnlineTimeLength()+minuteOnlineTimeLength);
             objectResouceUseService.updateObjectResourceUseOnlyOnlineTimeLength(objectResourceUse);
-        }else
-        {
+        }else {
             ObjectResourceUse newObjectResourceUse = new ObjectResourceUse();
             newObjectResourceUse.setObjectId(object.getObjectId());
             newObjectResourceUse.setYearMonth(yearMonth);
@@ -97,34 +96,26 @@ public class IndexObjectController {
             newObjectResourceUse.setBeginDate(beginDate);
             java.sql.Date endDate = beginDate;
             if(month.equals("01")||month.equals("03")||month.equals("05")||month.equals("07")||
-                    month.equals("08")||month.equals("10")||month.equals("12"))
-            {
+                    month.equals("08")||month.equals("10")||month.equals("12")) {
                 endDate = java.sql.Date.valueOf(yearMonth+"-31");
-            }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11"))
-            {
+            }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11")) {
                 endDate = java.sql.Date.valueOf(yearMonth+"-30");
-            }else if(month.equals("02"))
-            {
-                if(Integer.valueOf(year)%100 == 0)
-                {
-                    if (Integer.valueOf(year)%400 == 0)
-                    {
+            }else if(month.equals("02")) {
+                if(Integer.valueOf(year)%100 == 0) {
+                    if (Integer.valueOf(year)%400 == 0) {
                         endDate = java.sql.Date.valueOf(yearMonth+"-29");
                     }
-                    else
-                    {
+                    else {
                         endDate = java.sql.Date.valueOf(yearMonth+"-28");
                     }
                 }else {
-                    if (Integer.valueOf(year)%4 == 0)
-                    {
+                    if (Integer.valueOf(year)%4 == 0) {
                         endDate = java.sql.Date.valueOf(yearMonth+"-29");
                     }else {
                         endDate = java.sql.Date.valueOf(yearMonth+"-28");
                     }
                 }
-            }else
-            {
+            }else {
                 System.out.println("IndexObjectController: resourceUse endDate month error...");
             }
             newObjectResourceUse.setEndDate(endDate);

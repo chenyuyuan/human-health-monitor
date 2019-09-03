@@ -83,8 +83,7 @@ public class ObjAccountController {
 //        System.out.println(newPassword);
 
         //查看原密码是否输入正确
-        if (oldPassword.equals(object.getPwd()))//如果输入正确，则修改密码成功
-        {
+        if (oldPassword.equals(object.getPwd())) {//如果输入正确，则修改密码成功
             //在数据库中更新监测对象密码(session中的密码未改变)
             object.setPwd(newPassword);
             objectService.updateObjectPassword(object);
@@ -97,8 +96,8 @@ public class ObjAccountController {
             HttpSession session = request.getSession();
             session.removeAttribute("object");
             return "login";
-        } else//如果原密码错误，则提示用户原密码不对
-        {
+        } else {//如果原密码错误，则提示用户原密码不对
+
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('原密码不正确！密码修改失败');</script>");

@@ -196,8 +196,7 @@ public class LoginController {
             return "indexAdmin";
         } else {
             User user = userService.userLogin(userId, password);
-            if (user != null)//用户登录
-            {
+            if (user != null) { //用户登录
                 //将用户登录操作写入Log
                 UserLog userLog = new UserLog();
                 userLog.setUserId(user.getUserId());
@@ -212,8 +211,7 @@ public class LoginController {
                 String year = date.substring(0,4);
                 String month = date.substring(5,7);
                 ObjectResourceUse objectResourceUse = objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(userId,yearMonth);
-                if (objectResourceUse == null)
-                {
+                if (objectResourceUse == null) {
                     ObjectResourceUse newObjectResourceUse = new ObjectResourceUse();
                     newObjectResourceUse.setObjectId(userId);
                     newObjectResourceUse.setYearMonth(yearMonth);
@@ -221,34 +219,26 @@ public class LoginController {
                     newObjectResourceUse.setBeginDate(beginDate);
                     java.sql.Date endDate = beginDate;
                     if(month.equals("01")||month.equals("03")||month.equals("05")||month.equals("07")||
-                            month.equals("08")||month.equals("10")||month.equals("12"))
-                    {
+                            month.equals("08")||month.equals("10")||month.equals("12")) {
                         endDate = java.sql.Date.valueOf(yearMonth+"-31");
-                    }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11"))
-                    {
+                    }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11")) {
                         endDate = java.sql.Date.valueOf(yearMonth+"-30");
-                    }else if(month.equals("02"))
-                    {
-                        if(Integer.valueOf(year)%100 == 0)
-                        {
-                            if (Integer.valueOf(year)%400 == 0)
-                            {
+                    }else if(month.equals("02")) {
+                        if(Integer.valueOf(year)%100 == 0) {
+                            if (Integer.valueOf(year)%400 == 0) {
                                 endDate = java.sql.Date.valueOf(yearMonth+"-29");
                             }
-                            else
-                            {
+                            else {
                                 endDate = java.sql.Date.valueOf(yearMonth+"-28");
                             }
                         }else {
-                            if (Integer.valueOf(year)%4 == 0)
-                            {
+                            if (Integer.valueOf(year)%4 == 0) {
                                 endDate = java.sql.Date.valueOf(yearMonth+"-29");
                             }else {
                                 endDate = java.sql.Date.valueOf(yearMonth+"-28");
                             }
                         }
-                    }else
-                    {
+                    }else {
                         System.out.println("LoginController: resourceUse endDate month error...");
                     }
                     newObjectResourceUse.setEndDate(endDate);
@@ -280,8 +270,7 @@ public class LoginController {
                 return "indexUser";
             } else {
                 Object object = objectService.objectLogin(userId, password);
-                if (object != null)//监测对象登录
-                {
+                if (object != null) {//监测对象登录
                     //将监测对象登录操作写入Log
                     ObjectLog objectLog = new ObjectLog();
                     objectLog.setObjectId(object.getObjectId());
@@ -298,8 +287,7 @@ public class LoginController {
                     String year = date.substring(0,4);
                     String month = date.substring(5,7);
                     ObjectResourceUse objectResourceUse = objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(object.getObjectId(),yearMonth);
-                    if (objectResourceUse == null)
-                    {
+                    if (objectResourceUse == null) {
                         ObjectResourceUse newObjectResourceUse = new ObjectResourceUse();
                         newObjectResourceUse.setObjectId(userId);
                         newObjectResourceUse.setYearMonth(yearMonth);
@@ -307,34 +295,26 @@ public class LoginController {
                         newObjectResourceUse.setBeginDate(beginDate);
                         java.sql.Date endDate = beginDate;
                         if(month.equals("01")||month.equals("03")||month.equals("05")||month.equals("07")||
-                                month.equals("08")||month.equals("10")||month.equals("12"))
-                        {
+                                month.equals("08")||month.equals("10")||month.equals("12")) {
                             endDate = java.sql.Date.valueOf(yearMonth+"-31");
-                        }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11"))
-                        {
+                        }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11")) {
                             endDate = java.sql.Date.valueOf(yearMonth+"-30");
-                        }else if(month.equals("02"))
-                        {
-                            if(Integer.valueOf(year)%100 == 0)
-                            {
-                                if (Integer.valueOf(year)%400 == 0)
-                                {
+                        }else if(month.equals("02")) {
+                            if(Integer.valueOf(year)%100 == 0) {
+                                if (Integer.valueOf(year)%400 == 0) {
                                     endDate = java.sql.Date.valueOf(yearMonth+"-29");
                                 }
-                                else
-                                {
+                                else {
                                     endDate = java.sql.Date.valueOf(yearMonth+"-28");
                                 }
                             }else {
-                                if (Integer.valueOf(year)%4 == 0)
-                                {
+                                if (Integer.valueOf(year)%4 == 0) {
                                     endDate = java.sql.Date.valueOf(yearMonth+"-29");
                                 }else {
                                     endDate = java.sql.Date.valueOf(yearMonth+"-28");
                                 }
                             }
-                        }else
-                        {
+                        }else {
                             System.out.println("LoginController: resourceUse endDate month error...");
                         }
                         newObjectResourceUse.setEndDate(endDate);
