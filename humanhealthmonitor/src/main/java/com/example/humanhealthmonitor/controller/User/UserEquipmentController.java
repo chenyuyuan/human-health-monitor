@@ -106,7 +106,7 @@ public class UserEquipmentController {
                         System.out.println("UserEquipmentController: deviceRegisterOrder"+(i+1)+": "+deviceRegisterOrder);
                     }
                     else {
-//                      System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
+                        // System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
                     }
                 }
                 //等待返回设备添加结果，sleep一段时间后查找数据库，如果查到了就返回注册成功//网关验证注册时使用此块语句
@@ -122,7 +122,7 @@ public class UserEquipmentController {
                     flagAdd = 1;
                 }
 
-//                flagAdd=1;//非网关验证注册，而是直接注册时使用此语句
+                //flagAdd=1;//非网关验证注册，而是直接注册时使用此语句
 
                 //查数据库决定成败
                 if(flagAdd == 1) {

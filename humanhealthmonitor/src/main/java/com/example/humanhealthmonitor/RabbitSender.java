@@ -37,13 +37,11 @@ public class RabbitSender implements Runnable{
         try{
             while(true)
             {
-                while (sendAMQPQueue.isEmpty())//为空则线程休眠
-                {
+                while (sendAMQPQueue.isEmpty()) {//为空则线程休眠
                     Thread.sleep(1000);//1秒重新检查队列
                 }
                 String orderString = sendAMQPQueue.poll();//队列中有消息就取出一条命令
-                if (orderString != null && orderString.length() > 8)
-                {
+                if (orderString != null && orderString.length() > 8) {
                     QUEUE_NAME = orderString.substring(6,8);
                     System.out.println("RabbitSender: QUEUE_NAME: "+QUEUE_NAME);
                 }

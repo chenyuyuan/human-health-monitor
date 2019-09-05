@@ -681,37 +681,37 @@ public class UserInfoHallController {
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
 
-        //从数据库中获取所有该用户关联的监测对象并传到前台
+        // 从数据库中获取所有该用户关联的监测对象并传到前台
         List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
         request.setAttribute("objectList", objectList);
 
-        //获取选中的监测对象的Id和其他条件，查询结果并显示在页面上
+        // 获取选中的监测对象的Id和其他条件，查询结果并显示在页面上
         String objectSelected = request.getParameter("objectSelected");
         request.setAttribute("objectSelected",objectSelected);
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
-//        System.out.println(objectSelect);
-//        System.out.println(startTime);//2019-03-03T10:20
-//        System.out.println(endTime);//2019-03-03T11:20
-//        取回的时间格式也许需要处理
+        // System.out.println(objectSelect);
+        // System.out.println(startTime);//2019-03-03T10:20
+        // System.out.println(endTime);//2019-03-03T11:20
+        // 取回的时间格式也许需要处理
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectSelected);
         request.setAttribute("equipmentList", equipmentList);
         String objectNameSelected = objectService.queryObjectByObjectId(objectSelected).getObjectName();
         request.setAttribute("objectNameSelected", objectNameSelected);
         request.setAttribute("startTime",startTime);
         request.setAttribute("endTime",endTime);
-//        System.out.println("startTime: "+startTime);
-        //时间字符串转LocalDateTime
+        // System.out.println("startTime: "+startTime);
+        // 时间字符串转LocalDateTime
         String timestampStart = dateTimeLocalToTimeStampString(startTime);
         String timestampEnd = dateTimeLocalToTimeStampString(endTime);
-//        System.out.println("timestampStart: "+timestampStart);
-//        System.out.println("timestampEnd: "+timestampEnd);
-//        System.out.println("System.currentTimeMillis: "+System.currentTimeMillis());
+        // System.out.println("timestampStart: "+timestampStart);
+        // System.out.println("timestampEnd: "+timestampEnd);
+        // System.out.println("System.currentTimeMillis: "+System.currentTimeMillis());
 
-        //按照时间要求取数据
-        //判断监测对象有没有设备
-        if (equipmentList.size() != 0) { //如果有设备
-            //准备列表
+        // 按照时间要求取数据
+        // 判断监测对象有没有设备
+        if (equipmentList.size() != 0) { // 如果有设备
+            // 准备列表
             ArrayList<Double> bodyTempList = new ArrayList<>();
             ArrayList<Double> envTempList = new ArrayList<>();
             ArrayList<Double> highPressureList = new ArrayList<>();
@@ -719,9 +719,9 @@ public class UserInfoHallController {
             ArrayList<Double> heartRateList = new ArrayList<>();
             ArrayList<Double> spo2List = new ArrayList<>();
 
-//            ArrayList<String> temperature01TimeStampList = new ArrayList<>();
-//            ArrayList<String> bloodPressure01TimeStampList = new ArrayList<>();
-//            ArrayList<String> bloodOxygen01TimeStampList = new ArrayList<>();
+            // ArrayList<String> temperature01TimeStampList = new ArrayList<>();
+            // ArrayList<String> bloodPressure01TimeStampList = new ArrayList<>();
+            // ArrayList<String> bloodOxygen01TimeStampList = new ArrayList<>();
 
             temperature01TimeStampList.clear();
             bloodPressure01TimeStampList.clear();
@@ -772,9 +772,9 @@ public class UserInfoHallController {
             if (flagBloodPressure01 == 1) {
                 QueryResult bloodPressureResults =  influxDBConnector.queryData("select highPressure,lowPressure,heartRate from bloodPressure where objectId = "
                         +"'"+objectSelected+"'"+" and time > "+timestampStart+" and time < "+timestampEnd);
-//                System.out.println("UserInfoHallController: bloodPressureResults: "+bloodPressureResults);
+                // System.out.println("UserInfoHallController: bloodPressureResults: "+bloodPressureResults);
                 if(bloodPressureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                    System.out.println("UserInfoHallController: bloodPressureResults null");
+                    // System.out.println("UserInfoHallController: bloodPressureResults null");
                     highPressureList.add(0.0);
                     lowPressureList.add(0.0);
                     heartRateList.add(0.0);
@@ -800,9 +800,9 @@ public class UserInfoHallController {
             {
                 QueryResult spo2Results =  influxDBConnector.queryData("select spo2 from bloodOxygen where objectId = "
                         +"'"+objectSelected+"'"+" and time > "+timestampStart+" and time < "+timestampEnd);
-//                System.out.println("UserInfoHallController: spo2Results: "+spo2Results);
+                // System.out.println("UserInfoHallController: spo2Results: "+spo2Results);
                 if(spo2Results.getResults().get(0).getSeries() == null){//如果值为空,赋0
-//                    System.out.println("UserInfoHallController: spo2Results null");
+                    // System.out.println("UserInfoHallController: spo2Results null");
                     spo2List.add(0.0);
                 }else {
                     String timestamp = "";
@@ -836,19 +836,19 @@ public class UserInfoHallController {
     @RequestMapping("/infoHallHistorySearchResult/AutoRefresh")
     @ResponseBody
     public Map<String,ArrayList<String>> monitorCenterAjaxGetData(@RequestBody ArrayList<ArrayList<String>> array) {
-//        System.out.println("array: "+array);
+        // System.out.println("array: "+array);
         System.out.println("ajaxTest");
 
         Map<String,ArrayList<String>> map = new HashMap<>();
-//        ArrayList<String> timeListTemperature01 = new ArrayList<>();
-//        ArrayList<String> timeListBloodPressure01 = new ArrayList<>();
-//        ArrayList<String> timeListBloodOxygen01 = new ArrayList<>();
-//        for (int i = 0;i<100;i++)
-//        {
-//            timeListTemperature01.add("2019-04-25T10:52:35.036Z"+String.valueOf(i));
-//            timeListBloodPressure01.add("2019-04-25T10:52:35.036Z"+String.valueOf(i));
-//            timeListBloodOxygen01.add("2019-04-25T10:52:35.036Z"+String.valueOf(i));
-//        }
+        //        ArrayList<String> timeListTemperature01 = new ArrayList<>();
+        //        ArrayList<String> timeListBloodPressure01 = new ArrayList<>();
+        //        ArrayList<String> timeListBloodOxygen01 = new ArrayList<>();
+        //        for (int i = 0;i<100;i++)
+        //        {
+        //            timeListTemperature01.add("2019-04-25T10:52:35.036Z"+String.valueOf(i));
+        //            timeListBloodPressure01.add("2019-04-25T10:52:35.036Z"+String.valueOf(i));
+        //            timeListBloodOxygen01.add("2019-04-25T10:52:35.036Z"+String.valueOf(i));
+        //        }
         map.put("timeListTemperature01",temperature01TimeStampList);
         map.put("timeListBloodPressure01",bloodPressure01TimeStampList);
         map.put("timeListBloodOxygen01",bloodOxygen01TimeStampList);
