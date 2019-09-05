@@ -73,7 +73,7 @@ public class RabbitSender implements Runnable{
         hexString = hexString.toLowerCase();
         final byte[] byteArray = new byte[hexString.length() / 2];
         int k = 0;
-        for (int i = 0; i < byteArray.length; i++) {//因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
+        for (int i = 0; i < byteArray.length; i++) { //因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
             byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
             byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
             byteArray[i] = (byte) (high << 4 | low);
