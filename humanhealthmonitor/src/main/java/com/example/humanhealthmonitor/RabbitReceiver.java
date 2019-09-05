@@ -9,21 +9,19 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.lang.Object;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static com.example.humanhealthmonitor.MsgQueue.protocolState;
 
-@Component///////
+@Component
 public class RabbitReceiver implements Runnable{
 
     @Autowired
-    private EquipmentService equipmentService;/////////added0521
+    private EquipmentService equipmentService; // added0521
     @Autowired
     private AlarmNormalValueService alarmNormalValueService;
     @Autowired
@@ -37,16 +35,16 @@ public class RabbitReceiver implements Runnable{
     @Autowired
     private AlarmLogService alarmLogService;
 
-    private static RabbitReceiver rabbitReceiver;/////////added0521
+    private static RabbitReceiver rabbitReceiver; // added0521
 
     private final static String EXCHANGE_NAME = "amq.direct";
     private final static String QUEUE_NAME = "health_queue";
-    private InfluxDBConnector influxDBConnector;//创建influxDB连接实例
-    private CloudMsgUtil cloudMsgUtil = new CloudMsgUtil();//云短信工具
+    private InfluxDBConnector influxDBConnector; // 创建influxDB连接实例
+    private CloudMsgUtil cloudMsgUtil = new CloudMsgUtil(); // 云短信工具
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @PostConstruct
-    public void init() {/////////////added0521
+    public void init() { // added0521
         rabbitReceiver= this;
         rabbitReceiver.equipmentService= this.equipmentService;
 
@@ -60,7 +58,7 @@ public class RabbitReceiver implements Runnable{
 
     public void run() {
         try {
-//            System.out.println("RabbitReceiver: rabbit receiver start...");
+            // System.out.println("RabbitReceiver: rabbit receiver start...");
             handleRabbitReceived();
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +67,7 @@ public class RabbitReceiver implements Runnable{
 
     private void handleRabbitReceived() throws IOException,TimeoutException {
 
-//        System.out.println("create ConnectionFactory...");
+        // System.out.println("create ConnectionFactory...");
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("140.143.232.52");
         factory.setUsername("Andy");
@@ -77,24 +75,24 @@ public class RabbitReceiver implements Runnable{
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        //        //消费者指定要订阅的队列
-//        //第一个参数表示队列名称、第二个参数为是否持久化（true表示是，队列将在服务器重启时生存）、
-//        //第三个参数为是否是独占队列（创建者可以使用的私有队列，断开后自动删除）、第四个参数为当所有消费者客户端连接断开时是否自动删除队列、
-//        //第五个参数为队列的其他参数
+        // 消费者指定要订阅的队列
+        // 第一个参数表示队列名称、第二个参数为是否持久化（true表示是，队列将在服务器重启时生存）、
+        // 第三个参数为是否是独占队列（创建者可以使用的私有队列，断开后自动删除）、第四个参数为当所有消费者客户端连接断开时是否自动删除队列、
+        // 第五个参数为队列的其他参数
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
         String routingKey = "health";
         channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, routingKey);
         System.out.println("RabbitReceiver: Waiting for messages...");
-//        channel.basicQos(1);//告诉消费一次只获取一条消息，处理完再获取下一条
+        // channel.basicQos(1);//告诉消费一次只获取一条消息，处理完再获取下一条
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)//body是字节数组类型
                     throws IOException {
-//                String message = new String(body, "UTF-8");
-//                System.out.println(" [x] Received '" + message + "'");
+                // String message = new String(body, "UTF-8");
+                // System.out.println(" [x] Received '" + message + "'");
                 List<Byte> byteArrayList = new ArrayList<>();//字节列表
-//                System.out.println("body.length: "+body.length);
+                // System.out.println("body.length: "+body.length);
                 for(int i = 0;i < body.length;i++)
                 {
                     byteArrayList.add(body[i]);
@@ -172,1441 +170,214 @@ public class RabbitReceiver implements Runnable{
     public void socketInfoProcess(List<Byte> byteArrayList) {
         String date = dateformat.format(System.currentTimeMillis());
         String yearMonth = date.substring(0,7);//如2019-03
-        AlarmLog alarmLog = new AlarmLog();
         Equipment equipmentData;//added0521
-        while (byteArrayList.size() >= 10) {//while (byteArrayList.size() >= 22)
-            if (byteArrayList.get(0) == (byte) 0xFE && byteArrayList.get(1) == (byte) 0xFE) {
-                int dataLength = byteToUsignedValue(byteArrayList.get(4)) * 256 + byteToUsignedValue(byteArrayList.get(5));//获取传感器数据长度
-                if (byteArrayList.size() >= (dataLength + 6 + 3))//字节总长度达不到，证明数据损坏，这里的9是数据前6后3附加字节总长
-                {
-                    if (byteArrayList.get(dataLength + 9 - 2) == (byte) 0xAA && byteArrayList.get(dataLength + 9 - 1) == (byte) 0xBB)//验证结尾格式AABB
-                    {
-                        //校验和计算
-                        int check = 0;
-                        for (int i = 0; i < dataLength; i++) {
-                            check += byteArrayList.get(i + 6);
-                        }
-                        check = Math.abs(check) % 64;
-//                        System.out.println("check result: "+check);
-                        if (check == byteArrayList.get(dataLength + 9 - 3))//比对数据发送前后的校验和，一致则继续，不一致说明数据传输错误//这里需要判断包长会否大于大dataLength+9-3，防止出错
-                        {
-                            System.out.println("RabbitReceiver: check pass...");
-                            int netMaskId = byteToUsignedValue(byteArrayList.get(2));//这里要注意，网关id是按0x11字面16转10进制的值17来与上面对应
-                            int orderType = byteToUsignedValue(byteArrayList.get(3));//04是全部设备信息，03是指定设备信息,05指示更换协议为AMQP
-                            System.out.println("netMaskId: " + netMaskId + "  orderType: " + orderType);
-                            if(orderType == 5)//更换协议为AMQP//added0527
-                            {
-                                //修改或维持发来消息的网关状态为AMQP
-                                if(protocolState[netMaskId-1] != 2)
-                                {
-                                    protocolState[netMaskId-1] = 2;
-                                    System.out.println("RabbitReceiver: netMask order to change protocolState of netMask"+netMaskId + " to 2(AMQP)...");
-                                }
-                                break;
-                            }
+        while (byteArrayList.size() >= 8) {
+            int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
+            int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
+            byte[] responseContent = new byte[responseLength - 1];  // 不包括校验和(扣掉1位校验和)
+            int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
-                            //修改或维持发来消息的网关状态为AMQP
-                            if(protocolState[netMaskId-1] != 2)
-                            {
-                                protocolState[netMaskId-1] = 2;
-                                System.out.println("RabbitReceiver: change protocolState of netMask "+netMaskId + " to 2(AMQP)...");
-                            }
-
-                            List<Byte> dataList = byteArrayList.subList(6, 6 + dataLength);//取出校验成功的数据区数据，放到dataList中
-
-                            if(orderType == 6)//设备号与网关顺序号对应关系修正
-                            {
-                                int deviceNum = dataList.size()/6;
-                                List<Byte> miniDataList = new ArrayList<>();
-                                for (int j = 0;j < deviceNum;j++)
-                                {
-                                    miniDataList = dataList.subList(6*j,6*j+6);//不包括最后一个值
-                                    int deviceSerialNew = byteToUsignedValue(miniDataList.get(5));//顺序号
-                                    String eqpId = "";
-                                    for(int i = 0;i < 5;i++)
-                                    {
-                                        eqpId += byteToHexStringSocketTask(miniDataList.get(i));
-                                    }
-                                    eqpId = eqpId.substring(1,10).toUpperCase();//左闭右开，不包括10位置，一共10-1字符
-                                    System.out.println("RabbitReceiver:"+netMaskId+": order06 eqpId: "+eqpId);
-
-                                    Equipment equipment1 = rabbitReceiver.equipmentService.queryEquipmentByEqpId(eqpId);
-                                    if (equipment1 == null)
-                                    {
-                                        System.out.println("RabbitReceiver:"+netMaskId+": order06 equipment1 null");
-                                    }else{
-                                        System.out.println("RabbitReceiver:"+netMaskId+": order06 equipment1 not null");
-                                        int deviceNetMaskId = equipment1.getNetmaskId();
-                                        if(deviceNetMaskId != netMaskId)
-                                        {
-                                            equipment1.setNetmaskId(netMaskId);
-                                            rabbitReceiver.equipmentService.updateEquipmentNetMaskId(equipment1);
-                                            System.out.println("RabbitReceiver:"+netMaskId+": order06 a netMaskId updated,,,deviceNum="+deviceNum);
-                                        }
-                                        int deviceSerialOrigin = equipment1.getDeviceSerial();
-                                        if (deviceSerialOrigin != deviceSerialNew)
-                                        {
-                                            equipment1.setDeviceSerial(deviceSerialNew);
-                                            rabbitReceiver.equipmentService.updateEquipmentDeviceSerial(equipment1);
-                                            System.out.println("RabbitReceiver:"+netMaskId+": order06 a deviceSerial updated,,,deviceNum="+deviceNum);
-                                        }
-                                    }
-
-                                }
-                                break;//退出while循环，此方法结束
-                            }
-
-                            if(orderType == 2)//云平台操作添加设备的回传消息//6字节
-                            {
-                                int deviceSerialNew = byteToUsignedValue(dataList.get(5));//顺序号
-                                String eqpId = "";
-                                //逐个字节转为HexString再连起来得到eqpId（前面多一个0）
-                                for(int i = 0;i < 5;i++)
-                                {
-                                    eqpId = eqpId + byteToHexStringSocketTask(dataList.get(i));
-                                }
-                                eqpId = eqpId.substring(1,10).toUpperCase();//去掉多余的0，彻底解析出网关号//左闭右开，不包括10位置，一共10-1字符
-                                System.out.println("RabbitReceiver:"+netMaskId+": eqpId add success: "+eqpId);
-
-                                //这块转移到接收解析那块
-                                Equipment newEquipment = new Equipment();
-                                newEquipment.setEqpId(eqpId);
-                                newEquipment.setEqpName(eqpId);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
-//                                newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-//                                newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-                                newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
-                                newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
-                                newEquipment.setNetmaskId(netMaskId);
-                                newEquipment.setDeviceSerial(deviceSerialNew);
-                                rabbitReceiver.equipmentService.insertEquipment(newEquipment);
-                                break;//退出while循环，此方法结束
-                            }
-
-                            int validLength = 0;//存储有效数据长度
-                            //存储时间
-                            byte[] timeByte = new byte[7];
-                            String timeString = "";
-
-                            //连接InfluxDB
-                            influxDBConnector = new InfluxDBConnector("Andy","123456",
-                                    "http://140.143.232.52:8086","health_data");
-                            influxDBConnector.connectToDatabase();
-                            influxDBConnector.setRetentionPolicy();
-                            Map<String, String> tags = new HashMap<>();
-                            Map<String, Object> fields = new HashMap<>();
-
-                            while (dataList.size() >= 13) {
-                                int deviceSerial = byteToUsignedValue(dataList.get(0));//数据对应的在网关数据区的序号
-                                validLength = byteToUsignedValue(dataList.get(1));//获取有效数据长度
-                                System.out.println("RabbitReceiver: deviceSerial: " + deviceSerial + "  validLength: " + validLength);
-                                //根据deviceSerial查询数据库，获知设备类型，根据设备类型case解码
-                                equipmentData = rabbitReceiver.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-                                int typeNum = -1;
-
-                                if (equipmentData != null)
-                                {
-                                    System.out.println("RabbitReceiver"+netMaskId+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-                                    //更新设备对应的object的dataCount数据加1
-                                    ObjectResourceUse objectResourceUse = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                    if(objectResourceUse != null)
-                                    {
-                                        objectResourceUse.setDataCount(objectResourceUse.getDataCount()+1);
-                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyDataCount(objectResourceUse);
-                                    }else {
-//                                        String date = dateformat.format(System.currentTimeMillis());
-//                                        String yearMonth = date.substring(0,7);//如2019-03
-                                        String year = date.substring(0,4);
-                                        String month = date.substring(5,7);
-                                        ObjectResourceUse newObjectResourceUse = new ObjectResourceUse();
-                                        newObjectResourceUse.setObjectId(equipmentData.getObjectId());
-                                        newObjectResourceUse.setYearMonth(yearMonth);
-                                        java.sql.Date beginDate=java.sql.Date.valueOf(yearMonth+"-01");
-                                        newObjectResourceUse.setBeginDate(beginDate);
-                                        java.sql.Date endDate = beginDate;
-                                        if(month.equals("01")||month.equals("03")||month.equals("05")||month.equals("07")||
-                                                month.equals("08")||month.equals("10")||month.equals("12"))
-                                        {
-                                            endDate = java.sql.Date.valueOf(yearMonth+"-31");
-                                        }else if(month.equals("04")||month.equals("06")||month.equals("09")||month.equals("11"))
-                                        {
-                                            endDate = java.sql.Date.valueOf(yearMonth+"-30");
-                                        }else if(month.equals("02"))
-                                        {
-                                            if(Integer.valueOf(year)%100 == 0)
-                                            {
-                                                if (Integer.valueOf(year)%400 == 0)
-                                                {
-                                                    endDate = java.sql.Date.valueOf(yearMonth+"-29");
-                                                }
-                                                else
-                                                {
-                                                    endDate = java.sql.Date.valueOf(yearMonth+"-28");
-                                                }
-                                            }else {
-                                                if (Integer.valueOf(year)%4 == 0)
-                                                {
-                                                    endDate = java.sql.Date.valueOf(yearMonth+"-29");
-                                                }else {
-                                                    endDate = java.sql.Date.valueOf(yearMonth+"-28");
-                                                }
-                                            }
-                                        }else
-                                        {
-                                            System.out.println("RabbitReceiver: resourceUse endDate month error...");
-                                        }
-                                        newObjectResourceUse.setEndDate(endDate);
-                                        newObjectResourceUse.setMsgCount(0);
-                                        newObjectResourceUse.setOnlineTimeLength(0);
-                                        newObjectResourceUse.setDataCount(0);
-                                        objectResouceUseService.insertObjectResourceUse(newObjectResourceUse);
-
-                                        newObjectResourceUse.setDataCount(1);
-                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyDataCount(newObjectResourceUse);
-                                    }
-
-
-                                    //判断设备类型
-                                    if (equipmentData.getEqpType().equals("BloodPressure01"))
-                                    {
-                                        typeNum = 0;
-                                    }else if (equipmentData.getEqpType().equals("Temperature01"))
-                                    {
-                                        typeNum = 1;
-                                    }else if (equipmentData.getEqpType().equals("BloodOxygen01"))
-                                    {
-                                        typeNum = 2;
-                                    }
-                                }
-
-                                switch (typeNum) {
-                                    case 0:
-                                        int highBloodPressure = byteToUsignedValue(dataList.get(2));
-                                        int lowBloodPressure = byteToUsignedValue(dataList.get(3));
-                                        int heartRate = byteToUsignedValue(dataList.get(4));
-                                        for (int i = 0; i < 7; i++) {
-                                            timeByte[i] = dataList.get(i + 5);
-                                        }
-                                        timeString = bytesToHexString(timeByte);
-                                        System.out.println("rabbitReceiver"+netMaskId+": BloodPressure... " + "highBloodPressure: " + highBloodPressure + "  lowBloodPressure: " +
-                                                lowBloodPressure + "  heartBeat: " + heartRate + " bloodPressureTimeString: " + timeString);
-
-                                        //数据过滤
-                                        if (highBloodPressure == 255 && lowBloodPressure == 255 && heartRate==255)
-                                        {
-                                            System.out.println("rabbitReceiver"+netMaskId+": invalid BloodPressure01 255 data...");
-                                        }else{
-//                                            equipmentData = rabbitReceiver.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-//                                            System.out.println("rabbitReceiver"+netMaskId+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-
-                                            //插入新数据到influxDB
-                                            tags.clear();
-                                            fields.clear();
-                                            tags.put("netmaskId", String.valueOf(netMaskId));
-                                            tags.put("eqpId", equipmentData.getEqpId());
-                                            tags.put("objectId",equipmentData.getObjectId());
-                                            tags.put("sendTime",timeString);
-//                                            java.lang.Object highBloodPressureObj = highBloodPressure;////
-                                            fields.put("highPressure",highBloodPressure);////
-//                                            java.lang.Object lowBloodPressureObj = lowBloodPressure;////
-                                            fields.put("lowPressure", lowBloodPressure);////
-                                            fields.put("heartRate",heartRate);
-                                            influxDBConnector.insertData("bloodPressure", tags, fields);
-
-                                            //报警短信发送
-                                            if (!equipmentData.getSpecial())//如果没设置特殊警报值
-                                            {
-                                                List<AlarmNormalValue> alarmNormalValueList = rabbitReceiver.alarmNormalValueService.queryAlarmNormalValueByEqpType(equipmentData.getEqpType());
-                                                if(highBloodPressure != 255 && highBloodPressure > alarmNormalValueList.get(0).getValue())//血压高压高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "高压"+String.valueOf(highBloodPressure)+"超出正常范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压高压");//////////
-                                                    alarmLog.setAlarmValue(highBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压高压超出最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(highBloodPressure != 0 && highBloodPressure < alarmNormalValueList.get(1).getValue())//血压高压低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "高压"+String.valueOf(highBloodPressure)+"低于正常范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压高压");//////////
-                                                    alarmLog.setAlarmValue(highBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压高压低于警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(lowBloodPressure != 255 && lowBloodPressure > alarmNormalValueList.get(2).getValue())//血压低压高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "低压"+String.valueOf(lowBloodPressure)+"高于正常范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压低压");//////////
-                                                    alarmLog.setAlarmValue(lowBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压低压超出最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(lowBloodPressure != 0 && lowBloodPressure < alarmNormalValueList.get(3).getValue())//血压低压低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "低压"+String.valueOf(lowBloodPressure)+"低于正常范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压低压");//////////
-                                                    alarmLog.setAlarmValue(lowBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压低压低于最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(heartRate != 255 && heartRate > alarmNormalValueList.get(4).getValue())//心率高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "心率"+String.valueOf(heartRate)+"高于正常范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("心率");//////////
-                                                    alarmLog.setAlarmValue(heartRate);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("心率高于最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(heartRate != 0 && heartRate < alarmNormalValueList.get(5).getValue())//心率低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "心率"+String.valueOf(heartRate)+"低于正常范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("心率");//////////
-                                                    alarmLog.setAlarmValue(heartRate);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("心率低于最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                            }else
-                                            {
-                                                //设置了特殊警报值
-                                                List<AlarmSpecialValue> alarmSpecialValueList = rabbitReceiver.alarmSpecialValueService.queryAlarmSpecialValueByEqpId(equipmentData.getEqpId());
-                                                if(highBloodPressure != 255 && highBloodPressure > alarmSpecialValueList.get(0).getValue())//血压高压高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "高压"+String.valueOf(highBloodPressure)+"超出设定范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压高压");//////////
-                                                    alarmLog.setAlarmValue(highBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压高压高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(highBloodPressure != 0 && highBloodPressure < alarmSpecialValueList.get(1).getValue())//血压高压低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "高压"+String.valueOf(highBloodPressure)+"低于设定范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压高压");//////////
-                                                    alarmLog.setAlarmValue(highBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压高压低于设定最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(lowBloodPressure != 255 && lowBloodPressure > alarmSpecialValueList.get(2).getValue())//血压低压高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "低压"+String.valueOf(lowBloodPressure)+"高于设定范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压低压");//////////
-                                                    alarmLog.setAlarmValue(lowBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压低压高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(lowBloodPressure != 0 && lowBloodPressure < alarmSpecialValueList.get(3).getValue())//血压低压低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "低压"+String.valueOf(lowBloodPressure)+"低于设定范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血压低压");//////////
-                                                    alarmLog.setAlarmValue(lowBloodPressure);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血压低压低于设定最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(heartRate != 255 && heartRate > alarmSpecialValueList.get(4).getValue())//心率高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "心率"+String.valueOf(heartRate)+"高于设定范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("心率");//////////
-                                                    alarmLog.setAlarmValue(heartRate);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("心率高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if(heartRate != 0 && heartRate < alarmSpecialValueList.get(5).getValue())//心率低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver"+netMaskId+": objectPhoneNumber: "+objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "心率"+String.valueOf(heartRate)+"低于设定范围";
-                                                    if(userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    else
-                                                    {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber,userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,equipmentData.getEqpId(),message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("心率");//////////
-                                                    alarmLog.setAlarmValue(heartRate);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("心率低于设定最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                            }
-//                                            //插入新数据到influxDB
-//                                            tags.clear();
-//                                            fields.clear();
-//                                            tags.put("netmaskId", String.valueOf(netMaskId));
-//                                            tags.put("eqpId", equipmentData.getEqpId());
-//                                            tags.put("objectId",equipmentData.getObjectId());
-//                                            tags.put("sendTime",timeString);
-////                                            java.lang.Object highBloodPressureObj = highBloodPressure;////
-//                                            fields.put("highPressure",highBloodPressure);////
-////                                            java.lang.Object lowBloodPressureObj = lowBloodPressure;////
-//                                            fields.put("lowPressure", lowBloodPressure);////
-//                                            fields.put("heartRate",heartRate);
-//                                            influxDBConnector.insertData("bloodPressure", tags, fields);
-                                        }
-                                        break;
-                                    case 1:
-                                        int bodyTemperatureInt = byteToUsignedValue(dataList.get(2)) * 256 + byteToUsignedValue(dataList.get(3));
-                                        float bodyTemperature = (float) bodyTemperatureInt / 100;
-                                        int envTemperatureInt = byteToUsignedValue(dataList.get(4)) * 256 + byteToUsignedValue(dataList.get(5));
-                                        float envTemperature = (float) envTemperatureInt / 100;
-                                        for (int i = 0; i < 7; i++) {
-                                            timeByte[i] = dataList.get(i + 6);
-                                        }
-                                        timeString = bytesToHexString(timeByte);
-                                        System.out.println("rabbitReceiver"+netMaskId+": Temperature... " + "bodyTemperature: " + bodyTemperature + "  envTemperature: " +
-                                                envTemperature + " temperatureTimeString: " + timeString);
-                                        //数据过滤
-                                        if (bodyTemperature == 0 && envTemperature == 0)
-                                        {
-                                            System.out.println("rabbitReceiver"+netMaskId+": invalid Temperature01 0 data...");
-                                        }else{
-                                            equipmentData = rabbitReceiver.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-                                            System.out.println("rabbitReceiver"+netMaskId+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-
-                                            //报警短信发送
-                                            if (!equipmentData.getSpecial())//如果没设置特殊警报值
-                                            {
-                                                List<AlarmNormalValue> alarmNormalValueList = rabbitReceiver.alarmNormalValueService.queryAlarmNormalValueByEqpType(equipmentData.getEqpType());
-                                                if (bodyTemperature < 41.6 &&bodyTemperature > alarmNormalValueList.get(0).getValue())//体温高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "体温" + String.valueOf(bodyTemperature) + "超出正常范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("体温");//////////
-                                                    alarmLog.setAlarmValue(bodyTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("心率高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if (bodyTemperature > 30.0 && bodyTemperature < alarmNormalValueList.get(1).getValue())//体温低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "体温" + String.valueOf(bodyTemperature) + "低于正常范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("体温");//////////
-                                                    alarmLog.setAlarmValue(bodyTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("体温低于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if (envTemperature < 60 && envTemperature > alarmNormalValueList.get(2).getValue())//环温高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "环温" + String.valueOf(envTemperature) + "高于正常范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("环境温度");//////////
-                                                    alarmLog.setAlarmValue(envTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("环境温度高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if (envTemperature > -50 && envTemperature < alarmNormalValueList.get(3).getValue())//环温低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "环温" + String.valueOf(envTemperature) + "低于正常范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("环境温度");//////////
-                                                    alarmLog.setAlarmValue(envTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("环境温度低于设定最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                            }else
-                                            {
-                                                //设置了特殊值
-                                                List<AlarmSpecialValue> alarmSpecialValueList = rabbitReceiver.alarmSpecialValueService.queryAlarmSpecialValueByEqpId(equipmentData.getEqpId());
-                                                if (bodyTemperature < 41.6 &&bodyTemperature > alarmSpecialValueList.get(0).getValue())//体温高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "体温" + String.valueOf(bodyTemperature) + "超出设定范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("体温");//////////
-                                                    alarmLog.setAlarmValue(bodyTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("体温高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if (bodyTemperature > 34.0 && bodyTemperature < alarmSpecialValueList.get(1).getValue())//体温低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "体温" + String.valueOf(bodyTemperature) + "低于设定范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("体温");//////////
-                                                    alarmLog.setAlarmValue(bodyTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("体温低于设定最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if (envTemperature < 60 && envTemperature > alarmSpecialValueList.get(2).getValue())//环温高于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "环温" + String.valueOf(envTemperature) + "高于设定范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("环境温度");//////////
-                                                    alarmLog.setAlarmValue(envTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("环境温度高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                                if (envTemperature > -50 && envTemperature < alarmSpecialValueList.get(3).getValue())//环温低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "环温" + String.valueOf(envTemperature) + "低于设定范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("环境温度");//////////
-                                                    alarmLog.setAlarmValue(envTemperature);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("环境温度低于设定最低警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                            }
-                                            //插入新数据到influxDB
-                                            tags.clear();
-                                            fields.clear();
-                                            tags.put("netmaskId", String.valueOf(netMaskId));
-                                            tags.put("eqpId", equipmentData.getEqpId());
-                                            tags.put("objectId",equipmentData.getObjectId());
-//                                        tags.put("eqpId", "A00030101");
-//                                        tags.put("objectId","hitwhob001");
-                                            tags.put("sendTime",timeString);
-                                            fields.put("bodyTemp",bodyTemperature);
-                                            fields.put("envTemp",envTemperature);
-                                            influxDBConnector.insertData("temperature", tags, fields);
-
-                                        }
-                                        break;
-                                    case 2:
-                                        int bloodOxygenDegree = byteToUsignedValue(dataList.get(2));
-                                        for (int i = 0; i < 7; i++) {
-                                            timeByte[i] = dataList.get(i + 3);
-                                        }
-                                        timeString = bytesToHexString(timeByte);
-                                        System.out.println("rabbitReceiver"+netMaskId+": BloodOxygen... " + "bodyOxygenDegree: " + bloodOxygenDegree + " timeString: " +
-                                                timeString);
-                                        //数据过滤
-                                        if (bloodOxygenDegree == 0)
-                                        {
-                                            System.out.println("rabbitReceiver"+netMaskId+": invalid BloodOxygen01 0 data...");
-                                        }else {
-                                            equipmentData = rabbitReceiver.equipmentService .queryEquipmentByNetSerial(netMaskId,deviceSerial);/////////added0521/////////
-                                            System.out.println("rabbitReceiver"+netMaskId+": EqpId: "+equipmentData.getEqpId());////////////////////////added0521
-                                            //插入新数据到influxDB
-                                            tags.clear();
-                                            fields.clear();
-                                            tags.put("netmaskId", String.valueOf(netMaskId));
-                                            tags.put("eqpId", equipmentData.getEqpId());
-                                            tags.put("objectId",equipmentData.getObjectId());
-//                                        tags.put("eqpId", "A00060302");
-//                                        tags.put("objectId","hitwhob001");
-                                            tags.put("sendTime",timeString);
-                                            fields.put("spo2",bloodOxygenDegree);
-                                            influxDBConnector.insertData("bloodOxygen", tags, fields);
-                                            //报警短信发送
-                                            if (!equipmentData.getSpecial())//如果没设置特殊警报值
-                                            {
-                                                List<AlarmNormalValue> alarmNormalValueList = rabbitReceiver.alarmNormalValueService.queryAlarmNormalValueByEqpType(equipmentData.getEqpType());
-                                                if (bloodOxygenDegree < alarmNormalValueList.get(0).getValue())//血氧浓度低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "血氧" + String.valueOf(bloodOxygenDegree) + "低于正常范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 =rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血氧浓度");//////////
-                                                    alarmLog.setAlarmValue(bloodOxygenDegree);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血氧浓度高于最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                            }else
-                                            {
-                                                //特殊警报值
-                                                List<AlarmSpecialValue> alarmSpecialValueList = rabbitReceiver.alarmSpecialValueService.queryAlarmSpecialValueByEqpId(equipmentData.getEqpId());
-                                                if (bloodOxygenDegree < alarmSpecialValueList.get(0).getValue())//血氧浓度低于警戒值
-                                                {
-                                                    String objectId = equipmentData.getObjectId();
-                                                    com.example.humanhealthmonitor.pojo.Object object = rabbitReceiver.objectService.queryObjectByObjectId(objectId);
-                                                    String objectPhoneNumber = object.getObjectTel();
-                                                    System.out.println("rabbitReceiver" + netMaskId + ": objectPhoneNumber: " + objectPhoneNumber);
-                                                    String userId = object.getUserId();
-                                                    String message = "血氧" + String.valueOf(bloodOxygenDegree) + "低于设定范围";
-                                                    if (userId.equals(objectId))//说明是用户自己，只需要单发短信
-                                                    {
-                                                        try {
-                                                            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加1
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+1);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    } else {
-                                                        String userPhoneNumber = rabbitReceiver.userService.queryUserByUserId(userId).getUserTel();
-                                                        String[] phoneNumbers = {objectPhoneNumber, userPhoneNumber};
-                                                        try {
-                                                            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers, equipmentData.getEqpId(), message);
-                                                        } catch (HTTPException e) {
-                                                            e.printStackTrace();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        //更新设备对应的object的msgCount数据加2
-                                                        ObjectResourceUse objectResourceUse2 = rabbitReceiver.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(equipmentData.getObjectId(),yearMonth);
-                                                        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+2);
-                                                        rabbitReceiver.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
-                                                    }
-                                                    //插入一条AlarmLog
-                                                    alarmLog.setObjectId(objectId);
-                                                    alarmLog.setEqpId(equipmentData.getEqpId());
-                                                    alarmLog.setAlarmType("血氧浓度");//////////
-                                                    alarmLog.setAlarmValue(bloodOxygenDegree);//////////
-                                                    String writeTime = dateformat.format(System.currentTimeMillis());
-                                                    alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
-                                                    alarmLog.setDetail("血氧浓度高于设定最高警戒值");/////////
-                                                    rabbitReceiver.alarmLogService.insertAlarmLog(alarmLog);
-                                                }
-                                            }
-
-                                        }
-
-                                        break;
-                                    default:
-                                        System.out.println("rabbitReceiver"+netMaskId+": Exception: unknown device type...");
-                                        break;
-                                }
-                                dataList = dataList.subList(13, dataList.size());//去掉已经处理的13个字节，进入下一个循环
-                            }
-                            //内圈while处理完之后
-                            System.out.println("RabbitReceiver: Info: data section analyze completed...");
-                            //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-                            if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续，针对的是一个数据包内多个回复帧的情况
-                            {
-                                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                            }
-                            else//如果数据分析完毕，直接跳出外圈while循环
-                            {
-                                System.out.println("RabbitReceiver: Info: package analyze completed....");
-                                break;
-                            }
-                            //校验和验证，验证成功继续，然后是判断设备类型，这里先简易地写死，00是血压，01是温度。02是血氧，
-                            //然后把数据库里面的设备号改成网关一样的，或者设备上加字段，设备号之外再加网关和网关内设备序号
-                            //取出数据后存入influxdb
-
-                        } else {//校验和错误，去掉最前面的一个字节，进入下一个循环
-                            System.out.println("RabbitReceiver: data check error...");
-                            byteArrayList.remove(0);
-                        }
-                    } else {//结尾格式不是AABB，证明数据损坏，去掉最前面的一个字节，进入下一个循环
-                        System.out.println("RabbitReceiver: package tail is broken...");
-                        byteArrayList.remove(0);
-                    }
-
-                } else {//字节总长度达不到，证明数据可能损坏，去掉最前面的一个字节，进入下一个循环
-                    System.out.println("RabbitReceiver: package length error compared to dataLength, maybe package is broken...");
-                    byteArrayList.remove(0);
-//                    break;
-                }
-//                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-//                if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续
-//                {
-//                    byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-//                }
-//                else//否则直接跳出while循环
-//                {
-//                    System.out.println("Info: package is deserted...no valuable data...");
-//                    break;
-//                }
-            } else {//如果数据头不是FEFE，去掉前面的一个字节，进入下一个循环
-                byteArrayList.remove(0);
+            if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
+                break;
             }
-            //外圈while循环每圈一定会执行的位置
+            if (byteArrayList.size() != responseLength + 5) {
+                break;
+            }
+            if (byteArrayList.get(byteArrayList.size() - 2) != (byte) 0xAA || byteArrayList.get(byteArrayList.size() - 1) != (byte) 0xBB) {
+                break;
+            }
+
+            // 修改通信协议protocolState
+            // TODO
+
+
+
+
+            // 检查校验和
+            int check = 0;
+            for (byte b : responseContent) {
+                check = check + b;
+                if(check > 256) {
+                    check = check % 256;
+                }
+            }
+            if (check != checkSum) {
+                break;
+            }
+
+            // 将回复信息放到responseContent
+            for (int i = 0; i < responseLength - 1;++i) {
+                responseContent[i] = byteArrayList.get(i + 3);
+            }
+
+            if (orderType == 1) {
+                handleOrder1Response(responseContent);  // responseContent包括1位通信类型和n位网关号
+            }
+            else if (orderType == 2) {
+                handleOrder2Response(responseContent);  // responseContent包括5位设备ID和1位成功失败标识
+            }
+            else if (orderType == 3) {
+                handleOrder3and4Response(responseContent);
+            }
+            else if (orderType == 4) {
+                handleOrder3and4Response(responseContent);
+            }
+            else if (orderType == 5) {
+                handleOrder5Response(responseContent);
+            }
+            else if (orderType == 6) {
+                handleOrder6Response(responseContent);
+            }
+            else if (orderType == 7) {
+                handleOrder7Response(responseContent);
+            }
+
+        }
+    }
+
+
+    public int byteArrayToInt (byte[] byteArray, int start, int end) {
+        if(byteArray == null || byteArray.length == 0 || start > end || start < 0 || end >= byteArray.length) return -1;
+        int res = 0;
+        byte[] a = new byte[4];
+        int i = a.length - 1, j = byteArray.length - 1;
+        for (; i >= 0; --i, --j) {
+            if(j >= 0)
+                a[i] = byteArray[j];
+            else
+                a[i] = 0;
+        }
+        int v0 = (a[0] & 0xff) << 24;
+        int v1 = (a[1] & 0xff) << 16;
+        int v2 = (a[2] & 0xff) << 8;
+        int v3 = (a[3] & 0xff) << 0;
+
+        return v0 + v1 + v2 + v3;
+    }
+
+    /**
+     * 将byte[]转为各种进制的字符串
+     * @param radix 基数可以转换进制的范围(2-36)，从Character.MIN_RADIX到Character.MAX_RADIX，超出范围后变为10进制
+     * @return 转换后的字符串
+     */
+    public String byteArrayToString (byte[] byteArray, int radix) {
+        return new BigInteger(1, byteArray).toString(radix);
+    }
+    // 人体红外线传感器： 2字节环境温度 + 2字节体温
+    public void processDataType1(byte[] byteArrayData) {
+        double ambientTemp ,bodyTemp;
+
+    }
+    // 血压设备： 1字节心率 + 1字节收缩压(systolic pressure) + 1字节舒张压(diastolic pressure)
+    public void processDataType2(byte[] byteArrayData) {
+        int heartRate = byteToUnsignedValue(byteArrayData[0]);
+        int systolicPressure = byteToUnsignedValue(byteArrayData[1]);
+        int diastolicPressure = byteToUnsignedValue(byteArrayData[2]);
+
+    }
+    // 血氧设备： 血氧饱和度(简写SpO2)
+    public void processDataType3(byte[] byteArrayData) {
+        double SpO2;
+
+    }
+    // 床垫： 2字节心跳 + 2字节呼吸 + 2字节温度 + 1字节动作
+    public void processDataType4(byte[] byteArrayData){
+        int heartRate, breathFrequency, temp, action;
+
+    }
+
+    // 1位通信类型 + n位网关号
+    public void handleOrder1Response(byte[] responseContent) {
+        if(responseContent.length == 0) return;
+        int communicationMethod = responseContent[0];  // 通信类型
+        //int netMaskID = byteArrayToInt(responseContent, 1, responseContent.length - 1);  // 网关ID
+
+        // 将网关号所在的字节拷贝到字节数组charArrayNetmaskID上
+        byte[] charArrayNetmaskID = new byte[responseContent.length - 1];
+        System.arraycopy(responseContent, 1, charArrayNetmaskID, 0, charArrayNetmaskID.length);
+        String netMaskID = byteArrayToString(charArrayNetmaskID,10);
+
+    }
+    // n位设备ID + 1位标识
+    public void handleOrder2Response(byte[] responseContent) {
+        if(responseContent.length == 0) return;
+        int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
+        byte[] charArrayDeviceID = new byte[responseContent.length - 1];
+        System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
+        String deviceID = byteArrayToString(charArrayDeviceID, 16);
+
+    }
+    // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据
+    public void handleOrder3and4Response(byte[] responseContent) {
+        if(responseContent.length == 0) return;
+
+        int deviceIDLength = byteToUnsignedValue(responseContent[0]);
+        int timestampLength = 4;
+        int sensorDataLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 + timestampLength + 1 - 1]);
+
+        byte[] byteArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+
+        byte[] byteArrayTimestamp = new byte[timestampLength];
+        System.arraycopy(responseContent, deviceIDLength + 2, byteArrayTimestamp, 0, byteArrayTimestamp.length);
+        String timestamp = byteArrayToString(byteArrayTimestamp, 10);
+
+        byte[] byteArraySensorData = new byte[sensorDataLength];
+        System.arraycopy(responseContent, deviceIDLength + timestampLength + 3 , byteArraySensorData, 0, byteArraySensorData.length);
+
+        String sensortype = deviceID.substring(5,7);
+
+        if (sensortype == "01") {
+            processDataType1(byteArraySensorData);
+        }
+        if (sensortype == "02") {
+            processDataType2(byteArraySensorData);
+        }
+        if (sensortype == "03") {
+            processDataType3(byteArraySensorData);
+        }
+        if (sensortype == "04") {
+            processDataType4(byteArraySensorData);
+        }
+
+    }
+    public void handleOrder5Response(byte[] responseContent) {
+        if(responseContent.length == 0) return;
+        int flag = byteToUnsignedValue(responseContent[0]);
+
+    }
+    public void handleOrder6Response(byte[] responseContent) {
+        if(responseContent.length == 0) return;
+        int netMaskIDLength = byteToUnsignedValue(responseContent[0]);
+        int deviceIDLength = byteToUnsignedValue(responseContent[1 + netMaskIDLength + 1 - 1]);
+
+        byte[] byteArrayNetMaskID = new byte[netMaskIDLength];
+        System.arraycopy(responseContent, 1, byteArrayNetMaskID, 0, byteArrayNetMaskID.length);
+        String netmaskID = byteArrayToString(byteArrayNetMaskID, 10);
+        byte[] byteArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, netMaskIDLength + 2, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+        byte[] byteArrayTimestamp = new byte[4];
+        System.arraycopy(responseContent, netMaskIDLength + deviceIDLength + 2, byteArrayNetMaskID, 0, 4);
+        int timestamp = byteArrayToInt(byteArrayTimestamp, 0, byteArrayTimestamp.length - 1);
+
+    }
+    public void handleOrder7Response(byte[] responseContent) {
+        if(responseContent.length == 0) return;
+        int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
+        byte[] byteArrayDeviceID = new byte[responseContent.length - 1];
+        System.arraycopy(responseContent, 0, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+
+    }
+    //将1个字节的8个位解析成无符号0-255的值
+    public int byteToUnsignedValue(Byte b) {
+        int bInt = (int) b;
+        if (bInt >= 0) {
+            return bInt;
+        } else {
+            return (bInt + 256);
         }
     }
 
