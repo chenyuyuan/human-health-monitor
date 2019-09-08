@@ -95,7 +95,7 @@ public class ObjInfoHallController {
                     temperature01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03"
                             +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
                     netMaskIdTemperature01 = netMaskIdTemp;
-                    System.out.println("ObjInfoHallController: temperature01Order: "+temperature01Order);////
+                    System.out.println("ObjInfoHallController: temperature01Order: "+temperature01Order);
                 }
                 else if(objEquipmentList.get(i).getEqpType().equals("BloodOxygen01")) {
                     flagBloodOxygen01 = 1;
@@ -162,7 +162,7 @@ public class ObjInfoHallController {
             }
 
             if (flagBloodPressure01 == 1) {
-//                sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
+                //                sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
                 sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
                 for (int i = 0;i < 10;i++) {
                     highPressureList.add(0.0);
@@ -617,7 +617,7 @@ public class ObjInfoHallController {
             sendMsgQueue.get(netMaskId-1).offer(order);////added0524
         }
         else if(protocolState[netMaskId-1] == 2) {
-            sendAMQPQueue.offer(order);
+            sendAMQPQueue.offer(netMaskId + order);
         }
         else {
             System.out.println("ObjInfoHallController: Cannot get info, the netMask owing the equipment is offline...");

@@ -42,12 +42,13 @@ public class RabbitSender implements Runnable{
                 }
                 String orderString = sendAMQPQueue.poll();//队列中有消息就取出一条命令
                 if (orderString != null && orderString.length() > 8) {
-                    QUEUE_NAME = orderString.substring(6,8);
+                    int index = orderString.indexOf("FEFE");
+                    QUEUE_NAME = orderString.substring(0, index);
                     System.out.println("RabbitSender: QUEUE_NAME: "+QUEUE_NAME);
                 }
                 channel.queueDeclare(QUEUE_NAME, false, false, false, null);
                 // String message = "FEFE0401040005AABB";//04报文长度，01网关地址，04指令码查询所有设备，00填补（如果指令码03则这里是设备序号），05校验和
-                byte[] orderByte = toByteArray(orderString);
+                byte[] orderByte = toByteArray(orderString.substring(2));
                 // channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
                 channel.basicPublish("", QUEUE_NAME, null, orderByte);
                 System.out.println("RabbitSender: orderString: "+orderString);

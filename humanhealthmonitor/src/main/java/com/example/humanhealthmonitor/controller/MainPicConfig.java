@@ -10,7 +10,7 @@ public class MainPicConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //windows下图片映射
-//          registry.addResourceHandler("/images/**").addResourceLocations("file:H:/Java/IntellijProject2019/humanhealthmonitor/src/main/resources/static/images/");
+        //registry.addResourceHandler("/images/**").addResourceLocations("file:H:/Java/IntellijProject2019/humanhealthmonitor/src/main/resources/static/images/");
         //linux下图片映射
         registry.addResourceHandler("/images/**").addResourceLocations("file:/root/SpringRun/images/");
     }

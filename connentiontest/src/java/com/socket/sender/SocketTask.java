@@ -1,124 +1,159 @@
-package com.example.humanhealthmonitor;
+package com.socket.sender;
 
-import com.example.humanhealthmonitor.pojo.*;
-import com.example.humanhealthmonitor.service.*;
-import com.github.qcloudsms.httpclient.HTTPException;
-import com.rabbitmq.client.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
-import static com.example.humanhealthmonitor.MsgQueue.protocolState;
+import static com.socket.sender.MsgQueue.*;
 
-@Component
-public class RabbitReceiver implements Runnable{
 
-    @Autowired
-    private EquipmentService equipmentService; // added0521
-    @Autowired
-    private AlarmNormalValueService alarmNormalValueService;
-    @Autowired
-    private AlarmSpecialValueService alarmSpecialValueService;
-    @Autowired
-    private ObjectService objectService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ObjectResouceUseService objectResouceUseService;
-    @Autowired
-    private AlarmLogService alarmLogService;
+public class SocketTask implements Runnable {
 
-    private static RabbitReceiver rabbitReceiver; // added0521
 
-    private final static String EXCHANGE_NAME = "amq.direct";
-    private final static String QUEUE_NAME = "health_queue";
-    private InfluxDBConnector influxDBConnector; // 创建influxDB连接实例
-    private CloudMsgUtil cloudMsgUtil = new CloudMsgUtil(); // 云短信工具
+    private static SocketTask socketTask;////////added0521//静态私有化变量，所有类共享一份
+    private int taskNum = 0;//任务号初始化为0//added0523
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    @PostConstruct
-    public void init() { // added0521
-        rabbitReceiver= this;
-        rabbitReceiver.equipmentService= this.equipmentService;
-
-        rabbitReceiver.alarmNormalValueService=this.alarmNormalValueService;
-        rabbitReceiver.alarmSpecialValueService=this.alarmSpecialValueService;
-        rabbitReceiver.objectService=this.objectService;
-        rabbitReceiver.userService=this.userService;
-        rabbitReceiver.objectResouceUseService = this.objectResouceUseService;
-        rabbitReceiver.alarmLogService=this.alarmLogService;
+    private Socket socket;
+    public int getTaskNum()
+    {
+        return this.taskNum;
+    }
+    public void setTaskNum(int taskNum)
+    {
+        this.taskNum = taskNum;
     }
 
+    public void setSocket(Socket socket){//added0521
+        this.socket = socket;
+    }
     public void run() {
         try {
-            // System.out.println("RabbitReceiver: rabbit receiver start...");
-            handleRabbitReceived();
+            //socket = HumanhealthmonitorApplication.serverSocket.accept();////////////////
+            handleSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void handleRabbitReceived() throws IOException,TimeoutException {
+    // 与客户端Socket进行通信
+    private void handleSocket() throws Exception {
+        //HealthDataProcessor healthDataProcessor = new HealthDataProcessor();//实例化信息处理类
+        //如果收到了信息就把信息打印出来
+        System.out.println("SocketTask: taskNum: "+this.getTaskNum());
 
-        // System.out.println("create ConnectionFactory...");
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("140.143.232.52");
-        factory.setUsername("Andy");
-        factory.setPassword("123456");
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        protocolState[taskNum-1] = 1;//修改协议状态为MODBUS，表明网关已经连接且使用MODBUS//added0526
+        System.out.println("SocketTask: change protocolState of netMask"+taskNum + " to 1(MODBUS)...");
 
-        // 消费者指定要订阅的队列
-        // 第一个参数表示队列名称、第二个参数为是否持久化（true表示是，队列将在服务器重启时生存）、
-        // 第三个参数为是否是独占队列（创建者可以使用的私有队列，断开后自动删除）、第四个参数为当所有消费者客户端连接断开时是否自动删除队列、
-        // 第五个参数为队列的其他参数
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        PrintWriter pw = null;
+        System.out.println("SocketTask: "+socket.getInetAddress() + " transferred to socketTask...");
+        pw = new PrintWriter(socket.getOutputStream());
+        //pw.println("FEFE0401040005AABB");
+        //pw.flush();
+        //String orderString = "FEFE0401040005AABB";
+        //询问网关上设备号和采集数组下标对应关系
+        //组装查询命令
+        String startStr = "FEFE04";
+        String netMaskIdStr = String.valueOf(taskNum);
+        if (netMaskIdStr.length()==1) {
+            netMaskIdStr = "0"+netMaskIdStr;
+        }
+        String orderType = "06";
+        int checkCal = 5 + taskNum;
+        checkCal = Math.abs(checkCal)%64;//计算校验和
+        String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
+        if(checkCalStr.length()==1) {
+            checkCalStr = "0"+checkCalStr;
+        }
+        String findSerialOrder = startStr + netMaskIdStr + orderType + "00" + checkCalStr + "AABB";
+        System.out.println("SocketTask"+taskNum+": send findSerialOrder: "+findSerialOrder);
+        sendMsgQueue.get(taskNum-1).offer(findSerialOrder);
 
-        String routingKey = "health";
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, routingKey);
-        System.out.println("RabbitReceiver: Waiting for messages...");
-        // channel.basicQos(1);//告诉消费一次只获取一条消息，处理完再获取下一条
-        Consumer consumer = new DefaultConsumer(channel) {
-            @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)//body是字节数组类型
-                    throws IOException {
-                List<Byte> byteArrayList = new ArrayList<>();//字节列表
+        while (sendMsgQueue.get(taskNum-1).size()==0) {//为空则线程休眠//modified0524
+            Thread.sleep(1000);//1秒
+        }
+        //String orderString = sendMsgQueue[taskNum-1].poll();//取出一条命令//modified0524
+        String orderString = sendMsgQueue.get(taskNum-1).poll();//modified0524
 
+        byte[] orderByte = toByteArray(orderString);
 
+        //byte[] orderByte = orderString.getBytes();
+        OutputStream os = socket.getOutputStream();
+        os.write(orderByte);
+        os.flush(); // ***********
+        System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
+        //字节读取
+        //装饰流BufferedReader封装输入流（接收客户端的流）
+        BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+        DataInputStream dis = new DataInputStream(bis);
+        byte[] bytes = new byte[1]; // 一次读取一个byte
+        String info = "";
+        List<Byte> byteArrayList = new ArrayList<>();//字节列表
 
-                // TODO : 直接传byte类型的body给socketInfoProcess
-
-
-
-                for(int i = 0;i < body.length;i++)
-                {
-                    byteArrayList.add(body[i]);
-                }
-                System.out.println("RabbitReceiver: byteArrayList: "+byteArrayList);
+        while (dis.read(bytes) != -1) {//如何实现循环接收的呢？忘了。。
+            info += bytesToHexString(bytes) + " ";//转为16进制字符串
+            byteArrayList.add(bytes[0]);//字节列表
+            if (dis.available() == 0) { //客户端一条信息结束
+                System.out.println("SocketTask"+taskNum+": received: " + info);
+                System.out.println("SocketTask"+taskNum+": byteArrayList: " + byteArrayList);
                 socketInfoProcess(byteArrayList);
-            }
-        };
 
-        /**订阅消息
-         * autoAck: 应答模式，true:自动应答，即消费者获取到消息，该消息就会从队列中删除掉，
-         * false:手动应答，当从队列中取出消息后，需要程序员手动调用方法应答，
-         * 如果没有应答，该消息还会再放进队列中，就会出现该消息一直没有被消费掉的现象
-         */
-        channel.basicConsume(QUEUE_NAME, true, consumer);//basicConsume订阅模式可以从队列中一直持续的自动的接收消息,basicGet一次只能获取一条消息，如果还想再获取下一条还要再次调用
+                //线程休眠
+                //Thread thread = new Thread(this);
+                //Thread.sleep(10000);
+
+                info = "";//将info清空
+                byteArrayList.clear();//字节列表清空
+                //orderString = "FEFE0401040005AABB";
+                while (sendMsgQueue.get(taskNum-1).isEmpty()) {//modified0524
+                    Thread.sleep(1000);
+                }
+                orderString = sendMsgQueue.get(taskNum-1).poll();//modified0524
+                orderByte = toByteArray(orderString);
+                //pw.println(orderString);
+                //pw.write(orderByte);
+                //pw.println(orderByte);
+                //w.flush();
+                os.write(orderByte);
+                os.flush();
+                System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
+            }
+        }
+
+        //added0525
+        String inetAddressStr = socket.getInetAddress().toString();
+        Iterator iterator = inetAddressArray.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals(inetAddressStr)) {
+                iterator.remove();
+                break;
+            }
+        }
+
+
+        socket.shutdownInput();//added 2019/04/08关闭输入流
+        socket.shutdownOutput();//added 2019/04/10关闭输出流
+
+        //关闭相对应的资源
+        pw.close();
+        bis.close();
+        dis.close();
+        socket.close();
     }
+
 
     //处理Socket收到的信息
     public void socketInfoProcess(List<Byte> byteArrayList) {
         String date = dateformat.format(System.currentTimeMillis());
         String yearMonth = date.substring(0,7);//如2019-03
-        Equipment equipmentData;//added0521
+
+        // 从网关发来的只带一个字节有效数据的帧长度就是8，比这个小的就是坏掉的或无关的
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
@@ -135,10 +170,6 @@ public class RabbitReceiver implements Runnable{
                 break;
             }
 
-            // 修改通信协议protocolState
-            // TODO
-
-
 
             // 检查校验和
             int check = 0;
@@ -151,6 +182,7 @@ public class RabbitReceiver implements Runnable{
             if (check != checkSum) {
                 break;
             }
+
 
             // 将回复信息放到responseContent
             for (int i = 0; i < responseLength - 1;++i) {
@@ -182,37 +214,10 @@ public class RabbitReceiver implements Runnable{
         }
     }
 
-
-    public int byteArrayToInt (byte[] byteArray, int start, int end) {
-        if(byteArray == null || byteArray.length == 0 || start > end || start < 0 || end >= byteArray.length) return -1;
-        int res = 0;
-        byte[] a = new byte[4];
-        int i = a.length - 1, j = byteArray.length - 1;
-        for (; i >= 0; --i, --j) {
-            if(j >= 0)
-                a[i] = byteArray[j];
-            else
-                a[i] = 0;
-        }
-        int v0 = (a[0] & 0xff) << 24;
-        int v1 = (a[1] & 0xff) << 16;
-        int v2 = (a[2] & 0xff) << 8;
-        int v3 = (a[3] & 0xff) << 0;
-
-        return v0 + v1 + v2 + v3;
-    }
-
-    /**
-     * 将byte[]转为各种进制的字符串
-     * @param radix 基数可以转换进制的范围(2-36)，从Character.MIN_RADIX到Character.MAX_RADIX，超出范围后变为10进制
-     * @return 转换后的字符串
-     */
-    public String byteArrayToString (byte[] byteArray, int radix) {
-        return new BigInteger(1, byteArray).toString(radix);
-    }
     // 人体红外线传感器： 2字节环境温度 + 2字节体温
     public void processDataType1(byte[] byteArrayData) {
         double ambientTemp ,bodyTemp;
+
 
     }
     // 血压设备： 1字节心率 + 1字节收缩压(systolic pressure) + 1字节舒张压(diastolic pressure)
@@ -252,7 +257,6 @@ public class RabbitReceiver implements Runnable{
         byte[] charArrayDeviceID = new byte[responseContent.length - 1];
         System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
         String deviceID = byteArrayToString(charArrayDeviceID, 16);
-
 
     }
     // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据
@@ -319,15 +323,6 @@ public class RabbitReceiver implements Runnable{
         String deviceID = byteArrayToString(byteArrayDeviceID, 16);
 
     }
-    //将1个字节的8个位解析成无符号0-255的值
-    public int byteToUnsignedValue(Byte b) {
-        int bInt = (int) b;
-        if (bInt >= 0) {
-            return bInt;
-        } else {
-            return (bInt + 256);
-        }
-    }
     //字节转为16进制字符串，如“FE”
     public String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("");
@@ -344,10 +339,9 @@ public class RabbitReceiver implements Runnable{
         }
         return stringBuilder.toString();
     }
-
     public byte[] toByteArray(String hexString) {
         if (hexString.equals("")) {
-            System.out.println("RabbitReceiver: toByteArray(): this hexString is empty");
+            System.out.println("SocketTask"+taskNum+": toByteArray(): this hexString is empty");
             throw new IllegalArgumentException("this hexString must not be empty");
         }
         hexString = hexString.toLowerCase();
@@ -361,9 +355,8 @@ public class RabbitReceiver implements Runnable{
         }
         return byteArray;
     }
-
     //将1个字节的8个位解析成无符号0-255的值
-    public int byteToUsignedValue(Byte b) {
+    public int byteToUnsignedValue(Byte b) {
         int bInt = (int) b;
         if (bInt >= 0) {
             return bInt;
@@ -371,17 +364,39 @@ public class RabbitReceiver implements Runnable{
             return (bInt + 256);
         }
     }
-
     //int转为两位16进制字符串
-    public String byteToHexStringSocketTask(Byte b)
-    {
-        int bInt = byteToUsignedValue(b);
+    public String byteToHexStringSocketTask(Byte b) {
+        int bInt = byteToUnsignedValue(b);
         String str = Integer.toHexString(bInt);
-        if(str.length()==1)
-        {
+        if(str.length()==1) {
             str = "0" + str;
         }
         return str;
     }
+    public int byteArrayToInt (byte[] byteArray, int start, int end) {
+        if(byteArray == null || byteArray.length == 0 || start > end || start < 0 || end >= byteArray.length) return -1;
+        int res = 0;
+        byte[] a = new byte[4];
+        int i = a.length - 1, j = byteArray.length - 1;
+        for (; i >= 0; --i, --j) {
+            if(j >= 0)
+                a[i] = byteArray[j];
+            else
+                a[i] = 0;
+        }
+        int v0 = (a[0] & 0xff) << 24;
+        int v1 = (a[1] & 0xff) << 16;
+        int v2 = (a[2] & 0xff) << 8;
+        int v3 = (a[3] & 0xff) << 0;
 
+        return v0 + v1 + v2 + v3;
+    }
+    /**
+     * 将byte[]转为各种进制的字符串
+     * @param radix 基数可以转换进制的范围(2-36)，从Character.MIN_RADIX到Character.MAX_RADIX，超出范围后变为10进制
+     * @return 转换后的字符串
+     */
+    public String byteArrayToString (byte[] byteArray, int radix) {
+        return new BigInteger(1, byteArray).toString(radix);
+    }
 }

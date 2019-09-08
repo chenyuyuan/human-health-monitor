@@ -51,17 +51,17 @@ public class LoginController {
     private MainPicService mainPicService;
     @Autowired
     private NewsService newsService;
-//    @Autowired
-//    private EquipmentService equipmentService;
+    //    @Autowired
+    //    private EquipmentService equipmentService;
     @Autowired
     private AlarmLogService alarmLogService;
     @Autowired
     private ObjectResouceUseService objectResouceUseService;
 
-//    CloudMsgUtil cloudMsgUtil;
-//    CloudMsgUtil cloudMsgUtil = new CloudMsgUtil();
+    //    CloudMsgUtil cloudMsgUtil;
+    //    CloudMsgUtil cloudMsgUtil = new CloudMsgUtil();
     //    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//            TimeZone.getTimeZone("GMT+08:00")
+    //            TimeZone.getTimeZone("GMT+08:00")
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     //    format.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
@@ -69,91 +69,91 @@ public class LoginController {
     public String login(HttpServletRequest request) throws InterruptedException {
         //先清除原来的session
         HttpSession session = request.getSession();
-//        session.removeAttribute("user");
-//        session.removeAttribute("object");
-//        session.removeAttribute("admin");
+        //        session.removeAttribute("user");
+        //        session.removeAttribute("object");
+        //        session.removeAttribute("admin");
 
-//        sendAMQPQueue.offer("FEFE0401040005AABB");///////////////////测试0524
+        //        sendAMQPQueue.offer("FEFE0401040005AABB");///////////////////测试0524
 
-//        //测试5-sendMsgQueue
-//        sendMsgQueue.offer("FEFE0401040005AABB");
+        //        //测试5-sendMsgQueue
+        //        sendMsgQueue.offer("FEFE0401040005AABB");
 
-//        //测试1，根据网关id和网关内部顺序号查询设备信息
-//        Equipment equipmentData = equipmentService .queryEquipmentByNetSerial(1,0);//////////////////////
-//        System.out.println("EqpId: "+equipmentData.getEqpId());////////////////////////
-//        Testttt();
+        //        //测试1，根据网关id和网关内部顺序号查询设备信息
+        //        Equipment equipmentData = equipmentService .queryEquipmentByNetSerial(1,0);//////////////////////
+        //        System.out.println("EqpId: "+equipmentData.getEqpId());////////////////////////
+        //        Testttt();
 
-//        //测试2，/manageCenter/userInfoHallGroupData数据展示
-//        Timestamp beginTime = java.sql.Timestamp.valueOf(dateformat.format((System.currentTimeMillis()-7200000)));//一小时前
-//        Timestamp endTime = java.sql.Timestamp.valueOf(dateformat.format((System.currentTimeMillis()-3600000)));//现在
-//        int count = alarmLogService.queryAlarmLogCountDuringCertainTime(beginTime,endTime);
-//        System.out.println("count: "+ count);
+        //        //测试2，/manageCenter/userInfoHallGroupData数据展示
+        //        Timestamp beginTime = java.sql.Timestamp.valueOf(dateformat.format((System.currentTimeMillis()-7200000)));//一小时前
+        //        Timestamp endTime = java.sql.Timestamp.valueOf(dateformat.format((System.currentTimeMillis()-3600000)));//现在
+        //        int count = alarmLogService.queryAlarmLogCountDuringCertainTime(beginTime,endTime);
+        //        System.out.println("count: "+ count);
 
-//        //测试3，为了方便展示，每次运行时更改数据库中的alarmLog所有记录的时间
-//        alarmLogService.updateAllAlarmLogWriteTime();
+        //        //测试3，为了方便展示，每次运行时更改数据库中的alarmLog所有记录的时间
+        //        alarmLogService.updateAllAlarmLogWriteTime();
 
-//        //测试4，腾讯云短信发送测试
-//        //准备必要的参数
-//        int appid = 1400176937; // 1400开头// 短信应用SDK AppID
-//        String appkey = "9b9899ca5e4510220410d6298df2f3cc";// 短信应用SDK AppKey
-//        String[] phoneNumbers = {"18463100658", "13371184957"};// 需要发送短信的手机号码
-//        int templateId = 259905; // 短信模板ID，真实的模板ID需要在短信控制台中申请,如："您的验证码是: {1}"
-//        String smsSign = "威小工健康";// 签名// NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`
-////        try {
-////            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,"A00060302","高压168超出正常范围");
-////        } catch (HTTPException e) {
-////            e.printStackTrace();
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//        //短信单发/群发
-//        try {
-//            String[] params = {"A00020201","高压168超出正常范围"};//数组具体的元素个数和模板中变量个数必须一致
-//            //单发
-////            SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
-////            SmsSingleSenderResult result = ssender.sendWithParam("86", phoneNumbers[0],
-////                    templateId, params, smsSign, "", "");//单发// 签名参数未提供或者为空时，会使用默认签名发送短信
-//            //群发
-//            SmsMultiSender msender = new SmsMultiSender(appid, appkey);
-//            SmsMultiSenderResult result =  msender.sendWithParam("86", phoneNumbers,
-//                    templateId, params, smsSign, "", "");//群发// 签名参数未提供或者为空时，会使用默认签名发送短信
-//            System.out.println(result.toString());
-//            String reStr;//结果字符串
-//            if(result.result == 0)
-//            {
-//                reStr = "send message successfully";
-//            }
-//            else
-//            {
-//                reStr = "!send error";
-//            }
-//            System.out.println(reStr);
-//        } catch (HTTPException e) {
-//            // HTTP响应码错误
-//            e.printStackTrace();
-//        } catch (JSONException e) {
-//            // json解析错误
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            // 网络IO错误
-//            e.printStackTrace();
-//        }
+        //        //测试4，腾讯云短信发送测试
+        //        //准备必要的参数
+        //        int appid = 1400176937; // 1400开头// 短信应用SDK AppID
+        //        String appkey = "9b9899ca5e4510220410d6298df2f3cc";// 短信应用SDK AppKey
+        //        String[] phoneNumbers = {"18463100658", "13371184957"};// 需要发送短信的手机号码
+        //        int templateId = 259905; // 短信模板ID，真实的模板ID需要在短信控制台中申请,如："您的验证码是: {1}"
+        //        String smsSign = "威小工健康";// 签名// NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`
+        ////        try {
+        ////            cloudMsgUtil.sendMultiCloudMsg(phoneNumbers,"A00060302","高压168超出正常范围");
+        ////        } catch (HTTPException e) {
+        ////            e.printStackTrace();
+        ////        } catch (IOException e) {
+        ////            e.printStackTrace();
+        ////        }
+        //        //短信单发/群发
+        //        try {
+        //            String[] params = {"A00020201","高压168超出正常范围"};//数组具体的元素个数和模板中变量个数必须一致
+        //            //单发
+        ////            SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
+        ////            SmsSingleSenderResult result = ssender.sendWithParam("86", phoneNumbers[0],
+        ////                    templateId, params, smsSign, "", "");//单发// 签名参数未提供或者为空时，会使用默认签名发送短信
+        //            //群发
+        //            SmsMultiSender msender = new SmsMultiSender(appid, appkey);
+        //            SmsMultiSenderResult result =  msender.sendWithParam("86", phoneNumbers,
+        //                    templateId, params, smsSign, "", "");//群发// 签名参数未提供或者为空时，会使用默认签名发送短信
+        //            System.out.println(result.toString());
+        //            String reStr;//结果字符串
+        //            if(result.result == 0)
+        //            {
+        //                reStr = "send message successfully";
+        //            }
+        //            else
+        //            {
+        //                reStr = "!send error";
+        //            }
+        //            System.out.println(reStr);
+        //        } catch (HTTPException e) {
+        //            // HTTP响应码错误
+        //            e.printStackTrace();
+        //        } catch (JSONException e) {
+        //            // json解析错误
+        //            e.printStackTrace();
+        //        } catch (IOException e) {
+        //            // 网络IO错误
+        //            e.printStackTrace();
+        //        }
 
         return "login";
     }
-//    public void Testttt()
-//    {
-//        Equipment equipmentData = equipmentService.queryEquipmentByNetSerial(1,0);//////////////////////
-//        System.out.println("EqpId: "+equipmentData.getEqpId());
-//    }
+    //    public void Testttt()
+    //    {
+    //        Equipment equipmentData = equipmentService.queryEquipmentByNetSerial(1,0);//////////////////////
+    //        System.out.println("EqpId: "+equipmentData.getEqpId());
+    //    }
 
     @RequestMapping("/loginSubmit")
     public String loginSubmit(HttpServletRequest request, HttpServletResponse response) throws IOException, InterruptedException, ParseException {
         //从页面取信息
         String userId = request.getParameter("userId");
-//        System.out.println(userId);
+        //        System.out.println(userId);
         String password = request.getParameter("password");
-//        System.out.println(password);
+        //        System.out.println(password);
         //角色判断与登录，按照管理员、用户、监测对象的顺序逐个判断
         Admin admin = adminService.adminLogin(userId, password);
 

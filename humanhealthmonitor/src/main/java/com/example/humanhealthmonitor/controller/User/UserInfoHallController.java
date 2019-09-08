@@ -371,8 +371,8 @@ public class UserInfoHallController {
             System.out.println("UserInfoHallController: envTempList"+envTempList);
         }
         if (flagBloodPressure01 == 1) {
-//            sendMsgQueue.offer("FEFE0401030004AABB");//xueya/////////////////////
-//            sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
+            //            sendMsgQueue.offer("FEFE0401030004AABB");//xueya/////////////////////
+            //            sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
             sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
 
             highPressureList.remove(0);
@@ -382,9 +382,9 @@ public class UserInfoHallController {
             long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
             QueryResult bloodPressureResults =  influxDBConnector.queryData("select last(highPressure),(lowPressure),(heartRate) from bloodPressure where objectId = "+"'"
                     +objectSelectedIdS+"'"+" and time > "+timestamp10);
-//            System.out.println("UserInfoHallController: bloodPressureResults: "+bloodPressureResults);
+            //            System.out.println("UserInfoHallController: bloodPressureResults: "+bloodPressureResults);
             if(bloodPressureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                System.out.println("UserInfoHallController: bloodPressureResults null 277");
+                //                System.out.println("UserInfoHallController: bloodPressureResults null 277");
                 highPressureList.add(0.0);
                 lowPressureList.add(0.0);
                 heartRateList.add(0.0);
@@ -662,8 +662,8 @@ public class UserInfoHallController {
         //从数据库中获取所有该用户关联的监测对象并传到前台
         List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
         request.setAttribute("objectList", objectList);
-//        System.out.println(objectList.get(0).getObjectId());
-//        System.out.println(objectList.get(0).getObjectName());
+        //        System.out.println(objectList.get(0).getObjectId());
+        //        System.out.println(objectList.get(0).getObjectName());
 
         String startTime = dateformat.format(System.currentTimeMillis()).substring(0,16);
         startTime = startTime.replace(" ","T");
@@ -873,7 +873,7 @@ public class UserInfoHallController {
             sendMsgQueue.get(netMaskId-1).offer(order);////added0524
         }
         else if(protocolState[netMaskId-1] == 2) {
-            sendAMQPQueue.offer(order);
+            sendAMQPQueue.offer(netMaskId + order);
         }
         else {
             System.out.println("ObjInfoHallController: Cannot get info, the netMask owing the equipment is offline...");

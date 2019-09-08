@@ -51,8 +51,6 @@ public class UserEquipmentController {
             request.setAttribute("eqpTypeList", eqpTypeList);
             return "monitorCenter/equipmentAdd";
         }
-
-
     }
 
     //监测中心-添加设备结果
@@ -80,7 +78,7 @@ public class UserEquipmentController {
                 //验证通过，开始向网关发送命令查询设备
                 //组装查询命令
                 String startStr = "FEFE";
-                String dataLengthStr = "08";//有效数据字节数
+                String dataLengthStr = "07";//有效数据字节数
                 // String repairString = "0";//补齐字节
                 String orderTypeStr = "02";
                 String endStr = "AABB";
@@ -96,9 +94,8 @@ public class UserEquipmentController {
                         checkCal = Math.abs(checkCal)%64;//计算校验和
                         String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                         if(checkCalStr.length()==1) {
-                            checkCalStr = "0"+checkCalStr;
+                            checkCalStr = "0" + checkCalStr;
                         }
-
                         String deviceRegisterOrder = startStr + dataLengthStr + netMaskIdStr + orderTypeStr +
                                 eqpId + checkCalStr + endStr;
                         //根据该网关使用的协议发送查询命令
@@ -181,11 +178,6 @@ public class UserEquipmentController {
         return "monitorCenter/equipmentAdd";
     }
 
-
-
-
-
-
     //监测中心-设备信息管理
     @RequestMapping("/monitorCenter/equipmentInfoManage")
     public String equipmentInfoManage(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException {
@@ -213,7 +205,6 @@ public class UserEquipmentController {
 
             return "monitorCenter/equipmentInfoManage";
         }
-
     }
 
     //监测中心-设备信息管理-设备选择
@@ -508,8 +499,7 @@ public class UserEquipmentController {
     private void judgeEqpAlarmValue(HttpServletRequest request, Equipment equipment) {
         //取出设备警戒值，首先判断special字段，为0则从mormal表中取值，为1则从special表里取值，alarmSpecialValue作为暂存实例
 //        AlarmSpecialValue alarmValue = new AlarmSpecialValue();
-        if (!equipment.getSpecial())//取默认值
-        {
+        if (!equipment.getSpecial()) { // 取默认值
             List<AlarmNormalValue> alarmNormalValueList = alarmNormalValueService.queryAlarmNormalValueByEqpType(equipment.getEqpType());
             request.setAttribute("alarmValueList", alarmNormalValueList);
         } else {
@@ -519,47 +509,41 @@ public class UserEquipmentController {
     }
 
     //向网关发送获取数据的命令
-    public void sendMessage(int netMaskId,String order)
-    {
-        if (protocolState[netMaskId-1] == 1 )
-        {
-            sendMsgQueue.get(netMaskId-1).offer(order);////added0524
-        }
-        else if(protocolState[netMaskId-1] == 2)
-        {
-            sendAMQPQueue.offer(order);
-        }
-        else
-        {
+    public void sendMessage(int netMaskId,String order) {
+        if (protocolState[netMaskId - 1] == 1 ) {
+            sendMsgQueue.get(netMaskId - 1).offer(order);////added0524
+        } else if (protocolState[netMaskId - 1] == 2) {
+            sendAMQPQueue.offer(netMaskId + order);
+        } else {
             System.out.println("ObjInfoHallController: Cannot get info, the netMask owing the equipment is offline...");
         }
     }
 
-//    public byte[] toByteArray(String hexString) {
-//        if (hexString.equals("")) {
-//            System.out.println("SocketTask"+taskNum+": toByteArray(): this hexString is empty");
-//            throw new IllegalArgumentException("this hexString must not be empty");
-//        }
-//        hexString = hexString.toLowerCase();
-//        final byte[] byteArray = new byte[hexString.length() / 2];
-//        int k = 0;
-//        for (int i = 0; i < byteArray.length; i++) {//因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
-//            byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
-//            byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
-//            byteArray[i] = (byte) (high << 4 | low);
-//            k += 2;
-//        }
-//        return byteArray;
-//    }
-//
-//    //将1个字节的8个位解析成无符号0-255的值
-//    public int byteToUsignedValue(Byte b) {
-//        int bInt = (int) b;
-//        if (bInt >= 0) {
-//            return bInt;
-//        } else {
-//            return (bInt + 256);
-//        }
-//    }
+    //    public byte[] toByteArray(String hexString) {
+    //        if (hexString.equals("")) {
+    //            System.out.println("SocketTask"+taskNum+": toByteArray(): this hexString is empty");
+    //            throw new IllegalArgumentException("this hexString must not be empty");
+    //        }
+    //        hexString = hexString.toLowerCase();
+    //        final byte[] byteArray = new byte[hexString.length() / 2];
+    //        int k = 0;
+    //        for (int i = 0; i < byteArray.length; i++) {//因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
+    //            byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
+    //            byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
+    //            byteArray[i] = (byte) (high << 4 | low);
+    //            k += 2;
+    //        }
+    //        return byteArray;
+    //    }
+    //
+    //    //将1个字节的8个位解析成无符号0-255的值
+    //    public int byteToUsignedValue(Byte b) {
+    //        int bInt = (int) b;
+    //        if (bInt >= 0) {
+    //            return bInt;
+    //        } else {
+    //            return (bInt + 256);
+    //        }
+    //    }
 
 }

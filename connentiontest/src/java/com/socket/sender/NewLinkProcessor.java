@@ -1,6 +1,4 @@
-package com.example.humanhealthmonitor;
-
-import com.example.humanhealthmonitor.pojo.Equipment;
+package com.socket.sender;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -8,12 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.example.humanhealthmonitor.MsgQueue.sendMsgQueue;
-import static com.example.humanhealthmonitor.MsgQueue.socketTasks;
 
 public class NewLinkProcessor implements Runnable{
 
@@ -47,7 +40,6 @@ public class NewLinkProcessor implements Runnable{
         String orderString = "FEFE040101AABB";//询问网关号，固定命令
         byte[] orderByte = toByteArray(orderString);
 
-        //byte[] orderByte = orderString.getBytes();
         OutputStream os = socket.getOutputStream();
         os.write(orderByte);
         os.flush();
@@ -149,16 +141,16 @@ public class NewLinkProcessor implements Runnable{
                             int netMaskId = byteToUsignedValue(byteArrayList.get(6));
                             System.out.println("NewLinkProcessor: netMaskId: "+netMaskId);
                             //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
-                            socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
-                            if(socketTasks[netMaskId-1].getTaskNum() == netMaskId) { //说明已经在运行
+                            MsgQueue.socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
+                            if(MsgQueue.socketTasks[netMaskId-1].getTaskNum() == netMaskId) { //说明已经在运行
                                 System.out.println("NewLinkProcessor: conflict, netmask"+netMaskId+" already exist,please check your setting...");
                             }
                             else {
                                 System.out.println("NewLinkProcessor: socketTasks"+netMaskId+" ready to start...");
                                 //socketTasks[netMaskId-1] = new SocketTask();
-                                socketTasks[netMaskId-1].setSocket(socket);
-                                socketTasks[netMaskId-1].setTaskNum(netMaskId);
-                                new Thread(socketTasks[netMaskId-1]).start();
+                                MsgQueue.socketTasks[netMaskId-1].setSocket(socket);
+                                MsgQueue.socketTasks[netMaskId-1].setTaskNum(netMaskId);
+                                new Thread(MsgQueue.socketTasks[netMaskId-1]).start();
                             }
 
                             //内圈while处理完之后
@@ -189,21 +181,10 @@ public class NewLinkProcessor implements Runnable{
                     byteArrayList.remove(0);
                     //break;
                 }
-                //                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-                //                if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续
-                //                {
-                //                    byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                //                }
-                //                else//否则直接跳出while循环
-                //                {
-                //                    System.out.println("Info: package is deserted...no valuable data...");
-                //                    break;
-                //                }
+
             } else {//如果数据头不是FEFE，去掉前面的一个字节，进入下一个循环
                 byteArrayList.remove(0);
             }
-            //外圈while循环每圈一定会执行的位置
         }
     }
 
