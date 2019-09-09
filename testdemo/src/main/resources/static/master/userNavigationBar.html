@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--<html xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
+<html>
+<head>
+    <style>
+        ol,
+        ul,
+        li {
+            list-style: none;
+        }
+
+        .head-nav {
+            width: 100%;
+            height: 60px;
+            /*background: #007130;*/
+            /*background: #7EC0FF;*/
+            background: #3366CC;
+        }
+
+        .head-nav-con {
+            width: 1200px;
+            height: 60px;
+            margin-bottom: 0px;
+        }
+
+        .head-nav-con ul li {
+            width: 220px;
+            float: left;
+            /*float: right;*/
+            font-size: 20px;
+            text-align: center;
+        }
+
+        /*鼠标滑过一级列表元素，改变背景色*/
+        /*.head-nav-con ul li:hover {*/
+        /*!*background: #ff9c01;*!*/
+        /*!*background: #7EC0FF;*!*/
+        /*background-color: #160BF4;*/
+        /*}*/
+        .head-nav-con ul a {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            line-height: 60px;
+            color: white;
+        }
+
+        .head-nav-con .drop-down {
+            position: relative;
+        }
+
+        .head-nav-con .drop-down-content {
+            padding: 0;
+            display: none;
+            position: absolute;
+            z-index: 1;
+            /*background: #007130;*/
+            /*background: #7EC0FF;*/
+            background: #3366CC;
+        }
+
+        .head-nav-con .drop-down-content li:hover > a {
+            /*background-color: #ff9c01;*/
+            /*background-color: #7EC0FF;*/
+            background-color: #160BF4;
+        }
+
+        .head-nav-con .drop-down:hover .drop-down-content {
+            display: block;
+        }
+
+        .head-nav-con .drop-down-2 {
+            position: relative;
+        }
+
+        .head-nav-con .drop-down-content-2 {
+            padding: 0;
+            display: none;
+            position: absolute;
+            z-index: 1;
+            /*background-color: #007130;*/
+            /*background-color: #7EC0FF;*/
+            background-color: #3366CC;
+            right: -170px;
+            top: 0;
+        }
+
+        .head-nav-con .drop-down-content-2 > li {
+            float: none;
+            /*background-color: #007130;*/
+            /*background-color: #7EC0FF;*/
+            background-color: #3366CC;
+        }
+
+        .head-nav-con .drop-down-content-2 li:hover a {
+            /*background-color: #ff9c01;*/
+            /*background-color: #7EC0FF;*/
+            background-color: #160BF4;
+        }
+
+        .head-nav-con .drop-down-2:hover .drop-down-content-2 {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="head-nav" class="head-nav">
+    <!--<div class="head-nav-con clearFloat">-->
+    <div class="head-nav-con">
+        <ul>
+            <li><a href="/indexUser">首&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li class="drop-down"><a href="javascript:void(0)">监测信息</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/infoHallOnTime">实时监测信息</a></li>
+                    <li><a href="/monitorCenter/infoHallHistory">历史监测信息</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测设备</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/equipmentAdd">添加设备</a></li>
+                    <li><a href="/monitorCenter/equipmentInfoManage">设备信息管理</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测对象</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/objectAdd">添加监测对象</a></li>
+                    <li><a href="/monitorCenter/objectInfoManage">监测对象信息管理</a></li>
+                    <!--<li><a href="/monitorCenter/banding">绑定设备</a></li>-->
+                    <!--<li><a href="/monitorCenter/unBanding">解绑设备</a></li>-->
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">用户账户</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/accountBasicInfo">基本信息</a></li>
+                    <li><a href="/monitorCenter/accountPwdModify">密码修改</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
