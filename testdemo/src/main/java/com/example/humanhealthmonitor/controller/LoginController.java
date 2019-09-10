@@ -3,10 +3,7 @@ package com.example.humanhealthmonitor.controller;
 import com.example.humanhealthmonitor.pojo.*;
 import com.example.humanhealthmonitor.pojo.Object;
 import com.example.humanhealthmonitor.service.*;
-import com.example.humanhealthmonitor.CloudMsgUtil;
 
-import com.github.qcloudsms.SmsMultiSender;
-import com.github.qcloudsms.SmsMultiSenderResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,22 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-
-import com.github.qcloudsms.SmsSingleSender;
-import com.github.qcloudsms.SmsSingleSenderResult;
-import com.github.qcloudsms.httpclient.HTTPException;
-import org.json.JSONException;
-
-import static com.example.humanhealthmonitor.MsgQueue.sendAMQPQueue;
-import static com.example.humanhealthmonitor.MsgQueue.sendMsgQueue;
 
 @Controller
 public class LoginController {
