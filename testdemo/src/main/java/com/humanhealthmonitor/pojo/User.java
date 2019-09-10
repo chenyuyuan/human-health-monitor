@@ -1,4 +1,4 @@
-package com.example.humanhealthmonitor.pojo;
+package com.humanhealthmonitor.pojo;
 
 import java.sql.Date;//e.g.2000-01-01
 //import java.sql.Time;//e.g.22:59:59

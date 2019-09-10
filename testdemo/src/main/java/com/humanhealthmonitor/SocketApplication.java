@@ -1,4 +1,4 @@
-package com.socket.sender;
+package com.humanhealthmonitor;
 
 import java.util.Scanner;
 

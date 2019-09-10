@@ -1,6 +1,6 @@
-package com.example.humanhealthmonitor.mapper;
+package com.humanhealthmonitor.mapper;
 
-import com.example.humanhealthmonitor.pojo.UserLog;
+import com.humanhealthmonitor.pojo.UserLog;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

@@ -1,10 +1,9 @@
-package com.example.humanhealthmonitor.mapper;
+package com.humanhealthmonitor.mapper;
 
-import com.example.humanhealthmonitor.pojo.User;
+import com.humanhealthmonitor.pojo.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository

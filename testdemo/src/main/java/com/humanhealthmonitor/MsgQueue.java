@@ -1,8 +1,7 @@
-package com.example.humanhealthmonitor;
+package com.humanhealthmonitor;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import com.example.humanhealthmonitor.SocketTask;
 
 public class MsgQueue {
 

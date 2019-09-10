@@ -1,12 +1,9 @@
-package com.example.humanhealthmonitor;
+package com.humanhealthmonitor;
 
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
-import static com.example.humanhealthmonitor.MsgQueue.sendAMQPQueue;
 
 public class RabbitSender implements Runnable{
 
@@ -37,10 +34,10 @@ public class RabbitSender implements Runnable{
         try{
             while(true)
             {
-                while (sendAMQPQueue.isEmpty()) {//为空则线程休眠
+                while (MsgQueue.sendAMQPQueue.isEmpty()) {//为空则线程休眠
                     Thread.sleep(1000);//1秒重新检查队列
                 }
-                String orderString = sendAMQPQueue.poll();//队列中有消息就取出一条命令
+                String orderString = MsgQueue.sendAMQPQueue.poll();//队列中有消息就取出一条命令
                 if (orderString != null && orderString.length() > 8) {
                     int index = orderString.indexOf("FEFE");
                     QUEUE_NAME = orderString.substring(0, index);

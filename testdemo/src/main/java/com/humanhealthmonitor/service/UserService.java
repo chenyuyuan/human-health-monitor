@@ -1,7 +1,7 @@
-package com.example.humanhealthmonitor.service;
+package com.humanhealthmonitor.service;
 
-import com.example.humanhealthmonitor.pojo.User;
-import com.example.humanhealthmonitor.mapper.UserMapper;
+import com.humanhealthmonitor.pojo.User;
+import com.humanhealthmonitor.mapper.UserMapper;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,12 @@
-package com.example.humanhealthmonitor.controller;
+package com.humanhealthmonitor.controller;
 
 import com.example.humanhealthmonitor.pojo.*;
 import com.example.humanhealthmonitor.pojo.Object;
 import com.example.humanhealthmonitor.service.*;
 
+import com.humanhealthmonitor.pojo.User;
+import com.humanhealthmonitor.pojo.UserLog;
+import com.humanhealthmonitor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

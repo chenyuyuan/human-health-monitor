@@ -1,4 +1,4 @@
-package com.example.humanhealthmonitor;
+package com.humanhealthmonitor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

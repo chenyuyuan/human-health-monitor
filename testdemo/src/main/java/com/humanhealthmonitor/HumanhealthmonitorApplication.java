@@ -1,25 +1,15 @@
-package com.example.humanhealthmonitor;
+package com.humanhealthmonitor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import com.example.humanhealthmonitor.SocketTask;
-
-import static com.example.humanhealthmonitor.MsgQueue.*;
 
 @SpringBootApplication
 @MapperScan("com.example.humanhealthmonitor.mapper")
@@ -51,20 +41,20 @@ public class HumanhealthmonitorApplication {
         // }
 
         //added0525
-        inetAddressArray = new ArrayList<>();
-        inetAddressArray.clear();
+        MsgQueue.inetAddressArray = new ArrayList<>();
+        MsgQueue.inetAddressArray.clear();
 
         //初始化protocolType为0即未工作
         for(int i = 0;i <32;i++)
         {
-            protocolState[i] = 0;
+            MsgQueue.protocolState[i] = 0;
         }
 
         //初始化sendMsgQueue
         for(int i = 0;i <32;i++)
         {
             ConcurrentLinkedQueue<String> conQueue = new ConcurrentLinkedQueue<>();
-            sendMsgQueue.add(conQueue);
+            MsgQueue.sendMsgQueue.add(conQueue);
         }
         // keepRabbitListening();
         // 添加于2019.04.04
@@ -92,7 +82,7 @@ public class HumanhealthmonitorApplication {
                 // 线程号码
                 String newInetAddressStr = socket.getInetAddress().toString();
                 System.out.println("Application: newInetAddress: "+newInetAddressStr);
-                Iterator iterator = inetAddressArray.iterator();
+                Iterator iterator = MsgQueue.inetAddressArray.iterator();
                 int flag = 0;//0说明是新的客户IP，1说明是已有客户IP
                 while (iterator.hasNext()) {
                     if (iterator.next().equals(newInetAddressStr)) {
