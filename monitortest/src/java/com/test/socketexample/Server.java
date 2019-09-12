@@ -4,16 +4,18 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class Server implements Runnable {
     ServerSocket ss = null;
     Socket socket;
     InputStream in;
     OutputStream out;
     DataInputStream din;
     DataOutputStream dout;
-    public Server() {
+    public Server() {}
+
+    public void run() {
         try {
-            ss = new ServerSocket(10000);
+            ss = new ServerSocket(8081);
             System.out.println("Waiting for connecting......");
             socket = ss.accept();
             System.out.println("Connected!");
@@ -25,7 +27,7 @@ public class Server {
             String name = din.readUTF();
             String s = din.readUTF();
             System.out.println(name + s);
-            in.close();;
+            in.close();
             out.close();
             din.close();
             dout.close();
@@ -36,5 +38,6 @@ public class Server {
     }
     public static void main(String[] args) {
         Server server = new Server();
+        server.run();
     }
 }
