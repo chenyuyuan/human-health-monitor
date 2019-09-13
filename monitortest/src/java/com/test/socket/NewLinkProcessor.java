@@ -31,12 +31,7 @@ public class NewLinkProcessor implements Runnable{
         PrintWriter pw = null;
         System.out.println("NewLinkProcessor: "+socket.getInetAddress() + " has already linked...");
         pw = new PrintWriter(socket.getOutputStream());
-        //pw.println("FEFE0401040005AABB");
-        //pw.flush();
-        //String orderString = "FEFE0401040005AABB";
-        //while (sendMsgQueue.isEmpty()){//为空则线程休眠
-        //    Thread.sleep(1000);//1秒
-        // }
+
         String orderString = "FEFE040101AABB";//询问网关号，固定命令
         byte[] orderByte = toByteArray(orderString);
 
@@ -59,9 +54,8 @@ public class NewLinkProcessor implements Runnable{
                 System.out.println("NewLinkProcessor: received: " + info);
                 System.out.println("NewLinkProcessor: received byteArrayList: " + byteArrayList);
                 //socket.shutdownInput();//added 2019/04/08关闭输入流//comment0524
-                //socket.shutdownOutput();//added 2019/04/10关闭输出流//comment0524
                 socketInfoProcess(byteArrayList);//NullPointException line158,74,28
-                break;//added0526
+                break;
             }
         }
         //关闭相对应的资源

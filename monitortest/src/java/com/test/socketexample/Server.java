@@ -5,25 +5,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server implements Runnable {
-    ServerSocket ss = null;
-    Socket socket;
-    InputStream in;
-    OutputStream out;
-    DataInputStream din;
-    DataOutputStream dout;
+
     public Server() {}
 
     public void run() {
         try {
-            ss = new ServerSocket(8081);
+            ServerSocket ss = new ServerSocket(8081);
             System.out.println("Waiting for connecting......");
-            socket = ss.accept();
+            Socket socket = ss.accept();
             System.out.println("Connected!");
-            in = socket.getInputStream();
-            out = socket.getOutputStream();
-            din = new DataInputStream(in);
-            dout = new DataOutputStream(out);
-            dout.writeUTF("Hello!");
+            InputStream in = socket.getInputStream();
+            OutputStream out = socket.getOutputStream();
+            DataInputStream din = new DataInputStream(in);
+            DataOutputStream dout = new DataOutputStream(out);
+            dout.writeUTF("Hello!(From server)");
             String name = din.readUTF();
             String s = din.readUTF();
             System.out.println(name + s);
