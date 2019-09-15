@@ -26,7 +26,6 @@ public class NewLinkProcessor implements Runnable{
 
     // 与客户端Socket进行通信
     private void handleSocket() throws Exception {
-        // HealthDataProcessor healthDataProcessor = new HealthDataProcessor();//实例化信息处理类
         // 如果收到了信息就把信息打印出来
         PrintWriter pw = null;
         System.out.println("NewLinkProcessor: "+socket.getInetAddress() + " has already linked...");
@@ -59,10 +58,6 @@ public class NewLinkProcessor implements Runnable{
             }
         }
         //关闭相对应的资源
-        //pw.close();//comment0524
-        //bis.close();//comment0524
-        //dis.close();//comment0524
-        //socket.close();
         System.out.println("NewLinkProcessor: one newLinkProcessor close safely...");
     }
 
