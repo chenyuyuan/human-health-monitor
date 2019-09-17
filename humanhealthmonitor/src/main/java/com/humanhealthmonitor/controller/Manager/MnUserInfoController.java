@@ -5,7 +5,7 @@ import com.humanhealthmonitor.pojo.Admin;
 import com.humanhealthmonitor.pojo.Object;
 import com.humanhealthmonitor.pojo.ObjectResourceUse;
 import com.humanhealthmonitor.pojo.User;
-import com.example.humanhealthmonitor.service.*;
+import com.humanhealthmonitor.service.*;
 import com.humanhealthmonitor.service.*;
 import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;

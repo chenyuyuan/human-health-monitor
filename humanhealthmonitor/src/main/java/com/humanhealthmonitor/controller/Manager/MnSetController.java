@@ -1,6 +1,6 @@
 package com.humanhealthmonitor.controller.Manager;
 
-import com.example.humanhealthmonitor.pojo.*;
+import com.humanhealthmonitor.pojo.*;
 import com.humanhealthmonitor.service.AlarmNormalValueService;
 import com.humanhealthmonitor.service.EquipmentIndexService;
 import com.humanhealthmonitor.service.EquipmentTypeService;

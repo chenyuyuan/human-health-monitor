@@ -3,18 +3,23 @@ package com.humanhealthmonitor.rabbitmq;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeoutException;
 
 public class NetMaskRabbitMQReceiver implements Runnable{
 
+    public static volatile ConcurrentLinkedQueue<String> receiveQueue ;
     private final static String EXCHANGE_NAME = "amq.direct";
     private final static String QUEUE_NAME = "health_queue";
 
     @Override
     public void run() {
         try {
-            rabbitReceiver();
+            while(true) {
+                rabbitReceiver();
+            }
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -47,10 +52,14 @@ public class NetMaskRabbitMQReceiver implements Runnable{
                     byteArrayList.add(body[i]);
                 }
                 System.out.println("RabbitReceiver: byteArrayList: "+byteArrayList);
+                SingletonReceiveQueue.receiveQueue.add(byteArrayToString(body,16));
                 //socketInfoProcess(byteArrayList);
             }
         };
     }
 
+    public String byteArrayToString (byte[] byteArray, int radix) {
+        return new BigInteger(1, byteArray).toString(radix);
+    }
 
 }

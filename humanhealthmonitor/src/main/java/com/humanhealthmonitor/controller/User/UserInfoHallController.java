@@ -1,9 +1,9 @@
 package com.humanhealthmonitor.controller.User;
 
 import com.humanhealthmonitor.InfluxDBConnector;
-import com.example.humanhealthmonitor.pojo.*;
+import com.humanhealthmonitor.pojo.*;
 import com.humanhealthmonitor.pojo.Object;
-import com.example.humanhealthmonitor.service.*;
+import com.humanhealthmonitor.service.*;
 import com.humanhealthmonitor.MsgQueue;
 import com.humanhealthmonitor.pojo.Equipment;
 import com.humanhealthmonitor.pojo.User;

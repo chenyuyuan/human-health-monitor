@@ -1,6 +1,6 @@
 package com.humanhealthmonitor.controller;
 
-import com.example.humanhealthmonitor.service.*;
+import com.humanhealthmonitor.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
