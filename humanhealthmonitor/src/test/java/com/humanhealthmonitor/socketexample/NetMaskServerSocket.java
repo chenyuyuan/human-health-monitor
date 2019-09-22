@@ -35,33 +35,33 @@ public class NetMaskServerSocket {
     }
 
     public void run() {
-        try {
-            ServerSocket ss = new ServerSocket(8081);
-            System.out.println("Waiting for message from cloud......");
-            Socket socket = ss.accept();
-            System.out.println("Connected!");
+        while (true) {
+            try {
+                ServerSocket ss = new ServerSocket(8081);
+                System.out.println("Waiting for message from cloud......");
+                Socket socket = ss.accept();
+                System.out.println("Connected!");
 
-            InputStream din = socket.getInputStream();
-            OutputStream dout = socket.getOutputStream();
+                InputStream din = socket.getInputStream();
+                OutputStream dout = socket.getOutputStream();
 
-            //网关接收数据
-            int receivedMessageLength = din.read();
-            byte[] receivedMessage = new byte[receivedMessageLength];
-            din.read(receivedMessage);
-            System.out.println("received message: " + byteArrayToString(receivedMessage, 16));
+                //网关接收数据
+                byte[] receivedMessage = din.readAllBytes();
+                System.out.println("received message: " + byteArrayToString(receivedMessage, 16));
 
-            //网关返回数据
-            byte[] responseMessage = toByteArray(getResponse(byteArrayToString(receivedMessage, 16)));
-            dout.write(responseMessage.length);
-            dout.write(responseMessage);
+                //网关返回数据
+                byte[] responseMessage = toByteArray(getResponse(byteArrayToString(receivedMessage, 16)));
+                dout.write(responseMessage);
 
-            dout.flush();
-            din.close();
-            dout.close();
-            ss.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+                dout.flush();
+                din.close();
+                dout.close();
+                ss.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
     public static void main(String[] args) {
         NetMaskServerSocket netMaskServerSocket = new NetMaskServerSocket();

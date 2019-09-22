@@ -33,18 +33,17 @@ public class CloudSocket {
             InputStream din = socket.getInputStream();
             OutputStream dout = socket.getOutputStream();
 
-            //发送数据
-            String sendMessage = "FEFE03010501AABB";
-            byte[] sendMessageByteArray = toByteArray(sendMessage);
-            dout.write(sendMessageByteArray.length);
-            dout.write(sendMessageByteArray);
-            System.out.println("send message: " + sendMessage);
+//            //发送数据
+//            String sendMessage = "FEFE03010501AABB";
+//            byte[] sendMessageByteArray = toByteArray(sendMessage);
+//            dout.write(sendMessageByteArray.length);
+//            dout.write(sendMessageByteArray);
+//            System.out.println("send message: " + sendMessage);
 
             //接收数据
-            int receivedMessageLength = din.read();
-            byte[] receivedMessage = new byte[receivedMessageLength];
-            din.read(receivedMessage);
-            System.out.println("received message length: " + receivedMessageLength);
+            byte[] receivedMessage = din.readAllBytes();
+
+            System.out.println("received message length: " + receivedMessage.length);
             System.out.println("received message: " + byteArrayToString(receivedMessage, 16));
 
             dout.flush();
