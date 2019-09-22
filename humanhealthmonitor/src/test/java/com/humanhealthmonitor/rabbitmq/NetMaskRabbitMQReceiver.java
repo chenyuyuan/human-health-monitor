@@ -43,16 +43,15 @@ public class NetMaskRabbitMQReceiver implements Runnable{
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)//body是字节数组类型
                     throws IOException {
-//                String message = new String(body, "UTF-8");
-//                System.out.println(" [x] Received '" + message + "'");
+                //String message = new String(body, "UTF-8");
+                //System.out.println(" [x] Received '" + message + "'");
                 ArrayList<Byte> byteArrayList = new ArrayList<>();//字节列表
-//                System.out.println("body.length: "+body.length);
+                //System.out.println("body.length: "+body.length);
                 for(int i = 0;i < body.length;i++)
                 {
                     byteArrayList.add(body[i]);
                 }
                 System.out.println("RabbitReceiver: byteArrayList: "+byteArrayList);
-                SingletonReceiveQueue.receiveQueue.add(byteArrayToString(body,16));
                 //socketInfoProcess(byteArrayList);
             }
         };

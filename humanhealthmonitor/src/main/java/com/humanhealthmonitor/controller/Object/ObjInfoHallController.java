@@ -126,7 +126,6 @@ public class ObjInfoHallController {
             }
             System.out.println("ObjInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
             List<Equipment> noEquipmentList = new ArrayList<>();
-            Equipment noNewEquipment = new Equipment();
             //连接InfluxDB
             influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
             influxDBConnector.connectToDatabase();
@@ -153,6 +152,9 @@ public class ObjInfoHallController {
                 System.out.println("ObjInfoHallController: bodyTempList"+bodyTempList);
                 System.out.println("ObjInfoHallController: envTempList"+envTempList);
             } else {
+                Equipment noNewEquipment = new Equipment();//zy
+
+
                 noNewEquipment.setEqpType("Temperature01");
                 for (int i = 0;i < 11;i++) {
                     bodyTempList.add(0.0);
@@ -190,6 +192,8 @@ public class ObjInfoHallController {
                 System.out.println("ObjInfoHallController: lowPressureList"+lowPressureList);
                 System.out.println("ObjInfoHallController: heartRateList"+heartRateList);
             } else {
+                Equipment noNewEquipment = new Equipment();//zy
+
                 noNewEquipment.setEqpType("BloodPressure01");
                 for (int i = 0;i < 11;i++) {
                     highPressureList.add(0.0);
@@ -217,6 +221,8 @@ public class ObjInfoHallController {
                 }
                 System.out.println("ObjInfoHallController: spo2List: "+spo2List);
             }else {
+                Equipment noNewEquipment = new Equipment();//zy
+
                 noNewEquipment.setEqpType("BloodOxygen01");
                 for (int i = 0;i < 11;i++) {
                     spo2List.add(0.0);
