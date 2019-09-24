@@ -12,10 +12,12 @@ public class NetMaskRabbitMQSender implements Runnable {
 
 
     public void run() {
-        try {
-            rabbitSender();
-        } catch (IOException | TimeoutException e) {
-            e.printStackTrace();
+        while(true) {
+            try {
+                rabbitSender();
+            } catch (IOException | TimeoutException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -28,7 +30,10 @@ public class NetMaskRabbitMQSender implements Runnable {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-        String message = "FEFE0401040005AABB";//04报文长度，01网关地址，04指令码查询所有设备，00填补（如果指令码03则这里是设备序号），05校验和
+        String message = "FEFE0401040005AABB";
+        while(!NetMaskReceiveQueue.receiveQueue.isEmpty()) {
+            message = NetMaskReceiveQueue.receiveQueue.poll();
+        }
         byte[] orderByte = toByteArray(message);
         channel.basicPublish("", QUEUE_NAME, null, orderByte);
     }

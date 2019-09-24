@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SpringBootApplication
-@MapperScan("com.example.humanhealthmonitor.mapper")
+@MapperScan("com.humanhealthmonitor.mapper")
 //@ComponentScan(basePackages = "com.example.humanhealthmonitor")
 public class HumanhealthmonitorApplication {
     // public static ServerSocket serverSocket;//

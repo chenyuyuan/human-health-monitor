@@ -8,20 +8,21 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeoutException;
 
+import static com.humanhealthmonitor.util.ByteUtils.*;
+
 public class NetMaskRabbitMQReceiver implements Runnable{
 
-    public static volatile ConcurrentLinkedQueue<String> receiveQueue ;
     private final static String EXCHANGE_NAME = "amq.direct";
     private final static String QUEUE_NAME = "health_queue";
 
     @Override
     public void run() {
-        try {
-            while(true) {
+        while(true) {
+            try {
                 rabbitReceiver();
+            } catch (IOException | TimeoutException e) {
+                e.printStackTrace();
             }
-        } catch (IOException | TimeoutException e) {
-            e.printStackTrace();
         }
     }
 
@@ -47,12 +48,11 @@ public class NetMaskRabbitMQReceiver implements Runnable{
                 //System.out.println(" [x] Received '" + message + "'");
                 ArrayList<Byte> byteArrayList = new ArrayList<>();//字节列表
                 //System.out.println("body.length: "+body.length);
-                for(int i = 0;i < body.length;i++)
-                {
+                for(int i = 0;i < body.length;i++) {
                     byteArrayList.add(body[i]);
                 }
-                System.out.println("RabbitReceiver: byteArrayList: "+byteArrayList);
-                //socketInfoProcess(byteArrayList);
+                System.out.println("RabbitReceiver: byteArrayList: " + byteArrayToString(body, 16));
+                NetMaskReceiveQueue.receiveQueue.add(byteArrayToString(body, 16));
             }
         };
     }
