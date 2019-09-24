@@ -5,6 +5,8 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import static com.humanhealthmonitor.util.ByteUtils.toByteArray;
+
 public class RabbitSender implements Runnable{
 
     public void run() {
@@ -59,22 +61,5 @@ public class RabbitSender implements Runnable{
         // channel.close();
         // connection.close();
         // handleRabbitSend(); END
-    }
-
-    private byte[] toByteArray(String hexString) {
-        if (hexString.equals("")) {
-            System.out.println("RabbitSender: toByteArray(): this hexString is empty");
-            throw new IllegalArgumentException("this hexString must not be empty");
-        }
-        hexString = hexString.toLowerCase();
-        final byte[] byteArray = new byte[hexString.length() / 2];
-        int k = 0;
-        for (int i = 0; i < byteArray.length; i++) { //因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
-            byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
-            byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
-            byteArray[i] = (byte) (high << 4 | low);
-            k += 2;
-        }
-        return byteArray;
     }
 }

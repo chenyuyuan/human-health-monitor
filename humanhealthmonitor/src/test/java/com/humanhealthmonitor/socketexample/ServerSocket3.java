@@ -1,3 +1,4 @@
+package com.humanhealthmonitor.socketexample;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -7,7 +8,7 @@ public class ServerSocket3 {
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket=new ServerSocket(8081);
-            System.out.println("服务端已启动，等待客户端连接..");
+            System.out.println("Server has started, waiting for connection form client");
             Socket socket=serverSocket.accept();
             InputStream inputStream=socket.getInputStream();
             InputStreamReader inputStreamReader=new InputStreamReader(inputStream);
