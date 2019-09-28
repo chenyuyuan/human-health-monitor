@@ -45,19 +45,15 @@ public class HumanhealthmonitorApplication {
         MsgQueue.inetAddressArray.clear();
 
         //初始化protocolType为0即未工作
-        for(int i = 0;i <32;i++)
-        {
+        for(int i = 0;i <32;i++) {
             MsgQueue.protocolState[i] = 0;
         }
 
         //初始化sendMsgQueue
-        for(int i = 0;i <32;i++)
-        {
+        for(int i = 0;i <32;i++) {
             ConcurrentLinkedQueue<String> conQueue = new ConcurrentLinkedQueue<>();
             MsgQueue.sendMsgQueue.add(conQueue);
         }
-        // keepRabbitListening();
-        // 添加于2019.04.04
         keepSocketListening();
 
     }
@@ -90,7 +86,7 @@ public class HumanhealthmonitorApplication {
                     }
                 }
                 if (flag == 0) {
-                    // 记录下来，如果与已经有的相同，则不继续，同时，在每个socketttask快结束了时，把其对应的inet置为null
+                    // 记录下来，如果与已经有的相同，则不继续，同时，在每个sockettask快结束了时，把其对应的inet置为null
                     System.out.println("Application: Socket accept success,new link...");
                     // new Thread(new SocketTask(socket)).start();//后面可以做成线程池，比如大小为100，接入时候分配一个，并记录下线程编号和网关设备的对应关系
                     // SocketTask socketTask = new SocketTask();////////added0521
