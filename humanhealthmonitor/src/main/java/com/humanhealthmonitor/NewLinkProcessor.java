@@ -13,11 +13,9 @@ import static com.humanhealthmonitor.util.ByteUtils.*;
 public class NewLinkProcessor implements Runnable{
 
     private Socket socket;
-
     public void setSocket(Socket socket){ //added0521
         this.socket = socket;
     }
-
     public void run() {
         try {
             handleSocket();
@@ -33,12 +31,7 @@ public class NewLinkProcessor implements Runnable{
         PrintWriter pw = null;
         System.out.println("NewLinkProcessor: "+socket.getInetAddress() + " has already linked...");
         pw = new PrintWriter(socket.getOutputStream());
-        //pw.println("FEFE0401040005AABB");
-        //pw.flush();
-        //String orderString = "FEFE0401040005AABB";
-        //while (sendMsgQueue.isEmpty()){//为空则线程休眠
-        //    Thread.sleep(1000);//1秒
-        // }
+
         String orderString = "FEFE040101AABB";//询问网关号，固定命令
         byte[] orderByte = toByteArray(orderString);
 

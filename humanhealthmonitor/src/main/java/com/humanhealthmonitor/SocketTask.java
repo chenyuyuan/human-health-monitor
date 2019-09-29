@@ -50,16 +50,13 @@ public class SocketTask implements Runnable {
     private CloudMsgUtil cloudMsgUtil = new CloudMsgUtil();//云短信工具
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Socket socket;
-    public int getTaskNum()
-    {
+    public int getTaskNum() {
         return this.taskNum;
     }
-    public void setTaskNum(int taskNum)
-    {
+    public void setTaskNum(int taskNum) {
         this.taskNum = taskNum;
     }
-
-    public void setSocket(Socket socket){//added0521
+    public void setSocket(Socket socket){
         this.socket = socket;
     }
     @PostConstruct
@@ -76,7 +73,7 @@ public class SocketTask implements Runnable {
     }
     public void run() {
         try {
-        //socket = HumanhealthmonitorApplication.serverSocket.accept();////////////////
+            //socket = HumanhealthmonitorApplication.serverSocket.accept();////////////////
             handleSocket();
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,7 +173,6 @@ public class SocketTask implements Runnable {
                 break;
             }
         }
-
 
         socket.shutdownInput();//added 2019/04/08关闭输入流
         socket.shutdownOutput();//added 2019/04/10关闭输出流

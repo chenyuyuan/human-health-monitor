@@ -10,9 +10,9 @@ public class MsgQueue {
     // public static ConcurrentLinkedQueue<String> sendMsgQueue = new ConcurrentLinkedQueue<>();//comment0524
     // public static ConcurrentLinkedQueue<String>[] sendMsgQueue = new ConcurrentLinkedQueue<String>[32];///无法创建泛型数组，失败的语句
     // public static ArrayList<ArrayList<String>> sendMsgQueue = new ArrayList<ArrayList<String>>();
-    public static ArrayList<ConcurrentLinkedQueue<String>> sendMsgQueue = new ArrayList<ConcurrentLinkedQueue<String>>();//MODBUS命令发送队列
+    public static ArrayList<ConcurrentLinkedQueue<String>> sendMsgQueue = new ArrayList<>();//MODBUS命令发送队列
     public static ConcurrentLinkedQueue<String> sendAMQPQueue = new ConcurrentLinkedQueue<>();//AMQP命令发送队列
-    // ublic static ArrayList<String> addSuccessEqpIdList = new ArrayList<>();// 添加成功的设备号码
+    // public static ArrayList<String> addSuccessEqpIdList = new ArrayList<>();// 添加成功的设备号码
 
     public static ArrayList<String> inetAddressArray = new ArrayList<>(); // socket接收到的连接地址列表
 
