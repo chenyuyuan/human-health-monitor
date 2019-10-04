@@ -97,21 +97,6 @@ public class SocketTask implements Runnable {
         //String orderString = "FEFE0401040005AABB";
         //询问网关上设备号和采集数组下标对应关系
         //组装查询命令
-        String startStr = "FEFE04";
-        String netMaskIdStr = String.valueOf(taskNum);
-        if (netMaskIdStr.length()==1) {
-            netMaskIdStr = "0"+netMaskIdStr;
-        }
-        String orderType = "06";
-        int checkCal = 5 + taskNum;
-        checkCal = Math.abs(checkCal)%64;//计算校验和
-        String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
-        if(checkCalStr.length()==1) {
-            checkCalStr = "0"+checkCalStr;
-        }
-        String findSerialOrder = startStr + netMaskIdStr + orderType + "00" + checkCalStr + "AABB";
-        System.out.println("SocketTask"+taskNum+": send findSerialOrder: "+findSerialOrder);
-        sendMsgQueue.get(taskNum-1).offer(findSerialOrder);
 
         while (sendMsgQueue.get(taskNum-1).size()==0) {//为空则线程休眠//modified0524
             Thread.sleep(1000);//1秒
@@ -203,7 +188,7 @@ public class SocketTask implements Runnable {
                 byteArrayList.remove(0);
                 break;
             }
-            if (byteArrayList.size() != responseLength + 5) {
+            if (byteArrayList.size() != responseLength + 6) {
                 System.out.println("SocketTask: The byte length is wrong");
                 byteArrayList.remove(0);
                 break;
@@ -214,26 +199,25 @@ public class SocketTask implements Runnable {
                 break;
             }
 
-            // 将回复信息放到responseContent
-            for (int i = 0; i < responseLength - 1;++i) {
-                responseContent[i] = byteArrayList.get(i + 3);
-            }
-
-
             // 检查校验和
             int check = 0;
-            for (byte b : responseContent) {
-                check = check + b;
+            for (int i = 0; i < byteArrayList.size() - 3; ++i) {
+                check = check + byteArrayList.get(i);
                 if(check > 256) {
                     check = check % 256;
                 }
             }
             if (check != checkSum) {
+                System.out.println("SocketTask: data check error...");
+                byteArrayList.remove(0);
                 break;
             }
 
 
-
+            // 将回复信息放到responseContent
+            for (int i = 0; i < responseLength - 1;++i) {
+                responseContent[i] = byteArrayList.get(i + 3);
+            }
             if (orderType == 1) {
                 handleOrder1Response(responseContent);  // responseContent包括1位通信类型和n位网关号
             }
