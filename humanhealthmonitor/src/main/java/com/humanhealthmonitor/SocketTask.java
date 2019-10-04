@@ -199,13 +199,24 @@ public class SocketTask implements Runnable {
             int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
             if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
+                System.out.println("SocketTask: The byte head is not FEFE");
+                byteArrayList.remove(0);
                 break;
             }
             if (byteArrayList.size() != responseLength + 5) {
+                System.out.println("SocketTask: The byte length is wrong");
+                byteArrayList.remove(0);
                 break;
             }
             if (byteArrayList.get(byteArrayList.size() - 2) != (byte) 0xAA || byteArrayList.get(byteArrayList.size() - 1) != (byte) 0xBB) {
+                System.out.println("SocketTask: The byte tale is not AABB");
+                byteArrayList.remove(0);
                 break;
+            }
+
+            // 将回复信息放到responseContent
+            for (int i = 0; i < responseLength - 1;++i) {
+                responseContent[i] = byteArrayList.get(i + 3);
             }
 
 
@@ -222,10 +233,6 @@ public class SocketTask implements Runnable {
             }
 
 
-            // 将回复信息放到responseContent
-            for (int i = 0; i < responseLength - 1;++i) {
-                responseContent[i] = byteArrayList.get(i + 3);
-            }
 
             if (orderType == 1) {
                 handleOrder1Response(responseContent);  // responseContent包括1位通信类型和n位网关号
