@@ -20,9 +20,15 @@ public class NetMaskApplication implements Runnable {
 
     private static String getResponse(String s) {
         s = s.toLowerCase();
-        if(s.equals("fefe0400010001aabb")) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        // order 1
+        if(s.equals("fefe040101aabb")) {
+            System.out.println("order type 1 return");
             return "fefe0103000202aabb";
+        }
+        // order 2
+        if(s.equals("fefe07020a0006030218aabb")) {
+            System.out.println("order type 1 return");
+            return "fefe02060a0006030118aabb";
         }
         //add if below
 
@@ -33,7 +39,8 @@ public class NetMaskApplication implements Runnable {
     public void run() {
 
         try {
-            socket = new Socket("140.143.232.52", 14900);
+            //socket = new Socket("140.143.232.52", 14900);
+            socket = new Socket("127.0.0.1", 14900);
             System.out.println("Connected!");
             din = socket.getInputStream();
             dout = socket.getOutputStream();
@@ -74,8 +81,8 @@ public class NetMaskApplication implements Runnable {
 
                 count++;
 
-                Thread.sleep(5000);
-                //rerun per 30 second
+                Thread.sleep(2000);
+                //rerun per 2 second
 
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
