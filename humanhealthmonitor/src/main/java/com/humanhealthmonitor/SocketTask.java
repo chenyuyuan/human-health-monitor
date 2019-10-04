@@ -48,7 +48,7 @@ public class SocketTask implements Runnable {
     private int taskNum = 0;//任务号初始化为0//added0523
     private InfluxDBConnector influxDBConnector;//创建influxDB连接实例
     private CloudMsgUtil cloudMsgUtil = new CloudMsgUtil();//云短信工具
-    SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Socket socket;
     public int getTaskNum() {
         return this.taskNum;
@@ -89,7 +89,7 @@ public class SocketTask implements Runnable {
         protocolState[taskNum-1] = 1;//修改协议状态为MODBUS，表明网关已经连接且使用MODBUS//added0526
         System.out.println("SocketTask: change protocolState of netMask"+taskNum + " to 1(MODBUS)...");
 
-        PrintWriter pw = null;
+        PrintWriter pw;
         System.out.println("SocketTask: "+socket.getInetAddress() + " transferred to socketTask...");
         pw = new PrintWriter(socket.getOutputStream());
         //pw.println("FEFE0401040005AABB");
@@ -109,7 +109,7 @@ public class SocketTask implements Runnable {
         //byte[] orderByte = orderString.getBytes();
         OutputStream os = socket.getOutputStream();
         os.write(orderByte);
-        os.flush(); // ***********
+        os.flush();
         System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
         //字节读取
         //装饰流BufferedReader封装输入流（接收客户端的流）
@@ -171,7 +171,7 @@ public class SocketTask implements Runnable {
 
 
     //处理Socket收到的信息
-    public void socketInfoProcess(List<Byte> byteArrayList) {
+    private void socketInfoProcess(List<Byte> byteArrayList) {
         String date = dateformat.format(System.currentTimeMillis());
         String yearMonth = date.substring(0,7);//如2019-03
 
@@ -244,31 +244,31 @@ public class SocketTask implements Runnable {
     }
 
     // 人体红外线传感器： 2字节环境温度 + 2字节体温
-    public void processDataType1(byte[] byteArrayData) {
+    private void processDataType1(byte[] byteArrayData) {
         double ambientTemp ,bodyTemp;
 
 
     }
     // 血压设备： 1字节心率 + 1字节收缩压(systolic pressure) + 1字节舒张压(diastolic pressure)
-    public void processDataType2(byte[] byteArrayData) {
+    private void processDataType2(byte[] byteArrayData) {
         int heartRate = byteToUnsignedValue(byteArrayData[0]);
         int systolicPressure = byteToUnsignedValue(byteArrayData[1]);
         int diastolicPressure = byteToUnsignedValue(byteArrayData[2]);
 
     }
     // 血氧设备： 血氧饱和度(简写SpO2)
-    public void processDataType3(byte[] byteArrayData) {
+    private void processDataType3(byte[] byteArrayData) {
         double SpO2;
 
     }
     // 床垫： 2字节心跳 + 2字节呼吸 + 2字节温度 + 1字节动作
-    public void processDataType4(byte[] byteArrayData){
+    private void processDataType4(byte[] byteArrayData){
         int heartRate, breathFrequency, temp, action;
 
     }
 
     // 1位通信类型 + n位网关号
-    public void handleOrder1Response(byte[] responseContent) {
+    private void handleOrder1Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int communicationMethod = responseContent[0];  // 通信类型
         //int netMaskID = byteArrayToInt(responseContent, 1, responseContent.length - 1);  // 网关ID
@@ -280,7 +280,7 @@ public class SocketTask implements Runnable {
 
     }
     // n位设备ID + 1位标识
-    public void handleOrder2Response(byte[] responseContent) {
+    private void handleOrder2Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
         byte[] charArrayDeviceID = new byte[responseContent.length - 1];
@@ -289,7 +289,7 @@ public class SocketTask implements Runnable {
 
     }
     // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据
-    public void handleOrder3and4Response(byte[] responseContent) {
+    private void handleOrder3and4Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
 
         int deviceIDLength = byteToUnsignedValue(responseContent[0]);
@@ -309,26 +309,26 @@ public class SocketTask implements Runnable {
 
         String sensortype = deviceID.substring(5,7);
 
-        if (sensortype == "01") {
+        if (sensortype.equals("01")) {
             processDataType1(byteArraySensorData);
         }
-        if (sensortype == "02") {
+        if (sensortype.equals("02")) {
             processDataType2(byteArraySensorData);
         }
-        if (sensortype == "03") {
+        if (sensortype.equals("03")) {
             processDataType3(byteArraySensorData);
         }
-        if (sensortype == "04") {
+        if (sensortype.equals("04")) {
             processDataType4(byteArraySensorData);
         }
 
     }
-    public void handleOrder5Response(byte[] responseContent) {
+    private void handleOrder5Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[0]);
 
     }
-    public void handleOrder6Response(byte[] responseContent) {
+    private void handleOrder6Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int netMaskIDLength = byteToUnsignedValue(responseContent[0]);
         int deviceIDLength = byteToUnsignedValue(responseContent[1 + netMaskIDLength + 1 - 1]);
@@ -344,7 +344,7 @@ public class SocketTask implements Runnable {
         int timestamp = byteArrayToInt(byteArrayTimestamp, 0, byteArrayTimestamp.length - 1);
 
     }
-    public void handleOrder7Response(byte[] responseContent) {
+    private void handleOrder7Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
         byte[] byteArrayDeviceID = new byte[responseContent.length - 1];
@@ -353,20 +353,4 @@ public class SocketTask implements Runnable {
 
     }
 
-    public byte[] toByteArray(String hexString) {
-        if (hexString.equals("")) {
-            System.out.println("SocketTask"+taskNum+": toByteArray(): this hexString is empty");
-            throw new IllegalArgumentException("this hexString must not be empty");
-        }
-        hexString = hexString.toLowerCase();
-        final byte[] byteArray = new byte[hexString.length() / 2];
-        int k = 0;
-        for (int i = 0; i < byteArray.length; i++) {//因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
-            byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
-            byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
-            byteArray[i] = (byte) (high << 4 | low);
-            k += 2;
-        }
-        return byteArray;
-    }
 }
