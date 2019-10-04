@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
+<head>
+    <title>用户账户-基本信息</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
+    <style>
+        input.inputStyle2 {
+            font-size: 18px;
+            height: 36px;
+            width: 60%;
+            text-indent: 0.5em;
+        }
+    </style>
+    <script>
+        function checkUserModify() {
+            // || form.sex.value == ""
+            var form = document.getElementById("userModifyForm");
+            if (form.userName.value == "" || form.birthday.value == "" || form.telephone.value == "") {
+                alert("您有信息尚未填写，请补充未填写的信息");
+                window.event.returnValue = false;//验证失败不提交action
+                // return false;
+            }
+            else if (form.userName.value.length > 32)
+            // || form.telephone.value.length > 32
+            {
+                alert("昵称不能超过32个字符");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(form.userName.value)) {
+                alert("昵称只能由汉字、字母、数字和下划线组成");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            // else if(form.sex.value != "男" && form.sex.value != "女")
+            // {
+            //     alert("性别只能为男或女！");
+            //     window.event.returnValue = false;//验证失败不提交action
+            // }
+            else if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(form.telephone.value)) {
+                alert("手机号格式错误，请填写正确的手机号");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+        }
+
+        function submitOnMouseUpUserModify() {
+            var modifySubmit = document.getElementById("userModifySubmit");
+            modifySubmit.style.backgroundColor = "#EE7700";
+        }
+
+        function submitOnMouseLeaveUserModify() {
+            var modifySubmit = document.getElementById("userModifySubmit");
+            modifySubmit.style.backgroundColor = "#FFA500";
+        }
+    </script>
+</head>
+
+<body>
+<div id="header">
+    <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
+    <br/>
+    <div style="float: left;width: 60%;text-align: left">
+        <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
+    </div>
+    <div style="float: left;width: 40%;text-align: right">
+        <span style="color: darkgrey;font-size: 18px">您好！<td th:text="${user.userName}"></td></span>
+        <!--<a href="/monitorCenter/infoHallOnTime" style="text-align: right;font-size: 18px">监测中心&nbsp|</a>-->
+        <a href="/userLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
+        <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
+    </div>
+</div>
+
+<!--<hr width="100%" color="#0080FF" size="2"/>-->
+
+<!--<iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"-->
+<!--th:src="@{/master/userNavigationBar.html}"></iframe>-->
+
+<div id="head-nav" class="head-nav">
+    <div class="head-nav-con">
+        <ul>
+            <li><a href="/indexUser">首&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li class="drop-down"><a href="javascript:void(0)">监测信息</a>
+                <ul class="drop-down-content">
+                    <li><a href="/infoHallOnTime">实时监测信息</a></li>
+                    <li><a href="/infoHallHistory">历史监测信息</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测设备</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/equipmentAdd">添加设备</a></li>
+                    <li><a href="/monitorCenter/equipmentInfoManage">设备信息管理</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测对象</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/objectAdd">添加监测对象</a></li>
+                    <li><a href="/monitorCenter/objectInfoManage">监测对象信息管理</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">用户账户</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/accountBasicInfo">基本信息</a></li>
+                    <li><a href="/monitorCenter/accountPwdModify">密码修改</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div style="width: 100%">
+    <h1 style="text-align: center;color: blue;">用户基本信息管理</h1>
+</div>
+<div style="width: 100%;min-height: 80%">
+    <div style="align-self: center">
+        <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
+        <form id="userModifyForm" name="userModifyFrom" action="/monitorCenter/accountBasicInfoModify"
+              accept-charset="utf-8" method="post"
+              style="text-align:center;" onsubmit="checkUserModify()">
+            <!--margin:auto;margin-top:15%-->
+            <div class="d" style="height:550px;background-color:white;width:950px;
+        border: 1px solid lightgrey;margin: auto;">
+                <br/>
+                <p style="font-size: 28px;text-align: left;text-indent: 2em;color: blue">&nbsp基本信息
+                </p>
+                <p style="text-align: left;text-indent: 7.5em">
+                    <span class="userModifyReminder" style="text-align: left;font-size: 28px">账号:</span>
+                    <span th:text="${user.userId}" th:value="${user.userId}"
+                          style="text-align: left;font-size: 28px"></span>
+                    <input type="hidden" id="userIdInfo" name="userIdInfo" th:value="${user.userId}"/>
+                </p>
+                <p style="text-align: left;text-indent: 7.5em;margin-top: 15px">
+                    <span class="userModifyReminder" style="text-align: left;font-size: 28px">昵称:</span>
+                    <input type="text" id="userName" name="userName" th:value="${user.userName}"
+                           onfocus="this.ready()" onmouseout="this.blur()" class="inputStyle2"/>
+                </p>
+                <p style="text-align: left;text-indent: 7.5em;margin-top: 15px">
+                    <span class="userModifyReminder" style="text-align: left;font-size: 28px">性别:</span>
+                    <!--<input type="text" id="sex" name="sex" th:value="${user.sex}"  class="inputStyle2"/>-->
+                    <select id="sex" name="sex" style="font-size: 18px;height: 36px;width: 60%;text-indent: 0.5em;">
+                        <option th:value="${female}" th:selected="${user.sex eq female}">女</option>
+                        <option th:value="${male}" th:selected="${user.sex eq male}">男</option>
+                    </select>
+                </p>
+                <p style="text-align: left;text-indent: 4em;margin-top: 15px">
+                    <span class="userModifyReminder" style="text-align: left;font-size: 28px">出生日期:</span>
+                    <input type="date" id="birthday" name="birthday" th:value="${user.birthDate}" class="inputStyle2"/>
+                </p>
+                <p style="text-align: left;text-indent: 4em;margin-top: 15px">
+                    <span class="userModifyReminder" style="text-align: left;font-size: 28px">手机号码:</span>
+                    <input type="text" id="telephone" name="telephone" th:value="${user.userTel}"
+                           onfocus="this.ready()" onmouseout="this.blur()" class="inputStyle2"/>
+                </p>
+                <input type="submit" id="userModifySubmit" name="userModifySubmit"
+                       style="font-size: 18px;height: 50px;width: 40%;background-color: #FFA500;border: none;color: white"
+                       value="保存修改" onmouseover="submitOnMouseUpUserModify()"
+                       onmouseleave="submitOnMouseLeaveUserModify()"/>
+                <!--<p style="text-align: right">-->
+                <!--已有账号-><a href="/login" >立即登录&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</a>-->
+                <!--</p>-->
+            </div>
+        </form>
+    </div>
+</div>
+<!--<div style="margin-top: 80px;margin-bottom: 80px">-->
+
+<!--</div>-->
+
+<iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"
+        th:src="@{/master/footer.html}"></iframe>
+</body>
+</html>
