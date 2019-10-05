@@ -98,7 +98,7 @@ public class SocketTask implements Runnable {
         //询问网关上设备号和采集数组下标对应关系
         //组装查询命令
 
-        while (sendMsgQueue.get(taskNum-1).size()==0) {//为空则线程休眠//modified0524
+        while (sendMsgQueue.get(taskNum - 1).size() == 0) {//为空则线程休眠//modified0524
             Thread.sleep(1000);//1秒
         }
         //String orderString = sendMsgQueue[taskNum-1].poll();//取出一条命令//modified0524
@@ -267,17 +267,15 @@ public class SocketTask implements Runnable {
 
     }
 
-    // 1位通信类型 + n位网关号
+    // 1位通信类型 + n位网关号 // 处理01指令的方法在这里用不到，因为01指令已经在NewLinkProcessor类处理了
     private void handleOrder1Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int communicationMethod = responseContent[0];  // 通信类型
         //int netMaskID = byteArrayToInt(responseContent, 1, responseContent.length - 1);  // 网关ID
-
         // 将网关号所在的字节拷贝到字节数组charArrayNetmaskID上
         byte[] charArrayNetmaskID = new byte[responseContent.length - 1];
         System.arraycopy(responseContent, 1, charArrayNetmaskID, 0, charArrayNetmaskID.length);
         String netMaskID = byteArrayToString(charArrayNetmaskID,10);
-
     }
     // n位设备ID + 1位标识
     private void handleOrder2Response(byte[] responseContent) {
