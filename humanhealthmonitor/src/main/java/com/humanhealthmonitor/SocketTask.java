@@ -285,6 +285,20 @@ public class SocketTask implements Runnable {
         System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
         String deviceID = byteArrayToString(charArrayDeviceID, 16);
 
+        Equipment newEquipment = new Equipment();
+        newEquipment.setEqpId(deviceID);
+        newEquipment.setEqpName(deviceID);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
+//                                newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+//                                newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+        newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
+        newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
+        //newEquipment.setNetmaskId(netMaskId);
+        //newEquipment.setDeviceSerial(deviceSerialNew);
+        //socketTask.equipmentService.insertEquipment(newEquipment);
+
+
     }
     // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据
     private void handleOrder3and4Response(byte[] responseContent) {

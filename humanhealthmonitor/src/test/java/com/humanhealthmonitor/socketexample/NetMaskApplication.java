@@ -21,9 +21,9 @@ public class NetMaskApplication implements Runnable {
     private static String getResponse(String s) {
         s = s.toLowerCase();
         // order 1
-        if(s.equals("fefe040101aabb")) {
+        if(s.equals("fefe020101aabb")) {
             System.out.println("order type 1 return");
-            return "fefe0103000202aabb";
+            return "fefe0103000101aabb"; // 通讯类型，网关号，校验和
         }
         // order 2
         if(s.equals("fefe07020a0006030218aabb")) {

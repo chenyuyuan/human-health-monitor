@@ -1,6 +1,7 @@
 package com.humanhealthmonitor;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MsgQueue {
@@ -20,5 +21,8 @@ public class MsgQueue {
     public static SocketTask[] socketTasks = new SocketTask[32];
 
     public static int[] protocolState = new int[32]; // 初始化为0即未工作状态，为1代表MODBUS，2代表AMQP
+
+
+    public static Hashtable<String, Integer> ipNetmaskIDTable = new Hashtable<>();
 
 }
