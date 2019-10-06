@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.humanhealthmonitor.MsgQueue.ipNetmaskIDTable;
+
 import static com.humanhealthmonitor.util.ByteUtils.*;
 
 public class NewLinkProcessor implements Runnable{
@@ -32,7 +34,7 @@ public class NewLinkProcessor implements Runnable{
         System.out.println("NewLinkProcessor: "+socket.getInetAddress() + " has already linked...");
         pw = new PrintWriter(socket.getOutputStream());
 
-        String orderString = "FEFE040101AABB";//询问网关号，固定命令
+        String orderString = "FEFE020101AABB";//询问网关号，固定命令
         byte[] orderByte = toByteArray(orderString);
 
         //byte[] orderByte = orderString.getBytes();
@@ -71,84 +73,88 @@ public class NewLinkProcessor implements Runnable{
 
     //处理Socket收到的信息
     public void socketInfoProcess(List<Byte> byteArrayList) {
-        while (byteArrayList.size() >= 10) {
-            if (byteArrayList.get(0) == (byte) 0xFE && byteArrayList.get(1) == (byte) 0xFE) {
-                int dataLength = byteToUsignedValue(byteArrayList.get(4)) * 256 + byteToUsignedValue(byteArrayList.get(5));//获取传感器数据长度
-                if (byteArrayList.size() >= (dataLength + 6 + 3)) {//字节总长度达不到，证明数据损坏，这里的9是数据前6后3附加字节总长
-                    if (byteArrayList.get(dataLength + 9 - 2) == (byte) 0xAA && byteArrayList.get(dataLength + 9 - 1) == (byte) 0xBB) {//验证结尾格式AABB
-                        //校验和计算
-                        int check = 0;
-                        for (int i = 0; i < dataLength; i++) {
-                            check += byteArrayList.get(i + 6);
-                        }
-                        check = Math.abs(check) % 64;
-                        if (check == byteArrayList.get(dataLength + 9 - 3)) {//比对数据发送前后的校验和，一致则继续，不一致说明数据传输错误//这里需要判断包长会否大于大dataLength+9-3，防止出错
-                            System.out.println("NewLinkProcessor: check pass...");
-                            //int netMaskId = byteToUnsignedValue(byteArrayList.get(2));//伪网关id，00
-                            int orderType = byteToUsignedValue(byteArrayList.get(3));//04是全部设备信息，03是指定设备信息
-                            System.out.println("NewLinkProcessor: orderType: " + orderType);
-                            List<Byte> dataList = byteArrayList.subList(6, 6 + dataLength);//取出校验成功的数据区数据，放到dataList中
+        while (byteArrayList.size() >= 8) {
+            int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
+            int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
+            byte[] responseContent = new byte[responseLength - 1];  // 不包括校验和(扣掉1位校验和)
+            int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
-                            System.out.println("NewLinkProcessor: dataList of order 01:"+dataList);
 
-                            int netMaskId = byteToUsignedValue(byteArrayList.get(6));
-                            System.out.println("NewLinkProcessor: netMaskId: "+netMaskId);
-                            //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
-                            MsgQueue.socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
-                            if(MsgQueue.socketTasks[netMaskId-1].getTaskNum() == netMaskId) { //说明已经在运行
-                                System.out.println("NewLinkProcessor: conflict, netmask"+netMaskId+" already exist,please check your setting...");
-                            }
-                            else {
-                                System.out.println("NewLinkProcessor: socketTasks"+netMaskId+" ready to start...");
-                                //socketTasks[netMaskId-1] = new SocketTask();
-                                MsgQueue.socketTasks[netMaskId-1].setSocket(socket);
-                                MsgQueue.socketTasks[netMaskId-1].setTaskNum(netMaskId);
-                                new Thread(MsgQueue.socketTasks[netMaskId-1]).start();
-                            }
-
-                            //内圈while处理完之后
-                            System.out.println("NewLinkProcessor: Info: data section analyze completed...");
-                            //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-                            if(dataLength + 9 < byteArrayList.size()) {//如果小于，则截取然后继续，针对的是一个数据包内多个回复帧的情况
-                                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                            }
-                            else {//如果数据分析完毕，直接跳出外圈while循环
-                                System.out.println("NewLinkProcessor: Info: package analyze completed....");
-                                break;
-                            }
-                            //校验和验证，验证成功继续，然后是判断设备类型，这里先简易地写死，00是血压，01是温度。02是血氧，
-                            //然后把数据库里面的设备号改成网关一样的，或者设备上加字段，设备号之外再加网关和网关内设备序号
-                            //取出数据后存入influxdb
-
-                        } else { //校验和错误，去掉最前面的一个字节，进入下一个循环
-                            System.out.println("NewLinkProcessor: data check error...");
-                            byteArrayList.remove(0);
-                        }
-                    } else { //结尾格式不是AABB，证明数据损坏，去掉最前面的一个字节，进入下一个循环
-                        System.out.println("NewLinkProcessor: package tail is broken...");
-                        byteArrayList.remove(0);
-                    }
-
-                } else { //字节总长度达不到，证明数据可能损坏，去掉最前面的一个字节，进入下一个循环
-                    System.out.println("NewLinkProcessor: package length error compared to dataLength, maybe package is broken...");
-                    byteArrayList.remove(0);
-                    //break;
-                }
-                //                byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
-                //                if(dataLength + 9 < byteArrayList.size())//如果小于，则截取然后继续
-                //                {
-                //                    byteArrayList = byteArrayList.subList(dataLength + 9, byteArrayList.size());
-                //                }
-                //                else//否则直接跳出while循环
-                //                {
-                //                    System.out.println("Info: package is deserted...no valuable data...");
-                //                    break;
-                //                }
-            } else {//如果数据头不是FEFE，去掉前面的一个字节，进入下一个循环
+            if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
+                System.out.println("NewLinkProcessor(socketInfoProcess): The byte head is not FEFE");
                 byteArrayList.remove(0);
+                break;
             }
-            //外圈while循环每圈一定会执行的位置
+            if (byteArrayList.size() != responseLength + 6) {
+                System.out.println("NewLinkProcessor(socketInfoProcess): The byte length is wrong");
+                byteArrayList.remove(0);
+                break;
+            }
+            if (byteArrayList.get(byteArrayList.size() - 2) != (byte) 0xAA || byteArrayList.get(byteArrayList.size() - 1) != (byte) 0xBB) {
+                System.out.println("NewLinkProcessor(socketInfoProcess): The byte tale is not AABB");
+                byteArrayList.remove(0);
+                break;
+            }
+
+            // 将回复信息放到responseContent
+            for (int i = 0; i < responseLength - 1;++i) {
+                responseContent[i] = byteArrayList.get(i + 3);
+            }
+
+            //校验和计算
+            int check = 0;
+            for (int i = 0; i < byteArrayList.size() - 3; ++i) {
+                check = check + byteArrayList.get(i);
+                if(check > 256) {
+                    check = check % 256;
+                }
+            }
+            if (check != checkSum) {
+                System.out.println("NewLinkProcessor(socketInfoProcess): data check error...");
+                byteArrayList.remove(0);
+                break;
+            }
+
+
+            System.out.println("NewLinkProcessor(socketInfoProcess): orderType: " + orderType);
+            List<Byte> dataList = byteArrayList.subList(6, 6 + responseLength);//取出校验成功的数据区数据，放到dataList中
+
+            System.out.println("NewLinkProcessor(socketInfoProcess): dataList of order 01:"+dataList);
+
+            int netMaskId = byteToUsignedValue(byteArrayList.get(6));
+            System.out.println("NewLinkProcessor(socketInfoProcess): netMaskId: "+netMaskId);
+            //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
+            MsgQueue.socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
+            if(MsgQueue.socketTasks[netMaskId-1].getTaskNum() == netMaskId) { //说明已经在运行
+                System.out.println("NewLinkProcessor(socketInfoProcess): conflict, netmask"+netMaskId+" already exist,please check your setting...");
+            }
+            else {
+                System.out.println("NewLinkProcessor(socketInfoProcess): socketTasks"+netMaskId+" ready to start...");
+                //socketTasks[netMaskId-1] = new SocketTask();
+
+                String socketIpAddress = socket.getLocalAddress().getHostAddress();
+                int socketPort = socket.getLocalPort();
+                System.out.println("NewLinkProcessor(socketInfoProcess): ip address is " + socketIpAddress + ":" + socketPort);
+                ipNetmaskIDTable.put(socketIpAddress, netMaskId);
+
+                MsgQueue.socketTasks[netMaskId-1].setSocket(socket);
+                MsgQueue.socketTasks[netMaskId-1].setTaskNum(netMaskId);
+                new Thread(MsgQueue.socketTasks[netMaskId-1]).start();
+            }
+
+            //内圈while处理完之后
+            System.out.println("NewLinkProcessor(socketInfoProcess): Info: data section analyze completed...");
+            //可能存在dataLength写的值大于实际值，出现dataLength + 9 < byteArrayList.size()的情况，于是加了一个判断来避免异常
+            if(responseLength + 9 < byteArrayList.size()) {//如果小于，则截取然后继续，针对的是一个数据包内多个回复帧的情况
+                byteArrayList = byteArrayList.subList(responseLength + 9, byteArrayList.size());
+            }
+            else {//如果数据分析完毕，直接跳出外圈while循环
+                System.out.println("NewLinkProcessor(socketInfoProcess): Info: package analyze completed....");
+                break;
+            }
+            //校验和验证，验证成功继续，然后是判断设备类型，这里先简易地写死，00是血压，01是温度。02是血氧，
+            //然后把数据库里面的设备号改成网关一样的，或者设备上加字段，设备号之外再加网关和网关内设备序号
+            //取出数据后存入influxdb
         }
     }
 
