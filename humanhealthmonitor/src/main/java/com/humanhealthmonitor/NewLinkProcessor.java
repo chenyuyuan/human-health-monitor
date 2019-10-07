@@ -121,7 +121,7 @@ public class NewLinkProcessor implements Runnable{
 
             System.out.println("NewLinkProcessor(socketInfoProcess): dataList of order 01:"+dataList);
 
-            int netMaskId = byteToUsignedValue(byteArrayList.get(6));
+            int netMaskId = byteToUsignedValue(byteArrayList.get(byteArrayList.size() - 4));
             System.out.println("NewLinkProcessor(socketInfoProcess): netMaskId: "+netMaskId);
             //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
             MsgQueue.socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
@@ -132,10 +132,11 @@ public class NewLinkProcessor implements Runnable{
                 System.out.println("NewLinkProcessor(socketInfoProcess): socketTasks"+netMaskId+" ready to start...");
                 //socketTasks[netMaskId-1] = new SocketTask();
 
-                String socketIpAddress = socket.getLocalAddress().getHostAddress();
-                int socketPort = socket.getLocalPort();
-                System.out.println("NewLinkProcessor(socketInfoProcess): ip address is " + socketIpAddress + ":" + socketPort);
-                ipNetmaskIDTable.put(socketIpAddress, netMaskId);
+                String socketIp = socket.getInetAddress().getHostAddress();
+                int socketPort = socket.getPort();
+                String socketAddress = socketIp + ":" + socketPort;
+                System.out.println("NewLinkProcessor(socketInfoProcess): ip address is " + socketAddress);
+                ipNetmaskIDTable.put(socketAddress, netMaskId);
 
                 MsgQueue.socketTasks[netMaskId-1].setSocket(socket);
                 MsgQueue.socketTasks[netMaskId-1].setTaskNum(netMaskId);

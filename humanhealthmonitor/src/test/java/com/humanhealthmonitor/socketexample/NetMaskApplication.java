@@ -21,14 +21,15 @@ public class NetMaskApplication implements Runnable {
     private static String getResponse(String s) {
         s = s.toLowerCase();
         // order 1
-        if(s.equals("fefe020101aabb")) {
+        if(s.equals("fefe"+"02"+"01"+"01aabb")) {
             System.out.println("order type 1 return");
-            return "fefe0103000101aabb"; // 通讯类型，网关号，校验和
+            return "fefe"+"01"+"03"+"00"+"01"+"01"+"aabb"; // 通讯类型，网关号，校验和
         }
         // order 2
-        if(s.equals("fefe07020a0006030218aabb")) {
-            System.out.println("order type 1 return");
-            return "fefe02060a0006030118aabb";
+        if(s.equals("fefe"+"07"+"02"+"0a00060309"+"21"+"aabb")) {
+            System.out.println("order type 2 return");
+            return "fefe"+"02"+"07"+"0a00060309"+"01"+"22"+"aabb"; //添加成功
+            //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
         }
         //add if below
 

@@ -17,10 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import static com.humanhealthmonitor.MsgQueue.inetAddressArray;
-import static com.humanhealthmonitor.MsgQueue.protocolState;
-import static com.humanhealthmonitor.MsgQueue.sendMsgQueue;
-
+import static com.humanhealthmonitor.MsgQueue.*;
 import static com.humanhealthmonitor.util.ByteUtils.*;
 
 /**
@@ -285,18 +282,24 @@ public class SocketTask implements Runnable {
         System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
         String deviceID = byteArrayToString(charArrayDeviceID, 16);
 
+        String socketIp = socket.getInetAddress().getHostAddress();
+        int socketPort = socket.getPort();
+        String socketAddress = socketIp + ":" + socketPort;
+        int netMaskId = ipNetmaskIDTable.get(socketAddress);
+
+
         Equipment newEquipment = new Equipment();
         newEquipment.setEqpId(deviceID);
-        newEquipment.setEqpName(deviceID);//设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
-//                                newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-//                                newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-        newEquipment.setSpecial(false);//该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
+        newEquipment.setEqpName(deviceID); //设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
+        //newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+        //newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+        newEquipment.setSpecial(false); //该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
         newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
-        //newEquipment.setNetmaskId(netMaskId);
+        newEquipment.setNetmaskId(netMaskId);
         //newEquipment.setDeviceSerial(deviceSerialNew);
-        //socketTask.equipmentService.insertEquipment(newEquipment);
+        socketTask.equipmentService.insertEquipment(newEquipment);
 
 
     }
