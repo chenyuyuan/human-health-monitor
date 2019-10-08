@@ -19,26 +19,6 @@ public class HumanhealthmonitorApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(HumanhealthmonitorApplication.class, args);
-        // 测试于2019.04.23
-        // sendMsgQueue.offer("element1");//元素插入队尾
-        // sendMsgQueue.offer("element2");
-        // String str = sendMsgQueue.poll();//获取并移除此队列的头，如果此队列为空，则返回 null
-        // String str = sendMsgQueue.peek();//获取但不移除队列头
-        // System.out.println(str);
-        // String str2 = sendMsgQueue.poll();
-        // System.out.println(str2);
-        // String str3 = sendMsgQueue.poll();
-        // if (str3 == null){
-        //     System.out.println("str3null");
-        // }else{
-        //     System.out.println(str3);
-        // 添加于2019.04.03
-        // serverSocketTest();
-        // try{
-        //     serverSocket = new ServerSocket(14900);
-        // }catch (IOException e) {
-        //     e.printStackTrace();
-        // }
 
         //added0525
         MsgQueue.inetAddressArray = new ArrayList<>();
