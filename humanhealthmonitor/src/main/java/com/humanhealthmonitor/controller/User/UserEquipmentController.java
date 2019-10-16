@@ -65,7 +65,7 @@ public class UserEquipmentController {
 
         //如果查找设备号为空则尝试添加，不为空且objectId不为null则提示设备已绑定，不为空但objectId为null说明设备已经注册但被解除了绑定，需要更新绑定的监测对象
         Equipment eqp = equipmentService.queryEquipmentByEqpId(eqpId);
-
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~got parameter");
         if (eqp == null) {
             int flagAdd;//标识设备添加是否成功,0失败，1成功
             //验证该设备类型统一模式的匹配字符串
@@ -185,10 +185,9 @@ public class UserEquipmentController {
         //取出用户关联的监测对象的所有设备信息
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByUserId(user.getUserId());
 
-//        System.out.println("129");
-        if (equipmentList.size() == 0)//如果没有设备，提示先添加设备
-        {
-//            System.out.println("132");
+        // System.out.println("129");
+        if (equipmentList.size() == 0) {//如果没有设备，提示先添加设备
+        // System.out.println("132");
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('没有设备可管理，请先添加设备！');</script>");
@@ -234,8 +233,8 @@ public class UserEquipmentController {
         //取回页面修改后的设备名称并更新数据库
         String newEqpName = request.getParameter("eqpName");
         String eqpIdShow = request.getParameter("eqpIdShow");
-//        System.out.println(newEqpName);
-//        System.out.println(eqpIdShow);
+        // System.out.println(newEqpName);
+        // System.out.println(eqpIdShow);
         Equipment equipmentModify = new Equipment();
         equipmentModify.setEqpName(newEqpName);
         equipmentModify.setEqpId(eqpIdShow);
@@ -297,15 +296,13 @@ public class UserEquipmentController {
         //取回页面设备Id和下拉列表选中的对象Id
         String eqpId = request.getParameter("eqpIdInModifyBanding");
         String newObjectId = request.getParameter("objectSelected");
-//        System.out.println(eqpId);
-//        System.out.println(newObjectId);
-        if (newObjectId.equals(equipmentService.queryEquipmentByEqpId(eqpId).getObjectId()))//对象没变，提示
-        {
+        // System.out.println(eqpId);
+        // System.out.println(newObjectId);
+        if (newObjectId.equals(equipmentService.queryEquipmentByEqpId(eqpId).getObjectId())) {//对象没变，提示
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('绑定对象未作改动！');</script>");
-        } else//对象变了，数据库操作完成后提示修改成功然后返回设备信息管理页面
-        {
+        } else {//对象变了，数据库操作完成后提示修改成功然后返回设备信息管理页面
             Equipment equipment = new Equipment();
             equipment.setEqpId(eqpId);
             equipment.setObjectId(newObjectId);
@@ -408,28 +405,22 @@ public class UserEquipmentController {
 
         //从页面取出设备号，警戒值顺序号和新的警戒值
         String eqpId = request.getParameter("eqpIdInModifyAlarmValue");
-//        System.out.println(eqpId+"UserEquipmentController Line349");
         int serial = Integer.parseInt(request.getParameter("alarmValueSelected"));
-//        System.out.println(serial+"UserEquipmentController Line351");
         float newValue = Float.parseFloat(request.getParameter("newValue"));
-//        System.out.println(newValue+"UserEquipmentController Line353");
 
         Equipment equipment = equipmentService.queryEquipmentByEqpId(eqpId);
-        if (equipment.getSpecial())//如果设备的special值本来就是1，那么直接查找并修改特殊值表
-        {
+        if (equipment.getSpecial()) {//如果设备的special值本来就是1，那么直接查找并修改特殊值表
             AlarmSpecialValue alarmSpecialValue = new AlarmSpecialValue();
             alarmSpecialValue.setEqpId(eqpId);
             alarmSpecialValue.setSerial(serial);
             alarmSpecialValue.setValue(newValue);
             alarmSpecialValueService.updateAlarmSpecialValue(alarmSpecialValue);
-        } else//否则，把设备的special值置1，插入一组该设备的警戒值到特殊警报值数据库
-        {
+        } else {//否则，把设备的special值置1，插入一组该设备的警戒值到特殊警报值数据库
             equipment.setSpecial(true);
             equipmentService.updateEquipmentSpecial(equipment);
             List<AlarmNormalValue> alarmNormalValueList = alarmNormalValueService.queryAlarmNormalValueByEqpType(equipment.getEqpType());
             AlarmSpecialValue alarmSpecialValue = new AlarmSpecialValue();
-            for (int i = 0; i < alarmNormalValueList.size(); i++)//拷贝默认值到特殊值表
-            {
+            for (int i = 0; i < alarmNormalValueList.size(); i++) {//拷贝默认值到特殊值表
                 alarmSpecialValue.setValueName(alarmNormalValueList.get(i).getValueName());
                 alarmSpecialValue.setEqpId(eqpId);
                 alarmSpecialValue.setIndexSeq(alarmNormalValueList.get(i).getIndexSeq());//added in 16/03/2019
@@ -468,13 +459,11 @@ public class UserEquipmentController {
         String eqpId = request.getParameter("eqpIdInModifyAlarmValueReset");
 
         Equipment equipment = equipmentService.queryEquipmentByEqpId(eqpId);
-        if (!equipment.getSpecial())//如果special值为0，提示该设备未设置特殊警报值，不需要重置。
-        {
+        if (!equipment.getSpecial()) {//如果special值为0，提示该设备未设置特殊警报值，不需要重置。
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('该设备未设置特殊警报值，不需要重置。');</script>");
-        } else //如果special值为1，删除special数据库中相应设备的特殊警报值,special置0
-        {
+        } else {//如果special值为1，删除special数据库中相应设备的特殊警报值,special置0
             alarmSpecialValueService.deleteAlarmSpecialValueByEqpId(eqpId);
             equipment.setSpecial(false);
             equipmentService.updateEquipmentSpecial(equipment);
@@ -482,21 +471,18 @@ public class UserEquipmentController {
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('警报界限值重置成功！');</script>");
         }
-
         //准备返回页面
         request.setAttribute("eqpId", eqpId);
-
         List<AlarmNormalValue> alarmNormalValueList = alarmNormalValueService.queryAlarmNormalValueByEqpType(equipment.getEqpType());
         request.setAttribute("alarmValueList", alarmNormalValueList);
-
         return "monitorCenter/modifyAlarmValue";
     }
 
 
     //判断设备是否有特殊警报值，如果没有就取默认警报值
     private void judgeEqpAlarmValue(HttpServletRequest request, Equipment equipment) {
-        //取出设备警戒值，首先判断special字段，为0则从mormal表中取值，为1则从special表里取值，alarmSpecialValue作为暂存实例
-//        AlarmSpecialValue alarmValue = new AlarmSpecialValue();
+        // 取出设备警戒值，首先判断special字段，为0则从mormal表中取值，为1则从special表里取值，alarmSpecialValue作为暂存实例
+        // AlarmSpecialValue alarmValue = new AlarmSpecialValue();
         if (!equipment.getSpecial()) { // 取默认值
             List<AlarmNormalValue> alarmNormalValueList = alarmNormalValueService.queryAlarmNormalValueByEqpType(equipment.getEqpType());
             request.setAttribute("alarmValueList", alarmNormalValueList);
@@ -516,32 +502,4 @@ public class UserEquipmentController {
             System.out.println("ObjInfoHallController: Cannot get info, the netMask owing the equipment is offline...");
         }
     }
-
-    //    public byte[] toByteArray(String hexString) {
-    //        if (hexString.equals("")) {
-    //            System.out.println("SocketTask"+taskNum+": toByteArray(): this hexString is empty");
-    //            throw new IllegalArgumentException("this hexString must not be empty");
-    //        }
-    //        hexString = hexString.toLowerCase();
-    //        final byte[] byteArray = new byte[hexString.length() / 2];
-    //        int k = 0;
-    //        for (int i = 0; i < byteArray.length; i++) {//因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
-    //            byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
-    //            byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
-    //            byteArray[i] = (byte) (high << 4 | low);
-    //            k += 2;
-    //        }
-    //        return byteArray;
-    //    }
-    //
-    //    //将1个字节的8个位解析成无符号0-255的值
-    //    public int byteToUsignedValue(Byte b) {
-    //        int bInt = (int) b;
-    //        if (bInt >= 0) {
-    //            return bInt;
-    //        } else {
-    //            return (bInt + 256);
-    //        }
-    //    }
-
 }
