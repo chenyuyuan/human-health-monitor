@@ -133,7 +133,7 @@ public class UserEquipmentController {
                     newEquipment.setNetmaskId(1);
                     newEquipment.setDeviceSerial(-1);
 
-//                equipmentService.insertEquipment(newEquipment);//非网关验证注册，而是直接注册时使用此语句
+                    //equipmentService.insertEquipment(newEquipment);//非网关验证注册，而是直接注册时使用此语句
 
                     //更新设备名称、绑定人和设备类型，因为网关传来的只有eqpId，设备类型可以根据eqpId分析得出，可在解析下位机命令后添加
                     equipmentService.updateEquipmentName(newEquipment);//added0601
