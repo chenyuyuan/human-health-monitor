@@ -51,6 +51,27 @@ public class UserEquipmentController {
         }
     }
 
+    //监测中心-添加设备
+    @RequestMapping("/monitorCenter/newEquipmentAdd")
+    public String newEquipmentAdd(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException {
+        User user = (User) request.getSession().getAttribute("user");
+        request.setAttribute("user", user);
+
+        //如果没有添加监测对象，提示先添加监测对象
+        List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
+        if (objectList == null) {
+            response.setContentType("text/html;charset=utf-8");
+            PrintWriter out = response.getWriter();
+            out.print("<script language=\"javascript\">alert('没有监测对象可供设备绑定，请先去添加监测对象！');</script>");
+            return "indexUser";
+        } else {
+            request.setAttribute("objectList", objectList);
+            List<EquipmentType> eqpTypeList = equipmentTypeService.queryAllEquipmentType();
+            request.setAttribute("eqpTypeList", eqpTypeList);
+            return "monitorCenter/newEquipmentAdd";
+        }
+    }
+
     //监测中心-添加设备结果
     @RequestMapping("/monitorCenter/equipmentAddResult")
     public String equipmentAddResult(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException, InterruptedException {

@@ -1,4 +1,4 @@
-package com.humanhealthmonitor.controller;
+package com.humanhealthmonitor.controller.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
