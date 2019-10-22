@@ -37,7 +37,7 @@ public class UserEquipmentRestController {
     @ResponseBody
     public HashMap receive(@RequestBody JSONObject params, HttpServletRequest request, HttpServletResponse response)
             throws IOException, NullPointerException, InterruptedException {
-        System.out.println("<UserEquipmentRestController>:");
+        System.out.println("[UserEquipmentRestController]:");
         //String content = params.getString("content");
 
         User user = (User) request.getSession().getAttribute("user");
@@ -128,7 +128,9 @@ public class UserEquipmentRestController {
                     equipmentService.updateEquipmentType(newEquipment);//comment0601
 
                     response.setContentType("text/html;charset=utf-8");
+                    System.out.println("[UserEquipmentRestController]: before getWriter?????");
                     PrintWriter out = response.getWriter();
+                    System.out.println("[UserEquipmentRestController]: after getWriter?????");
                     out.print("<script language=\"javascript\">alert('设备添加成功！');</script>");
                 }
                 else {
