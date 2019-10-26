@@ -37,8 +37,9 @@ public class UserEquipmentRestController {
     @ResponseBody
     public HashMap receive(@RequestBody JSONObject params, HttpServletRequest request, HttpServletResponse response)
             throws IOException, NullPointerException, InterruptedException {
-        System.out.println("[UserEquipmentRestController]:");
+        System.out.print("[UserEquipmentRestController]:");
         //String content = params.getString("content");
+        HashMap res = new HashMap();
 
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
@@ -52,7 +53,6 @@ public class UserEquipmentRestController {
 
         //如果查找设备号为空则尝试添加，不为空且objectId不为null则提示设备已绑定，不为空但objectId为null说明设备已经注册但被解除了绑定，需要更新绑定的监测对象
         Equipment eqp = equipmentService.queryEquipmentByEqpId(eqpId);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~got parameter");
         if (eqp == null) {
             int flagAdd;//标识设备添加是否成功,0失败，1成功
             //验证该设备类型统一模式的匹配字符串
@@ -67,6 +67,7 @@ public class UserEquipmentRestController {
                 // String repairString = "0";//补齐字节
                 String orderTypeStr = "02";
                 String endStr = "AABB";
+                System.out.println("~~~~~~~~~~~After AABB");
                 for(int i = 0;i <32;i++) {
                     if(MsgQueue.protocolState[i] == 1 || MsgQueue.protocolState[i] == 2) {
                         String netMaskIdStr = Integer.toHexString(i+1);
@@ -129,34 +130,29 @@ public class UserEquipmentRestController {
 
                     response.setContentType("text/html;charset=utf-8");
                     System.out.println("[UserEquipmentRestController]: before getWriter?????");
-                    PrintWriter out = response.getWriter();
+                    //PrintWriter out = response.getWriter();
                     System.out.println("[UserEquipmentRestController]: after getWriter?????");
-                    out.print("<script language=\"javascript\">alert('设备添加成功！');</script>");
+                    //out.print("<script language=\"javascript\">alert('设备添加成功！');</script>");
                 }
                 else {
-                    response.setContentType("text/html;charset=utf-8");
-                    PrintWriter out = response.getWriter();
-                    out.print("<script language=\"javascript\">alert('设备添加失败！请检查网关号是否正确、网络连通是否畅通后重新尝试添加');</script>");
+                    System.out.print("查数据库失败 Return message: \"failed!\"");
+                    res.put("msg","failed");
                 }
             }else{
-                response.setContentType("text/html;charset=utf-8");
-                PrintWriter out = response.getWriter();
-                out.print("<script language=\"javascript\">alert('您所输入的设备号与设备类型不匹配！请输入正确的设备号或更改设备类型！');</script>");
+                System.out.print("typeMarchString匹配失败 Return message: \"failed!\"");
+                res.put("msg","failed");
             }
         } else if (eqp.getObjectId() != null) {
-            //eqp不为null且有绑定的监测对象
-            response.setContentType("text/html;charset=utf-8");
-            PrintWriter out = response.getWriter();
-            out.print("<script language=\"javascript\">alert('该设备已被绑定，请解绑此设备后再进行绑定操作');</script>");
+            System.out.print("Return message: \"failed!\"");
+            res.put("msg","failed");
         } else {
             //eqp不为null且没有绑定的监测对象
             eqp.setObjectId(objectId);
             eqp.setEqpName(eqpName);
             equipmentService.updateEquipmentObject(eqp);
 
-            response.setContentType("text/html;charset=utf-8");
-            PrintWriter out = response.getWriter();
-            out.print("<script language=\"javascript\">alert('已添加设备，已为您重新绑定设备到该监测对象');</script>");
+            System.out.print("Return message: \"failed!\"");
+            res.put("msg","failed");
         }
         List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
         request.setAttribute("objectList", objectList);
@@ -167,7 +163,7 @@ public class UserEquipmentRestController {
 
 
 
-        HashMap res = new HashMap();
+
         res.put("msg","success");
 
         return res;
