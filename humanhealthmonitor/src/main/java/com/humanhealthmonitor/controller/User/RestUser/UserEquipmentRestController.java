@@ -63,42 +63,47 @@ public class UserEquipmentRestController {
                 //验证通过，开始向网关发送命令查询设备
                 //组装查询命令
                 String startStr = "FEFE";
-                String dataLengthStr = "07";//有效数据字节数
-                // String repairString = "0";//补齐字节
-                String orderTypeStr = "02";
                 String endStr = "AABB";
-                System.out.println("~~~~~~~~~~~After AABB");
-                for(int i = 0;i <32;i++) {
-                    if(MsgQueue.protocolState[i] == 1 || MsgQueue.protocolState[i] == 2) {
-                        String netMaskIdStr = Integer.toHexString(i+1);
-                        if(netMaskIdStr.length() == 1) {
-                            netMaskIdStr = "0"+netMaskIdStr;
-                        }
-                        int checkCal = ( i + 1 ) + 2 + Integer.parseInt("0"+eqpId.charAt(0),16) +
-                                Integer.parseInt(eqpId.substring(1,3),16) + Integer.parseInt(eqpId.substring(3,5),16) +
-                                Integer.parseInt(eqpId.substring(5,7),16) + Integer.parseInt(eqpId.substring(7,9),16);
-                        checkCal = Math.abs(checkCal)%64;//计算校验和
-                        String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
-                        if(checkCalStr.length()==1) {
-                            checkCalStr = "0" + checkCalStr;
-                        }
-                        String deviceRegisterOrder = startStr + dataLengthStr + netMaskIdStr + orderTypeStr +
-                                eqpId + checkCalStr + endStr;
-                        //根据该网关使用的协议发送查询命令
-                        sendMessage(i+1,deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
-                        System.out.println("UserEquipmentController: deviceRegisterOrder"+(i+1)+": "+deviceRegisterOrder);
+                String dataLengthStr = "07"; //数据长度
+                String orderTypeStr = "02"; //指令码
+//                ？？？ 先直接发给1号网关
+//                for(int i = 0;i <32;i++) {
+//                }
+                if(MsgQueue.protocolState[0] == 1 || MsgQueue.protocolState[0] == 2) {
+                    String netMaskIdStr = Integer.toHexString(1);
+                    if(netMaskIdStr.length() == 1) {
+                        netMaskIdStr = "0"+netMaskIdStr;
                     }
-                    else {
-                        // System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
-                    }
+                    int checkCal = ( 255 + 255 + 2 + 7 )  + Integer.parseInt("0"+eqpId.charAt(0),16) +
+                            Integer.parseInt(eqpId.substring(1,3),16) + Integer.parseInt(eqpId.substring(3,5),16) +
+                            Integer.parseInt(eqpId.substring(5,7),16) + Integer.parseInt(eqpId.substring(7,9),16);
+                    checkCal = Math.abs(checkCal)%64;//计算校验和
+                    String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
+                    String eqpIdAddZero = "";
+                    if(eqpId.length()%2 == 1) eqpIdAddZero = "0" + eqpId;
+                    if(checkCalStr.length() == 1)
+                        checkCalStr = "0" + checkCalStr;
+                    String deviceRegisterOrder = startStr + dataLengthStr + orderTypeStr +
+                            eqpIdAddZero + checkCalStr + endStr;
+                    System.out.println("The Order is " + deviceRegisterOrder);
+
+                    // 根据该网关使用的协议发送查询命令
+                    sendMessage(1,deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
+                    System.out.println("UserEquipmentController: deviceRegisterOrder"+(1)+": "+deviceRegisterOrder);
+                }
+                else {
+                    System.out.print("没有选择要传送的协议（可能已经与当前网关断开连接） Return message: \"failed!\"");
+                    // System.out.println("NetMask["+(i+1)+"] is unregistered or offline...");
                 }
                 //等待返回设备添加结果，sleep一段时间后查找数据库，如果查到了就返回注册成功//网关验证注册时使用此块语句
                 System.out.println("UserEquipmentController: start waiting for the result of adding equipment...");
-                Thread.sleep(15000);//等待15秒
+                Thread.sleep(5000);//等待5秒
                 System.out.println("UserEquipmentController: the result of adding equipment is ready to get...");
                 //查询是否能在数据库中找到，找到了flagAdd置1，找不到置0
                 Equipment newAddEquipment = equipmentService.queryEquipmentByEqpId(eqpId);
+                System.out.println("equipmentService.queryEquipmentByEqpId: " + eqpId);
                 if(newAddEquipment == null) {
+                    System.out.println("没找到绑定的设备号");
                     flagAdd = 0;
                 }
                 else {
@@ -129,10 +134,8 @@ public class UserEquipmentRestController {
                     equipmentService.updateEquipmentType(newEquipment);//comment0601
 
                     response.setContentType("text/html;charset=utf-8");
-                    System.out.println("[UserEquipmentRestController]: before getWriter?????");
-                    //PrintWriter out = response.getWriter();
-                    System.out.println("[UserEquipmentRestController]: after getWriter?????");
-                    //out.print("<script language=\"javascript\">alert('设备添加成功！');</script>");
+                    System.out.println("数据库Equipment更新成功！");
+                    res.put("msg", "binded success");
                 }
                 else {
                     System.out.print("查数据库失败 Return message: \"failed!\"");
@@ -160,11 +163,7 @@ public class UserEquipmentRestController {
         request.setAttribute("eqpTypeList", eqpTypeList);
 
 
-
-
-
-
-        res.put("msg","success");
+        res.putIfAbsent("msg", "success");
 
         return res;
     }

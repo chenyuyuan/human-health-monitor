@@ -25,10 +25,10 @@ public class NetMaskApplication implements Runnable {
             System.out.println("order type 1 return");
             return "fefe"+"01"+"03"+"00"+"01"+"01"+"aabb"; // 通讯类型，网关号，校验和
         }
-        // order 2
-        if(s.equals("fefe"+"07"+"02"+"0a00060309"+"21"+"aabb")) {
+        // order 2 FEFE07020A0006010921AABB
+        if(s.equals("fefe"+"07"+"02"+"0a00060109"+"21"+"aabb")) {
             System.out.println("order type 2 return");
-            return "fefe"+"02"+"07"+"0a00060309"+"01"+"22"+"aabb"; //添加成功
+            return "fefe"+"02"+"07"+"0a00060109"+"01"+"20"+"aabb"; //添加成功
             //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
         }
         //add if below
@@ -41,7 +41,7 @@ public class NetMaskApplication implements Runnable {
 
         try {
             //socket = new Socket("140.143.232.52", 14900);
-            socket = new Socket("127.0.0.1", 14900);
+            socket = new Socket("127.0.0.1", 24900);
             System.out.println("Connected!");
             din = socket.getInputStream();
             dout = socket.getOutputStream();

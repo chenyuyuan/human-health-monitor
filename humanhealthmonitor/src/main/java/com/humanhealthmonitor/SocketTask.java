@@ -209,12 +209,12 @@ public class SocketTask implements Runnable {
                 byteArrayList.remove(0);
                 break;
             }
-
-
             // 将回复信息放到responseContent
             for (int i = 0; i < responseLength - 1;++i) {
-                responseContent[i] = byteArrayList.get(i + 3);
+                responseContent[i] = byteArrayList.get(i + 4);
             }
+
+            System.out.println("[SocketTask]: start handling data as order " + orderType);
             if (orderType == 1) {
                 handleOrder1Response(responseContent);  // responseContent包括1位通信类型和n位网关号
             }
@@ -237,6 +237,9 @@ public class SocketTask implements Runnable {
                 handleOrder7Response(responseContent);
             }
 
+            System.out.println("[SocketTask：socketInfoProcess]: 指令处理完成！");
+            byteArrayList.remove(0);
+            break;
         }
     }
 
@@ -280,12 +283,21 @@ public class SocketTask implements Runnable {
         int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
         byte[] charArrayDeviceID = new byte[responseContent.length - 1];
         System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
-        String deviceID = byteArrayToString(charArrayDeviceID, 16);
+        String deviceID = byteArrayToString(charArrayDeviceID, 16).toUpperCase();
 
         String socketIp = socket.getInetAddress().getHostAddress();
         int socketPort = socket.getPort();
         String socketAddress = socketIp + ":" + socketPort;
         int netMaskId = ipNetmaskIDTable.get(socketAddress);
+
+
+        System.out.println("[SocketTask:handleOrder2Response]: ");
+        System.out.print("flag = " + flag +
+                " deviceID = " + deviceID +
+                " socketIp = " + socketIp +
+                " socketPort = " + socketPort +
+                " socketAddress =" + socketAddress +
+                " netMaskId =" + netMaskId + "\n");
 
 
         Equipment newEquipment = new Equipment();
@@ -299,8 +311,10 @@ public class SocketTask implements Runnable {
         newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
         newEquipment.setNetmaskId(netMaskId);
         //newEquipment.setDeviceSerial(deviceSerialNew);
-        socketTask.equipmentService.insertEquipment(newEquipment);
-
+        int insertEquitmentResult = socketTask.equipmentService.insertEquipment(newEquipment); //
+        if(insertEquitmentResult < 0) {
+            //插入失败
+        }
 
     }
     // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据

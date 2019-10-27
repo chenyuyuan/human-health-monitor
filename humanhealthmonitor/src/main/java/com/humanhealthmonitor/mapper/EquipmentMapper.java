@@ -9,10 +9,12 @@ import java.util.List;
 @Repository
 public interface EquipmentMapper {
 
-    //添加监测设备//modified 20190416 add netmaskId,deviceSerial
+    //添加监测设备；返回值应该是插入的条数，所以这里插入成功的话应该返回1
     @Insert("insert into equipment(eqpId,objectId,eqpName,eqpType,netmaskId,deviceSerial,special,registerDate) " +
             "values(#{eqpId},#{objectId},#{eqpName},#{eqpType},#{netmaskId},#{deviceSerial},#{special},#{registerDate})")
     int insertEquipment(Equipment equipment);
+
+
 
     //监测设备更换绑定人并修改设备名称
     @Update("update equipment set objectId=#{objectId},eqpName=#{eqpName} where eqpId=#{eqpId}")

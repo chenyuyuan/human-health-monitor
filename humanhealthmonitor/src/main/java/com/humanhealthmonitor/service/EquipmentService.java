@@ -14,7 +14,12 @@ public class EquipmentService {
 
     //添加监测设备
     public int insertEquipment(Equipment equipment) {
-        return equipmentMapper.insertEquipment(equipment);
+        if (queryEquipmentByEqpId(equipment.getEqpId()) == null) {
+            return equipmentMapper.insertEquipment(equipment);
+        }
+        else {
+            return -1;
+        }
     }
 
     //监测设备更换绑定人并修改设备名称
@@ -38,20 +43,17 @@ public class EquipmentService {
     }
 
     //监测设备类型更新（主要为添加新设备所用）
-    public int updateEquipmentType(Equipment equipment)
-    {
+    public int updateEquipmentType(Equipment equipment) {
         return equipmentMapper.updateEquipmentType(equipment);
     }
 
     //监测设备网关号更新
-    public int updateEquipmentNetMaskId(Equipment equipment)
-    {
+    public int updateEquipmentNetMaskId(Equipment equipment) {
         return equipmentMapper.updateEquipmentNetMaskId(equipment);
     }
 
     //监测设备（在网关的）顺序号更新
-    public int updateEquipmentDeviceSerial(Equipment equipment)
-    {
+    public int updateEquipmentDeviceSerial(Equipment equipment) {
         return equipmentMapper.updateEquipmentDeviceSerial(equipment);
     }
 
@@ -71,8 +73,7 @@ public class EquipmentService {
     }
 
     //根据netmaskId和deviceSerial查询设备信息
-    public Equipment queryEquipmentByNetSerial(int netmaskId, int deviceSerial)
-    {
+    public Equipment queryEquipmentByNetSerial(int netmaskId, int deviceSerial) {
         return equipmentMapper.queryEquipmentByNetSerial(netmaskId,deviceSerial);
     }
 

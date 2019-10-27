@@ -141,7 +141,7 @@
             "eqpTypeSelected": "Temperature01",
             "eqpId": "A00060109",
             "eqpName": "yuantemp",
-            "objectSelected": "哈工大威海1号"
+            "objectSelected": "hitwhob001"
         };
         $.ajax({
             url:'http://localhost:8081/rest/monitorCenter/equipmentAddResult',
@@ -150,16 +150,16 @@
             data:JSON.stringify(tosenddata),
             dataType:'json',
             success:function (data) {
-                console.log(data);
+                console.log("[function:send:ajax]the success return message is " + data.msg);
                 if(data.msg === "success"){
-                    alert("success msg")
+                    //console.log("the return message is " + data.msg);
                 }
                 else {
-                    alert("success")
+                    //console.log("the return message is " + data.msg);
                 }
             },
             error:function(a,b,c) {
-                alert("error");
+                console.log("[function:send:ajax]the error return message is " + data.msg);
                 console.log(a.status+"::"+a.readyState+"::"+b)
             }
         })
