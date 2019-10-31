@@ -794,8 +794,7 @@ public class UserInfoHallController {
                 System.out.println("UserInfoHallController: lowPressureList"+lowPressureList);
                 System.out.println("UserInfoHallController: heartRateList"+heartRateList);
             }
-            if (flagBloodOxygen01 == 1)
-            {
+            if (flagBloodOxygen01 == 1) {
                 QueryResult spo2Results =  influxDBConnector.queryData("select spo2 from bloodOxygen where objectId = "
                         +"'"+objectSelected+"'"+" and time > "+timestampStart+" and time < "+timestampEnd);
                 // System.out.println("UserInfoHallController: spo2Results: "+spo2Results);
@@ -856,8 +855,7 @@ public class UserInfoHallController {
 
 
     //返回时间戳字符串，单位纳秒（ns）,而非毫秒，请注意
-    public String dateTimeLocalToTimeStampString(String dateTimeLocal)
-    {
+    public String dateTimeLocalToTimeStampString(String dateTimeLocal) {
         dateTimeLocal = dateTimeLocal.replace("T"," ");
         dateTimeLocal = dateTimeLocal+":00";//加上秒值00
         LocalDateTime localDateTimeStart = LocalDateTime.parse(dateTimeLocal,df);
@@ -865,8 +863,7 @@ public class UserInfoHallController {
         return String.valueOf(timestamp*1000000);
     }
     //向网关发送获取数据的命令
-    public void sendMessage(int netMaskId,String order)
-    {
+    public void sendMessage(int netMaskId,String order) {
         if (MsgQueue.protocolState[netMaskId-1] == 1 ) {
             MsgQueue.sendMsgQueue.get(netMaskId-1).offer(order);////added0524
         }

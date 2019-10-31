@@ -84,8 +84,7 @@ public class IndexObjectController {
         String year = date.substring(0,4);
         String month = date.substring(5,7);
         ObjectResourceUse objectResourceUse = objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(object.getObjectId(),yearMonth);
-        if (objectResourceUse != null)
-        {
+        if (objectResourceUse != null) {
             int minuteOnlineTimeLength =(int)((object.getLastLogoutTime().getTime()-object.getLastLoginTime().getTime())/(1000*60));
             System.out.println("IndexObjectController: minuteOnlineTimeLength: "+minuteOnlineTimeLength);
             objectResourceUse.setOnlineTimeLength(objectResourceUse.getOnlineTimeLength()+minuteOnlineTimeLength);

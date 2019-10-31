@@ -84,14 +84,12 @@ public class IndexUserController {
         String year = date.substring(0,4);
         String month = date.substring(5,7);
         ObjectResourceUse objectResourceUse = objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(user.getUserId(),yearMonth);
-        if (objectResourceUse != null)
-        {
+        if (objectResourceUse != null) {
             int minuteOnlineTimeLength =(int)((user.getLastLogoutTime().getTime()-user.getLastLoginTime().getTime())/(1000*60));
             System.out.println("IndexUserController: minuteOnlineTimeLength: "+minuteOnlineTimeLength);
             objectResourceUse.setOnlineTimeLength(objectResourceUse.getOnlineTimeLength()+minuteOnlineTimeLength);
             objectResouceUseService.updateObjectResourceUseOnlyOnlineTimeLength(objectResourceUse);
-        }else
-        {
+        }else {
             ObjectResourceUse newObjectResourceUse = new ObjectResourceUse();
             newObjectResourceUse.setObjectId(user.getUserId());
             newObjectResourceUse.setYearMonth(yearMonth);
@@ -118,8 +116,7 @@ public class IndexUserController {
                         endDate = java.sql.Date.valueOf(yearMonth+"-28");
                     }
                 }
-            }else
-            {
+            }else {
                 System.out.println("IndexUserController: resourceUse endDate month error...");
             }
             newObjectResourceUse.setEndDate(endDate);

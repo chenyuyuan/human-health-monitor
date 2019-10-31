@@ -143,8 +143,7 @@ public class LoginController {
         //角色判断与登录，按照管理员、用户、监测对象的顺序逐个判断
         Admin admin = adminService.adminLogin(userId, password);
 
-        if (admin != null)//管理员登录
-        {
+        if (admin != null) {//管理员登录
             //将管理员登录操作写入Log
             AdminLog adminLog = new AdminLog();
             adminLog.setAdminId(admin.getAdminId());
