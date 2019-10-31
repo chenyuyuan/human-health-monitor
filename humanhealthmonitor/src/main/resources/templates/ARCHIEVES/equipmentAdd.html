@@ -5,13 +5,7 @@
     <title>添加设备</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
-    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
-    
-    <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
-    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+]   <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
     <!--<script type="text/javascript" th:src="@{/javascript/checkInput.js}"></script>-->
     <script>
         function checkEquipmentAdd() {
@@ -32,12 +26,12 @@
                 window.event.returnValue = false;//验证失败不提交action
             }
         }
-        
+
         function submitOnMouseUpEquipmentAdd() {
             var addSubmit = document.getElementById("equipmentAddSubmit");
             addSubmit.style.backgroundColor = "#EE7700";
         }
-        
+
         function submitOnMouseLeaveEquipmentAdd() {
             var addSubmit = document.getElementById("equipmentAddSubmit");
             addSubmit.style.backgroundColor = "#FFA500";
@@ -103,21 +97,21 @@
         border: 1px solid lightgrey;margin: auto;">
             <br/>
             <p style="font-size: 28px;text-align: left;text-indent: 2em">添加设备</p>
-            
+
             <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">设备类型</p>
             <select id="eqpTypeSelected" name="eqpTypeSelected"
                     style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
                 <option th:each="eqpType:${eqpTypeList}" th:value="${eqpType.eqpType}"
                         th:text="${eqpType.eqpType}"></option>
             </select>
-            
+
             <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">设备号</p>
             <input type="text" id="eqpId" name="eqpId" placeholder="请输入设备上标注的设备识别号码" class="inputStyle1"/>
-            
+
             <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">设备名称</p>
             <input type="text" id="eqpName" name="eqpName" value="" placeholder="只能由汉字、字母、数字和下划线组成"
                    class="inputStyle1"/>
-            
+
             <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">绑定对象</p>
             <select id="objectSelected" name="objectSelected"
                     style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
@@ -127,48 +121,12 @@
             <p style="height: 36px"></p>
             <p style="text-align: left;font-size: 12px;text-indent: 4em">点击下方“添加”按钮后请等待15秒，15秒后将返回添加结果</p>
             <input type="submit" id="equipmentAddSubmit" name="equipmentAddSubmit"
-                   style="font-size: 18px;height: 50px;width: 83%;background-color: #FFA500;border: none;color: white" th:onclick="'javascript:send()'"
+                   style="font-size: 18px;height: 50px;width: 83%;background-color: #FFA500;border: none;color: white"
                    value="添    加" onmouseover="submitOnMouseUpEquipmentAdd()"
                    onmouseleave="submitOnMouseLeaveEquipmentAdd()"/>
         </div>
     </form>
 </div>
 <iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%" th:src="@{/master/footer.html}"></iframe>
-<script type = "text/javascript">
-    send = function (){
-        console.log("[function: send]: start");
-        tosenddata={
-            "eqpTypeSelected": $("#eqpTypeSelected").val(),
-            "eqpId": $("#eqpId").val(),
-            "eqpName": $("#eqpName").val(),
-            "objectSelected": $("#objectSelected").val()
-        };
-        console.log("send start")
-        console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
-        $.ajax({
-            url:'http://localhost:8081/rest/monitorCenter/equipmentAddResult',
-            type:"POST",
-            contentType: 'application/json; charset=UTF-8',
-            data:JSON.stringify(tosenddata),
-            dataType:'json',
-            success:function (data) {
-                console.log("[function:send:ajax]the success return message is " + data.msg);
-                if(data.msg === "success"){
-                    //console.log("the return message is " + data.msg);
-                }
-                else {
-                    //console.log("the return message is " + data.msg);
-                }
-            },
-            error:function(a,b,c) {
-                console.log("[function:send:ajax]the error return message is " + data.msg);
-                console.log(a.status+"::"+a.readyState+"::"+b)
-            }
-        })
-    }
-    $(document).ready(function () {
-    
-    })
-</script>
 </body>
 </html>

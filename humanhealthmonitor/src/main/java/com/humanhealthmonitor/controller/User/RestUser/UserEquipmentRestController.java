@@ -138,15 +138,15 @@ public class UserEquipmentRestController {
                     res.put("msg", "binded success");
                 }
                 else {
-                    System.out.print("查数据库失败 Return message: \"failed!\"");
+                    System.out.print("查数据库失败 Return message: \"failed!\"1");
                     res.put("msg","failed");
                 }
             }else{
-                System.out.print("typeMarchString匹配失败 Return message: \"failed!\"");
+                System.out.print("typeMarchString匹配失败 Return message: \"failed!\"2");
                 res.put("msg","failed");
             }
         } else if (eqp.getObjectId() != null) {
-            System.out.print("Return message: \"failed!\"");
+            System.out.print("Return message: \"failed!\"3");
             res.put("msg","failed");
         } else {
             //eqp不为null且没有绑定的监测对象
@@ -154,7 +154,7 @@ public class UserEquipmentRestController {
             eqp.setEqpName(eqpName);
             equipmentService.updateEquipmentObject(eqp);
 
-            System.out.print("Return message: \"failed!\"");
+            System.out.print("Return message: \"failed!\"4");
             res.put("msg","failed");
         }
         List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());

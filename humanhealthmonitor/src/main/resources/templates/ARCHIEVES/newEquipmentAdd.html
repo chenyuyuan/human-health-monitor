@@ -134,15 +134,17 @@
 	</form>
 </div>
 <iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%" th:src="@{/master/footer.html}"></iframe>
-<script type = "text/javascript" charset = "utf-8">
-    function send() {
+<script type = "text/javascript">
+    send = function (){
         console.log("[function: send]: start");
         tosenddata={
-            "eqpTypeSelected": "Temperature01",
-            "eqpId": "A00060109",
-            "eqpName": "yuantemp",
-            "objectSelected": "hitwhob001"
+            "eqpTypeSelected": $("#eqpTypeSelected").val(),
+            "eqpId": $("#eqpId").val(),
+            "eqpName": $("#eqpName").val(),
+            "objectSelected": $("#objectSelected").val()
         };
+        console.log("send start")
+        console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
         $.ajax({
             url:'http://localhost:8081/rest/monitorCenter/equipmentAddResult',
             type:"POST",
