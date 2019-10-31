@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.humanhealthmonitor.util.ByteUtils.*;
-
 public class NetMaskApplication implements Runnable {
     private NetMaskApplication() {}
 
