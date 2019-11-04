@@ -30,6 +30,12 @@ public class NetMaskApplication implements Runnable {
             return "fefe"+"02"+"07"+"0a00060109"+"01"+"20"+"aabb"; //添加成功
             //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
         }
+        // order 2 改
+        if(s.equals("fefe"+"07"+"02" + "05" +"0a00060109"+"21"+"aabb")) {
+            System.out.println("order type 2 return");
+            return "fefe"+"02"+"07" + "05" + "0a00060109"+"01"+"20"+"aabb"; //添加成功
+            //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
+        }
         //add if below
 
 

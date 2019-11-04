@@ -15,6 +15,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.text.SimpleDateFormat;
 
+import static com.humanhealthmonitor.util.ByteUtils.*;
+
 @Controller
 public class UserEquipmentController {
     @Autowired
@@ -102,7 +104,7 @@ public class UserEquipmentController {
                 for(int i = 0;i <32;i++) {
                     if(MsgQueue.protocolState[i] == 1 || MsgQueue.protocolState[i] == 2) {
                         String netMaskIdStr = Integer.toHexString(i+1);
-                        if(netMaskIdStr.length() == 1) {
+                        if(netMaskIdStr.length() % 2 == 1) {
                             netMaskIdStr = "0"+netMaskIdStr;
                         }
                         int checkCal = ( i + 1 ) + 2 + Integer.parseInt("0"+eqpId.charAt(0),16) +
@@ -113,7 +115,10 @@ public class UserEquipmentController {
                         if(checkCalStr.length()==1) {
                             checkCalStr = "0" + checkCalStr;
                         }
-                        String deviceRegisterOrder = startStr + dataLengthStr + netMaskIdStr + orderTypeStr +
+                        byte[] netMaskIdLengthChar = new byte[1];
+                        netMaskIdLengthChar[0] = (byte)netMaskIdStr.length();
+                        String netMaskIdLength = byteArrayToString(netMaskIdLengthChar, 16);
+                        String deviceRegisterOrder = startStr + dataLengthStr + netMaskIdLength + netMaskIdStr + orderTypeStr +
                                 eqpId + checkCalStr + endStr;
                         //根据该网关使用的协议发送查询命令
                         sendMessage(i+1,deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉

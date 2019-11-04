@@ -281,8 +281,9 @@ public class SocketTask implements Runnable {
     private void handleOrder2Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
-        byte[] charArrayDeviceID = new byte[responseContent.length - 1];
-        System.arraycopy(responseContent, 0, charArrayDeviceID, 0, charArrayDeviceID.length);
+        int deviceIDLength = byteToUnsignedValue(responseContent[0]);
+        byte[] charArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, 0, charArrayDeviceID, 0, deviceIDLength);
         String deviceID = byteArrayToString(charArrayDeviceID, 16).toUpperCase();
 
         String socketIp = socket.getInetAddress().getHostAddress();
@@ -290,14 +291,12 @@ public class SocketTask implements Runnable {
         String socketAddress = socketIp + ":" + socketPort;
         int netMaskId = ipNetmaskIDTable.get(socketAddress);
 
+        if(flag % 16 == 0) return;
 
         System.out.println("[SocketTask:handleOrder2Response]: ");
-        System.out.print("flag = " + flag +
-                " deviceID = " + deviceID +
-                " socketIp = " + socketIp +
-                " socketPort = " + socketPort +
-                " socketAddress =" + socketAddress +
-                " netMaskId =" + netMaskId + "\n");
+        System.out.print("flag = " + flag + " deviceID = " + deviceID +
+                " socketIp = " + socketIp + " socketPort = " + socketPort +
+                " socketAddress =" + socketAddress + " netMaskId =" + netMaskId + "\n");
 
 
         Equipment newEquipment = new Equipment();
@@ -314,6 +313,7 @@ public class SocketTask implements Runnable {
         int insertEquitmentResult = socketTask.equipmentService.insertEquipment(newEquipment); //
         if(insertEquitmentResult < 0) {
             //插入失败
+            return;
         }
 
     }
