@@ -51,9 +51,10 @@ public class ObjInfoHallController {
         Object object = (Object) request.getSession().getAttribute("object");
         request.setAttribute("object", object);
 
-        //从数据库中取出设备列表传到页面
+        //从数据库中取出设备列表传到页面 //为啥要传到页面
+        //查找对象绑定的所以有设备
         List<Equipment> objEquipmentList = equipmentService.queryAllEquipmentByObjectId(object.getObjectId());
-        request.setAttribute("equipmentList", objEquipmentList);/////////////////////////
+        request.setAttribute("equipmentList", objEquipmentList);
 
         //判断监测对象有没有设备
         if (objEquipmentList.size() != 0) {//如果有设备
@@ -83,7 +84,7 @@ public class ObjInfoHallController {
             int netMaskIdTemp;
             int deviceSerialTemp;
             int checkCal;
-            for (int i = 0;i < objEquipmentList.size();i++) {
+            for (int i = 0; i < objEquipmentList.size(); i++) {
                 if (objEquipmentList.get(i).getEqpType().equals("Temperature01")) {
                     flagTemperature01 = 1;
                     netMaskIdTemp = objEquipmentList.get(i).getNetmaskId();
