@@ -85,7 +85,7 @@ public class NewLinkProcessor implements Runnable{
                 byteArrayList.remove(0);
                 break;
             }
-            if (byteArrayList.size() != responseLength + 6) {
+            if (byteArrayList.size() != responseLength + 7) {
                 System.out.println("NewLinkProcessor(socketInfoProcess): The byte length is wrong");
                 byteArrayList.remove(0);
                 break;

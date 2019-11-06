@@ -107,7 +107,7 @@ public class UserEquipmentController {
                         if(netMaskIdStr.length() % 2 == 1) {
                             netMaskIdStr = "0"+netMaskIdStr;
                         }
-                        int checkCal = ( i + 1 ) + 2 + Integer.parseInt("0"+eqpId.charAt(0),16) +
+                        int checkCal = 2 + Integer.parseInt("0"+eqpId.charAt(0),16) +
                                 Integer.parseInt(eqpId.substring(1,3),16) + Integer.parseInt(eqpId.substring(3,5),16) +
                                 Integer.parseInt(eqpId.substring(5,7),16) + Integer.parseInt(eqpId.substring(7,9),16);
                         checkCal = Math.abs(checkCal)%64;//计算校验和

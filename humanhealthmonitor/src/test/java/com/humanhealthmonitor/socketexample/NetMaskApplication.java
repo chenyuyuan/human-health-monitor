@@ -22,20 +22,24 @@ public class NetMaskApplication implements Runnable {
         // order 1
         if(s.equals("fefe"+"02"+"01"+"01aabb")) {
             System.out.println("order type 1 return");
-            return "fefe"+"01"+"03"+"00"+"01"+"01"+"aabb"; // 通讯类型，网关号，校验和
+            return "fefe"+"01"+"02"+"00"+"01"+"01"+"aabb"; // 通讯类型，网关号，校验和
         }
         // order 2 FEFE07020A0006010921AABB
         if(s.equals("fefe"+"07"+"02"+"0a00060109"+"21"+"aabb")) {
             System.out.println("order type 2 return");
-            return "fefe"+"02"+"07"+"0a00060109"+"01"+"20"+"aabb"; //添加成功
+            return "fefe"+"02"+"06"+"0a00060109"+"01"+"20"+"aabb"; //添加成功
             //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
         }
         // order 2 改
-        if(s.equals("fefe"+"07"+"02" + "05" +"0a00060109"+"21"+"aabb")) {
+        if(s.equals("fefe"+"07"+   "02"+"04"+"0a000304"+"21"   +"aabb")) {
             System.out.println("order type 2 return");
-            return "fefe"+"02"+"07" + "05" + "0a00060109"+"01"+"20"+"aabb"; //添加成功
+            return "fefe"+"02"+"06" +  "04"+"0a000304"+"01"  +"20"+"aabb"; //添加成功
             //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
         }
+        // order 3
+
+        // order 4
+
         //add if below
 
 

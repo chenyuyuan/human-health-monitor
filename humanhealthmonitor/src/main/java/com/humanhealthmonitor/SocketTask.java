@@ -177,7 +177,7 @@ public class SocketTask implements Runnable {
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
-            byte[] responseContent = new byte[responseLength - 1];  // 不包括校验和(扣掉1位校验和)
+            byte[] responseContent = new byte[responseLength];  // 回复信息就是不包括校验和(不用扣掉1位校验和)
             int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
             if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
@@ -185,7 +185,7 @@ public class SocketTask implements Runnable {
                 byteArrayList.remove(0);
                 break;
             }
-            if (byteArrayList.size() != responseLength + 6) {
+            if (byteArrayList.size() != responseLength + 7) {
                 System.out.println("SocketTask: The byte length is wrong");
                 byteArrayList.remove(0);
                 break;
@@ -194,6 +194,11 @@ public class SocketTask implements Runnable {
                 System.out.println("SocketTask: The byte tale is not AABB");
                 byteArrayList.remove(0);
                 break;
+            }
+
+            // 将回复信息放到responseContent
+            for (int i = 0; i < responseLength;++i) {
+                responseContent[i] = byteArrayList.get(i + 4);
             }
 
             // 检查校验和
@@ -209,10 +214,7 @@ public class SocketTask implements Runnable {
                 byteArrayList.remove(0);
                 break;
             }
-            // 将回复信息放到responseContent
-            for (int i = 0; i < responseLength - 1;++i) {
-                responseContent[i] = byteArrayList.get(i + 4);
-            }
+
 
             System.out.println("[SocketTask]: start handling data as order " + orderType);
             if (orderType == 1) {
