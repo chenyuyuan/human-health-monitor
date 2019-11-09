@@ -203,8 +203,8 @@ public class SocketTask implements Runnable {
 
             // 检查校验和
             int check = 0;
-            for (int i = 0; i < byteArrayList.size() - 3; ++i) {
-                check = check + byteArrayList.get(i);
+            for (int i = 0; i < responseLength; ++i) {
+                check = check + responseContent[i];
                 if(check > 256) {
                     check = check % 256;
                 }

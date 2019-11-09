@@ -76,7 +76,7 @@ public class NewLinkProcessor implements Runnable{
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
-            byte[] responseContent = new byte[responseLength - 1];  // 不包括校验和(扣掉1位校验和)
+            byte[] responseContent = new byte[responseLength];  // 不包括校验和(扣掉1位校验和)
             int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
 
@@ -103,8 +103,8 @@ public class NewLinkProcessor implements Runnable{
 
             //校验和计算
             int check = 0;
-            for (int i = 0; i < byteArrayList.size() - 3; ++i) {
-                check = check + byteArrayList.get(i);
+            for (int i = 0; i < responseLength; ++i) {
+                check = check + responseContent[i];
                 if(check > 256) {
                     check = check % 256;
                 }
