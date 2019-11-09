@@ -340,6 +340,7 @@ public class SocketTask implements Runnable {
 
         String sensortype = deviceID.substring(5,7);
 
+        
         if (sensortype.equals("01")) {
             processDataType1(byteArraySensorData);
         }

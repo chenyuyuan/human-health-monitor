@@ -126,12 +126,15 @@ public class ObjInfoHallController {
                 }
             }
             System.out.println("ObjInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
+
+            String order = "FEFE020404AABB";
+
             List<Equipment> noEquipmentList = new ArrayList<>();
             //连接InfluxDB
             influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
             influxDBConnector.connectToDatabase();
             if (flagTemperature01 == 1) {
-                sendMessage(netMaskIdTemperature01,temperature01Order);//added0526
+                sendMessage(1, order);//added0526
                 for (int i = 0;i < 10;i++) {
                     bodyTempList.add(0.0);
                     envTempList.add(0.0);
@@ -166,7 +169,7 @@ public class ObjInfoHallController {
 
             if (flagBloodPressure01 == 1) {
                 //                sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
-                sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
+                sendMessage(1,order);//added0526
                 for (int i = 0;i < 10;i++) {
                     highPressureList.add(0.0);
                     lowPressureList.add(0.0);
@@ -205,7 +208,7 @@ public class ObjInfoHallController {
             }
             if (flagBloodOxygen01 == 1) {
 //                sendMsgQueue.get(netMaskIdBloodOxygen01-1).offer(bloodOxygen01Order);////added0524
-                sendMessage(netMaskIdBloodOxygen01,bloodOxygen01Order);//added0526
+                sendMessage(1,order);
                 for (int i = 0;i < 10;i++) {
                     spo2List.add(0.0);
                 }
