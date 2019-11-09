@@ -245,29 +245,6 @@ public class SocketTask implements Runnable {
         }
     }
 
-    // 人体红外线传感器： 2字节环境温度 + 2字节体温
-    private void processDataType1(byte[] byteArrayData) {
-        double ambientTemp ,bodyTemp;
-
-
-    }
-    // 血压设备： 1字节心率 + 1字节收缩压(systolic pressure) + 1字节舒张压(diastolic pressure)
-    private void processDataType2(byte[] byteArrayData) {
-        int heartRate = byteToUnsignedValue(byteArrayData[0]);
-        int systolicPressure = byteToUnsignedValue(byteArrayData[1]);
-        int diastolicPressure = byteToUnsignedValue(byteArrayData[2]);
-
-    }
-    // 血氧设备： 血氧饱和度(简写SpO2)
-    private void processDataType3(byte[] byteArrayData) {
-        double SpO2;
-
-    }
-    // 床垫： 2字节心跳 + 2字节呼吸 + 2字节温度 + 1字节动作
-    private void processDataType4(byte[] byteArrayData){
-        int heartRate, breathFrequency, temp, action;
-
-    }
 
     // 1位通信类型 + n位网关号 // 处理01指令的方法在这里用不到，因为01指令已经在NewLinkProcessor类处理了
     private void handleOrder1Response(byte[] responseContent) {
@@ -338,20 +315,48 @@ public class SocketTask implements Runnable {
         byte[] byteArraySensorData = new byte[sensorDataLength];
         System.arraycopy(responseContent, deviceIDLength + timestampLength + 3 , byteArraySensorData, 0, byteArraySensorData.length);
 
-        String sensortype = deviceID.substring(5,7);
+        String sensortype = deviceID.substring(4,6); //A000304
 
-        
-        if (sensortype.equals("01")) {
-            processDataType1(byteArraySensorData);
+        int validLength = 0;//存储有效数据长度
+        //存储时间
+        byte[] timeByte = new byte[7];
+        String timeString = "";
+
+        //连接InfluxDB
+        influxDBConnector = new InfluxDBConnector("Andy","123456",
+                "http://140.143.232.52:8086","health_data");
+        influxDBConnector.connectToDatabase();
+        influxDBConnector.setRetentionPolicy();
+        Map<String, String> tags = new HashMap<>();
+        Map<String, java.lang.Object> fields = new HashMap<>();
+
+
+
+
+        int highBloodPressure = byteToUsignedValue(dataList.get(2));
+        int lowBloodPressure = byteToUsignedValue(dataList.get(3));
+        int heartRate = byteToUsignedValue(dataList.get(4));
+        for (int i = 0; i < 7; i++) {
+            timeByte[i] = dataList.get(i + 5);
         }
-        if (sensortype.equals("02")) {
-            processDataType2(byteArraySensorData);
-        }
-        if (sensortype.equals("03")) {
-            processDataType3(byteArraySensorData);
-        }
-        if (sensortype.equals("04")) {
-            processDataType4(byteArraySensorData);
+        timeString = bytesToHexString(timeByte);
+        System.out.println("SocketTask"+taskNum+": BloodPressure... " + "highBloodPressure: " + highBloodPressure + "  lowBloodPressure: " +
+                lowBloodPressure + "  heartBeat: " + heartRate + " bloodPressureTimeString: " + timeString);
+        //数据过滤
+        if (highBloodPressure == 255 && lowBloodPressure == 255 && heartRate==255) {
+            System.out.println("SocketTask"+taskNum+": invalid BloodPressure01 255 data...");
+        }else {
+            //插入新数据到influxDB
+            tags.clear();
+            fields.clear();
+            tags.put("netmaskId", String.valueOf(deviceID));
+            tags.put("eqpId", "");
+            tags.put("objectId", "");
+            tags.put("sendTime", timeString);
+            fields.put("highPressure", highBloodPressure);////
+            fields.put("lowPressure", lowBloodPressure);////
+            fields.put("heartRate", heartRate);
+            influxDBConnector.insertData("bloodPressure", tags, fields);
         }
 
     }
