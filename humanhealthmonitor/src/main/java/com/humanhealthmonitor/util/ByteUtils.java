@@ -4,15 +4,6 @@ import java.math.BigInteger;
 
 public class ByteUtils {
 
-    //将1个字节的8个位解析成无符号0-255的值
-    public static int byteToUsignedValue(Byte b) {
-        int bInt = (int) b;
-        if (bInt >= 0) {
-            return bInt;
-        } else {
-            return (bInt + 256);
-        }
-    }
 
     public static byte[] toByteArray(String hexString) {
         if (hexString.equals(""))

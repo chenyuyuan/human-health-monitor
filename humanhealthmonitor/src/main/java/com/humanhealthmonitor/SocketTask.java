@@ -296,26 +296,34 @@ public class SocketTask implements Runnable {
         }
 
     }
-    // 1位ID长度（n） + n位设备ID + 1位时间戳长度（m） + m位时间戳 + 1位传感器数据长度（p） + p位传感器数据
+    // 1位ID长度（n）+n位设备ID +
+    // 1位时间戳长度（m）+m位时间戳 +
+    // 1位类型长度（q）+q位类型 +
+    // 1位传感器数据长度（p）+p位传感器数据
     private void handleOrder3and4Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
 
         int deviceIDLength = byteToUnsignedValue(responseContent[0]);
         int timestampLength = 4;
-        int sensorDataLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 + timestampLength + 1 - 1]);
+        int typeLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 + timestampLength + 1 - 1]);
+        int sensorDataLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 + timestampLength + 1 + typeLength + 1 - 1]);
 
         byte[] byteArrayDeviceID = new byte[deviceIDLength];
         System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
         String deviceID = byteArrayToString(byteArrayDeviceID, 16);
 
         byte[] byteArrayTimestamp = new byte[timestampLength];
-        System.arraycopy(responseContent, deviceIDLength + 2, byteArrayTimestamp, 0, byteArrayTimestamp.length);
+        System.arraycopy(responseContent, deviceIDLength+2, byteArrayTimestamp, 0, byteArrayTimestamp.length);
         String timestamp = byteArrayToString(byteArrayTimestamp, 10);
 
-        byte[] byteArraySensorData = new byte[sensorDataLength];
-        System.arraycopy(responseContent, deviceIDLength + timestampLength + 3 , byteArraySensorData, 0, byteArraySensorData.length);
+        byte[] byteArrayType = new byte[typeLength];
+        System.arraycopy(responseContent, deviceIDLength+timestampLength+3, byteArrayType, 0, byteArrayType.length);
+        String typeBinaryString = byteArrayToString(byteArrayType,2);
 
-        String sensortype = deviceID.substring(4,6); //A000304
+        byte[] byteArraySensorData = new byte[sensorDataLength];
+        System.arraycopy(responseContent, deviceIDLength+timestampLength+typeLength+4 , byteArraySensorData, 0, byteArraySensorData.length);
+
+        String sensorType = deviceID.substring(4,6); //A000304
 
         int validLength = 0;//存储有效数据长度
         //存储时间
@@ -331,30 +339,55 @@ public class SocketTask implements Runnable {
         Map<String, java.lang.Object> fields = new HashMap<>();
 
 
+        int environmentTemperature = 0; // 1
+        int bodyTemperature = 0; // 2
+        int heartRate = 0; // 3
 
+        int systolicBloodPressure = 0; // 4 收缩压 比较高
+        int diastolicBloodPressure = 0; // 5 舒张压 比较低
 
-        int highBloodPressure = byteToUsignedValue(dataList.get(2));
-        int lowBloodPressure = byteToUsignedValue(dataList.get(3));
-        int heartRate = byteToUsignedValue(dataList.get(4));
-        for (int i = 0; i < 7; i++) {
-            timeByte[i] = dataList.get(i + 5);
+        int bloodOxygenSaturation = 0; // 6 血氧饱和度
+        int breath = 0; // 7 呼吸
+        int action = 0; // 8 动作
+
+        if(byteArraySensorData.length == 0) {
+            return;
+        }
+
+//        床垫
+        if(sensorType.equals("01")) {
+            byte[] byteArrayActionMattress = new byte[timestampLength];
+            //System.arraycopy(byteArraySensorData, 1, byteArrayActionMattress, 0, actionMattressLength);
+            //String timestamp = byteArrayToString(byteArrayTimestamp, 10);
+        }
+//        血压
+        else if(sensorType.equals("02")) {
+
+        }
+//        血氧
+        else if(sensorType.equals("03")) {
+
+        }
+//        温度
+        else if(sensorType.equals("04")) {
+
         }
         timeString = bytesToHexString(timeByte);
-        System.out.println("SocketTask"+taskNum+": BloodPressure... " + "highBloodPressure: " + highBloodPressure + "  lowBloodPressure: " +
-                lowBloodPressure + "  heartBeat: " + heartRate + " bloodPressureTimeString: " + timeString);
+        System.out.println("SocketTask"+taskNum+": BloodPressure... " + "highBloodPressure: " + systolicBloodPressure + "  lowBloodPressure: " +
+                diastolicBloodPressure + "  heartBeat: " + heartRate + " bloodPressureTimeString: " + timeString);
         //数据过滤
-        if (highBloodPressure == 255 && lowBloodPressure == 255 && heartRate==255) {
+        if (systolicBloodPressure == 255 && diastolicBloodPressure == 255 && heartRate==255) {
             System.out.println("SocketTask"+taskNum+": invalid BloodPressure01 255 data...");
         }else {
             //插入新数据到influxDB
             tags.clear();
             fields.clear();
-            tags.put("netmaskId", String.valueOf(deviceID));
-            tags.put("eqpId", "");
-            tags.put("objectId", "");
-            tags.put("sendTime", timeString);
-            fields.put("highPressure", highBloodPressure);////
-            fields.put("lowPressure", lowBloodPressure);////
+            tags.put("netmaskId", String.valueOf(1));
+            tags.put("eqpId", String.valueOf(deviceID));
+            tags.put("objectId", "loading");
+            tags.put("sendTime", timestamp);
+            fields.put("highPressure", systolicBloodPressure);////
+            fields.put("lowPressure", diastolicBloodPressure);////
             fields.put("heartRate", heartRate);
             influxDBConnector.insertData("bloodPressure", tags, fields);
         }
