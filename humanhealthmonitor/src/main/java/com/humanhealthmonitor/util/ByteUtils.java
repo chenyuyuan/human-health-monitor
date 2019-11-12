@@ -81,4 +81,13 @@ public class ByteUtils {
     public static String byteArrayToString (byte[] byteArray, int radix) {
         return new BigInteger(1, byteArray).toString(radix);
     }
+
+    public static String toUnsignedBinaryString(byte[] b) {
+        String ans = "";
+        for(int i = 0;i <b.length; ++i) {
+            String str = Integer.toBinaryString((b[i]&0xFF) + 0x100).substring(1);
+            ans = str + ans;
+        }
+        return new StringBuffer(ans).reverse().toString();
+    }
 }

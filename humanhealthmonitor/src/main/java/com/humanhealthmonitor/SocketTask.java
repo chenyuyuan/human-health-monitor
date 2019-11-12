@@ -318,7 +318,7 @@ public class SocketTask implements Runnable {
 
         byte[] byteArrayType = new byte[typeLength];
         System.arraycopy(responseContent, deviceIDLength+timestampLength+3, byteArrayType, 0, byteArrayType.length);
-        String typeBinaryString = byteArrayToString(byteArrayType,2);
+        String typeBinaryString = toUnsignedBinaryString(byteArrayType);
 
         byte[] byteArraySensorData = new byte[sensorDataLength];
         System.arraycopy(responseContent, deviceIDLength+timestampLength+typeLength+4 , byteArraySensorData, 0, byteArraySensorData.length);
@@ -350,15 +350,39 @@ public class SocketTask implements Runnable {
         int breath = 0; // 7 呼吸
         int action = 0; // 8 动作
 
+        int count1InType = 0;
+        for(char c : typeBinaryString.toCharArray()) {
+            if(c == '1') {
+                count1InType = count1InType + 1;
+            }
+        }
+        int[] sensorDataArray = new int[8 * typeLength];
+        for(int i = 0; i < sensorDataArray.length; ++i) {
+            sensorDataArray[i] = -1;
+        }
+
+        int low = 0;
+        for(int i = 0;i < 8 * typeLength; ++i) {
+            if(low > byteArraySensorData.length){
+                System.out.println("[SocketTask:handleOrder3and4Response]: low > bytearraysensordata.length");
+                break;
+            }
+            if(typeBinaryString.indexOf(i) == '1') {
+                sensorDataArray[i] = byteToUnsignedValue(byteArraySensorData[low]) +
+                        byteToUnsignedValue(byteArraySensorData[low+1]);
+            }
+            low = low + 2;
+        }
+
+
+
         if(byteArraySensorData.length == 0) {
             return;
         }
 
 //        床垫
         if(sensorType.equals("01")) {
-            byte[] byteArrayActionMattress = new byte[timestampLength];
-            //System.arraycopy(byteArraySensorData, 1, byteArrayActionMattress, 0, actionMattressLength);
-            //String timestamp = byteArrayToString(byteArrayTimestamp, 10);
+
         }
 //        血压
         else if(sensorType.equals("02")) {
