@@ -48,7 +48,7 @@ public class HumanhealthmonitorApplication {
             // System.out.println("keepRabbitListening...");
             // 给rabbitsend开一个线程，创建一个全局队列，向里面发命令，收到命令后自动发送给网关
 
-            ServerSocket serverSocket = new ServerSocket(24900);
+            ServerSocket serverSocket = new ServerSocket(14900);
             System.out.println("Application: Server Listening...");
 
             while (true) {//循环监听

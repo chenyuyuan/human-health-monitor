@@ -49,6 +49,7 @@ public class UserEquipmentRestController {
         String eqpId = params.getString("eqpId");
         String eqpName = params.getString("eqpName");
         String objectId = params.getString("objectSelected");
+
         System.out.print(eqpType + " " + eqpId + " " + eqpName + " " + objectId + "\n");
 
         //如果查找设备号为空则尝试添加，不为空且objectId不为null则提示设备已绑定，不为空但objectId为null说明设备已经注册但被解除了绑定，需要更新绑定的监测对象
@@ -74,9 +75,9 @@ public class UserEquipmentRestController {
                     if(netMaskIdStr.length() == 1) {
                         netMaskIdStr = "0"+netMaskIdStr;
                     }
-                    int checkCal = ( 255 + 255 + 2 + 7 )  + Integer.parseInt("0"+eqpId.charAt(0),16) +
+                    int checkCal = 2  + Integer.parseInt("0"+eqpId.charAt(0),16) +
                             Integer.parseInt(eqpId.substring(1,3),16) + Integer.parseInt(eqpId.substring(3,5),16) +
-                            Integer.parseInt(eqpId.substring(5,7),16) + Integer.parseInt(eqpId.substring(7,9),16);
+                            Integer.parseInt(eqpId.substring(5,7),16);
                     checkCal = Math.abs(checkCal)%64;//计算校验和
                     String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                     String eqpIdAddZero = "";

@@ -210,7 +210,7 @@ public class SocketTask implements Runnable {
                 }
             }
             if (check != checkSum) {
-                System.out.println("SocketTask: data check error...");
+                System.out.println("[SocketTask]: {check/checkSum: "+check+" "+checkSum+"} data check error... ");
                 byteArrayList.remove(0);
                 break;
             }
@@ -325,10 +325,7 @@ public class SocketTask implements Runnable {
 
         String sensorType = deviceID.substring(4,6); //A000304
 
-        int validLength = 0;//存储有效数据长度
-        //存储时间
-        byte[] timeByte = new byte[7];
-        String timeString = "";
+        System.out.println("[SocketTask:指令3&4]:deviceId/timestamp/type:"+deviceID+" "+timestamp+" "+typeBinaryString);
 
         //连接InfluxDB
         influxDBConnector = new InfluxDBConnector("Andy","123456",
@@ -337,18 +334,6 @@ public class SocketTask implements Runnable {
         influxDBConnector.setRetentionPolicy();
         Map<String, String> tags = new HashMap<>();
         Map<String, java.lang.Object> fields = new HashMap<>();
-
-
-        int environmentTemperature = 0; // 1
-        int bodyTemperature = 0; // 2
-        int heartRate = 0; // 3
-
-        int systolicBloodPressure = 0; // 4 收缩压 比较高
-        int diastolicBloodPressure = 0; // 5 舒张压 比较低
-
-        int bloodOxygenSaturation = 0; // 6 血氧饱和度
-        int breath = 0; // 7 呼吸
-        int action = 0; // 8 动作
 
         int count1InType = 0;
         for(char c : typeBinaryString.toCharArray()) {
@@ -373,49 +358,55 @@ public class SocketTask implements Runnable {
             }
             low = low + 2;
         }
-
-
-
-        if(byteArraySensorData.length == 0) {
-            return;
+        System.out.print("[SocketTask:指令3&4]: 传感器数据: ");
+        for(int sd:sensorDataArray) {
+            System.out.print(sd + " ");
         }
+        System.out.println(" ");
 
-//        床垫
+        //床垫
         if(sensorType.equals("01")) {
 
         }
-//        血压
+        //血压
         else if(sensorType.equals("02")) {
-
-        }
-//        血氧
-        else if(sensorType.equals("03")) {
-
-        }
-//        温度
-        else if(sensorType.equals("04")) {
-
-        }
-        timeString = bytesToHexString(timeByte);
-        System.out.println("SocketTask"+taskNum+": BloodPressure... " + "highBloodPressure: " + systolicBloodPressure + "  lowBloodPressure: " +
-                diastolicBloodPressure + "  heartBeat: " + heartRate + " bloodPressureTimeString: " + timeString);
-        //数据过滤
-        if (systolicBloodPressure == 255 && diastolicBloodPressure == 255 && heartRate==255) {
-            System.out.println("SocketTask"+taskNum+": invalid BloodPressure01 255 data...");
-        }else {
-            //插入新数据到influxDB
             tags.clear();
             fields.clear();
-            tags.put("netmaskId", String.valueOf(1));
-            tags.put("eqpId", String.valueOf(deviceID));
-            tags.put("objectId", "loading");
-            tags.put("sendTime", timestamp);
-            fields.put("highPressure", systolicBloodPressure);////
-            fields.put("lowPressure", diastolicBloodPressure);////
-            fields.put("heartRate", heartRate);
+            tags.put("netmaskId", "1");
+            tags.put("eqpId", deviceID);
+            tags.put("objectId", "hitwhob001");
+            tags.put("sendTime",timestamp);
+            fields.put("heartRate", sensorDataArray[2]);
+            fields.put("highPressure", sensorDataArray[3]);
+            fields.put("lowPressure", sensorDataArray[4]);
             influxDBConnector.insertData("bloodPressure", tags, fields);
+            System.out.println("SocketTask: 血压数据已插入数据库, 数据采集时间" + timestamp);
         }
-
+        //血氧
+        else if(sensorType.equals("03")) {
+            tags.clear();
+            fields.clear();
+            tags.put("netmaskId", "1");
+            tags.put("eqpId", deviceID);
+            tags.put("objectId", "hitwhob001");
+            tags.put("sendTime",timestamp);
+            fields.put("spo2", sensorDataArray[5]);
+            influxDBConnector.insertData("bloodOxygen", tags, fields);
+            System.out.println("SocketTask: 血氧数据已插入数据库, 数据采集时间" + timestamp);
+        }
+        //温度
+        else if(sensorType.equals("04")) {
+            tags.clear();
+            fields.clear();
+            tags.put("netmaskId", "1");
+            tags.put("eqpId", deviceID);
+            tags.put("objectId", "hitwhob001");
+            tags.put("sendTime",timestamp);
+            fields.put("bodyTemp", sensorDataArray[1]/100);
+            fields.put("envTemp", sensorDataArray[1]/100);
+            influxDBConnector.insertData("temperature", tags, fields);
+            System.out.println("SocketTask: 温度数据已插入数据库, 数据采集时间" + timestamp);
+        }
     }
     private void handleOrder5Response(byte[] responseContent) {
         if(responseContent.length == 0) return;

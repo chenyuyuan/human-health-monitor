@@ -44,8 +44,9 @@ public class NetMaskApplication implements Runnable {
         // order 4
         if(s.equals("fefe"+"02" + "04" + "04" +"aabb")){ //✔
             System.out.println("return the order type 4");
-            return "fefe" + "04" + "datalength" + "data" + "checksum" + "aabb";
+            return "fefe"+"04"+"11"+"040a000801"+"045dcbc2ab"+"0103"+"0400140027"+"f3"+"aabb";
         }
+        //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb
         //add if below
 
 
@@ -56,7 +57,7 @@ public class NetMaskApplication implements Runnable {
 
         try {
             //socket = new Socket("140.143.232.52", 14900);
-            socket = new Socket("127.0.0.1", 24900);
+            socket = new Socket("127.0.0.1", 14900);
             System.out.println("Connected!");
             din = socket.getInputStream();
             dout = socket.getOutputStream();

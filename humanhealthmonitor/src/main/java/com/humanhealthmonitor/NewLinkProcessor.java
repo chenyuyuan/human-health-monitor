@@ -110,7 +110,7 @@ public class NewLinkProcessor implements Runnable{
                 }
             }
             if (check != checkSum) {
-                System.out.println("NewLinkProcessor(socketInfoProcess): data check error...");
+                System.out.println("NewLinkProcessor(socketInfoProcess): {check/checkSum: "+check+" "+checkSum+"}data check error...");
                 byteArrayList.remove(0);
                 break;
             }
