@@ -262,7 +262,7 @@ public class SocketTask implements Runnable {
         int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
         int deviceIDLength = byteToUnsignedValue(responseContent[0]);
         byte[] charArrayDeviceID = new byte[deviceIDLength];
-        System.arraycopy(responseContent, 0, charArrayDeviceID, 0, deviceIDLength);
+        System.arraycopy(responseContent, 1, charArrayDeviceID, 0, deviceIDLength);
         String deviceID = byteArrayToString(charArrayDeviceID, 16).toUpperCase();
 
         String socketIp = socket.getInetAddress().getHostAddress();

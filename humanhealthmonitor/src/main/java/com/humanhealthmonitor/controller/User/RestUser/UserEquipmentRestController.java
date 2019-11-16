@@ -79,17 +79,20 @@ public class UserEquipmentRestController {
                     if(netMaskIdStr.length() == 1) {
                         netMaskIdStr = "0"+netMaskIdStr;
                     }
-                    int checkCal = 2  + Integer.parseInt("0"+eqpId.charAt(0),16) +
+                    int checkCal = 2 + 4 + Integer.parseInt("0"+eqpId.charAt(0),16) +
                             Integer.parseInt(eqpId.substring(1,3),16) + Integer.parseInt(eqpId.substring(3,5),16) +
                             Integer.parseInt(eqpId.substring(5,7),16);
                     checkCal = Math.abs(checkCal)%64;//计算校验和
                     String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                     String eqpIdAddZero = "";
                     if(eqpId.length()%2 == 1) eqpIdAddZero = "0" + eqpId;
+                    String eqpIdLength = String.valueOf(eqpIdAddZero.length()/2);
+                    if(eqpIdLength.length()%2 == 1) eqpIdLength = "0" + eqpIdLength;
+
                     if(checkCalStr.length() == 1)
                         checkCalStr = "0" + checkCalStr;
-                    String deviceRegisterOrder = startStr + dataLengthStr + orderTypeStr +
-                            eqpIdAddZero + checkCalStr + endStr;
+                    String deviceRegisterOrder = startStr + dataLengthStr + orderTypeStr
+                            + eqpIdLength + eqpIdAddZero + checkCalStr + endStr;
                     System.out.println("The Order is " + deviceRegisterOrder);
 
                     // 根据该网关使用的协议发送查询命令
