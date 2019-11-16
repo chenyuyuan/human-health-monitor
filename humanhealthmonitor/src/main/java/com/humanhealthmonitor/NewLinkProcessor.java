@@ -97,8 +97,8 @@ public class NewLinkProcessor implements Runnable{
             }
 
             // 将回复信息放到responseContent
-            for (int i = 0; i < responseLength - 1;++i) {
-                responseContent[i] = byteArrayList.get(i + 3);
+            for (int i = 0; i < responseLength; ++i) {
+                responseContent[i] = byteArrayList.get(i + 4);
             }
 
             //校验和计算
@@ -121,7 +121,14 @@ public class NewLinkProcessor implements Runnable{
 
             System.out.println("NewLinkProcessor(socketInfoProcess): dataList of order 01:"+dataList);
 
-            int netMaskId = byteToUnsignedValue(byteArrayList.get(byteArrayList.size() - 4));
+            int byteArrayNetMaskIdLength = responseContent.length - 1;
+            int RadixNetMaskId = 10;
+            byte[] byteArrayNetMaskId = new byte[byteArrayNetMaskIdLength];
+            System.arraycopy(responseContent, 1, byteArrayNetMaskId, 0, byteArrayNetMaskIdLength);
+            // reverse ?
+            String StringNetMaskId = byteArrayToString(byteArrayNetMaskId, RadixNetMaskId);
+
+            int netMaskId = Integer.parseInt(StringNetMaskId, RadixNetMaskId);
             System.out.println("NewLinkProcessor(socketInfoProcess): netMaskId: "+netMaskId);
             //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
             MsgQueue.socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理

@@ -59,8 +59,12 @@ public class UserEquipmentRestController {
             //验证该设备类型统一模式的匹配字符串
             String typeMatchString = equipmentTypeService.queryEquipmentTypeByEqpType(eqpType).getStringMatch();
             System.out.println("[UserEquipmentRestController]: typeMatchString: "+typeMatchString+" length: "+typeMatchString.length());
-            if(eqpId.length() == typeMatchString.length() && eqpId.charAt(0) == typeMatchString.charAt(0) &&
-                    eqpId.charAt(5) == typeMatchString.charAt(5) && eqpId.charAt(6) == typeMatchString.charAt(6)) {
+            //设备类型匹配失败
+            if(!(eqpId.length() == typeMatchString.length() && eqpId.charAt(0) == typeMatchString.charAt(0) &&
+                    eqpId.charAt(5) == typeMatchString.charAt(5) && eqpId.charAt(6) == typeMatchString.charAt(6))){
+                System.out.print("设备类型匹配失败 Return message: \"failed!\"1");
+                res.put("msg","typemarchfailed");
+            } else {
                 //验证通过，开始向网关发送命令查询设备
                 //组装查询命令
                 String startStr = "FEFE";
@@ -142,9 +146,6 @@ public class UserEquipmentRestController {
                     System.out.print("查数据库失败 Return message: \"failed!\"1");
                     res.put("msg","failed");
                 }
-            }else{
-                System.out.print("typeMarchString匹配失败 Return message: \"failed!\"2");
-                res.put("msg","failed");
             }
         } else if (eqp.getObjectId() != null) {
             System.out.print("Return message: \"failed!\"3");

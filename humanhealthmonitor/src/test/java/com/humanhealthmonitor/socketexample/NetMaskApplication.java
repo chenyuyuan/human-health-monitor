@@ -22,7 +22,8 @@ public class NetMaskApplication implements Runnable {
         // order 1
         if(s.equals("fefe"+"02"+"01"+"01aabb")) { //✔
             System.out.println("order type 1 return");
-            return "fefe"+"01"+"02"+  "00"+"01"  +"01"+"aabb"; //✔ // 通讯类型，网关号，校验和
+            return "fefe"+"01"+"03"+  "01"+"0001"  +"02"+"aabb"; //✔ // 通讯类型，网关号，校验和
+            //**************************************************//
         }
         // order 2 FEFE07020A0006010921AABB
         if(s.equals("fefe"+"07"+"02"+"0a00060109"+"21"+"aabb")) {
@@ -39,12 +40,12 @@ public class NetMaskApplication implements Runnable {
         // order 3
         if(s.equals("fefe"+"07"+"03"  + "04" + "0a000304" + "18" +"aabb")){ //✔
             System.out.println("return the order type 4");
-            return "fefe" + "04" + "datalength" + "data" + "checksum" + "aabb"; //
+            return "fefe"+"04"+"11"+"040a000801"+"045dcbc2ab"+"0103"+"0400140027"+"f3"+"aabb"; //✔
         }
         // order 4
         if(s.equals("fefe"+"02" + "04" + "04" +"aabb")){ //✔
             System.out.println("return the order type 4");
-            return "fefe"+"04"+"11"+"040a000801"+"045dcbc2ab"+"0103"+"0400140027"+"f3"+"aabb";
+            return "fefe"+"04"+"11"+"040a000801"+"045dcbc2ab"+"0103"+"0400140027"+"f3"+"aabb"; // ✔
         }
         //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb
         //add if below

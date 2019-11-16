@@ -73,7 +73,7 @@ public class UserEquipmentController {
     }
 
     //监测中心-添加设备结果
-    @RequestMapping("/monitorCenter/equipmentAddResult")
+    @RequestMapping("/monitorCenter/equipmentAddResult/StopUsingThis")
     public String equipmentAddResult(HttpServletRequest request, HttpServletResponse response) throws IOException, NullPointerException, InterruptedException {
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);

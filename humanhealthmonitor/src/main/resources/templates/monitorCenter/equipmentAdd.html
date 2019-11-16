@@ -14,24 +14,7 @@
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <!--<script type="text/javascript" th:src="@{/javascript/checkInput.js}"></script>-->
     <script>
-        function checkEquipmentAdd() {
-            var form = document.getElementById("equipmentAddForm");
-            if (form.eqpId.value == "" || form.eqpName.value == "") {
-                alert("您有信息尚未填写，请补充未填写的信息");
-                window.event.returnValue = false;//验证失败不提交action
-                // return false;
-            }
-            else if (form.eqpId.value.length > 32 || form.eqpName.value.length > 32)
-            // || form.telephone.value.length > 32
-            {
-                alert("设备名称和设备号均不能超过32个字符");
-                window.event.returnValue = false;//验证失败不提交action
-            }
-            else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(form.eqpName.value)) {
-                alert("设备名称只能由汉字、字母、数字和下划线组成");
-                window.event.returnValue = false;//验证失败不提交action
-            }
-        }
+        
         
         function submitOnMouseUpEquipmentAdd() {
             var addSubmit = document.getElementById("equipmentAddSubmit");
@@ -95,9 +78,6 @@
 </div>
 
 <div style="margin-top: 100px;margin-bottom: 80px">
-    <form id="equipmentAddForm" name="equipmentAddFrom" action="/monitorCenter/equipmentAddResult"
-          accept-charset="utf-8" method="post"
-          style="text-align:center;" onsubmit="checkEquipmentAdd()">
         <!--margin:auto;margin-top:15%-->
         <div class="d" style="height:700px;background-color:white;width:600px;
         border: 1px solid lightgrey;margin: auto;">
@@ -131,12 +111,24 @@
                    value="添    加" onmouseover="submitOnMouseUpEquipmentAdd()"
                    onmouseleave="submitOnMouseLeaveEquipmentAdd()"/>
         </div>
-    </form>
 </div>
 <iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%" th:src="@{/master/footer.html}"></iframe>
 <script type = "text/javascript">
-    ipAddress = "101.132.105.38"
+    ipAddress = "localhost"
+    checkEquipmentAdd = function () {
+        var form = document.getElementById("");
+        if ($("#eqpId").val() == "" || $("#eqpName").val() == "") {
+            alert("您有信息尚未填写，请补充未填写的信息");
+        }
+        else if ($("#eqpId").val() > 32 || $("#eqpName").val() > 32){
+            alert("设备名称和设备号均不能超过32个字符");
+        }
+        else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test($("#eqpName").val())) {
+            alert("设备名称只能由汉字、字母、数字和下划线组成");
+        }
+    }
     send = function (){
+        checkEquipmentAdd()
         console.log("[function: send]: start");
         tosenddata={
             "eqpTypeSelected": $("#eqpTypeSelected").val(),
@@ -147,7 +139,7 @@
         console.log("send start")
         console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
         $.ajax({
-            url:'http://'+ipAddress+'：8081/rest/monitorCenter/equipmentAddResult',
+            url:'http://'+ipAddress+':8081/rest/monitorCenter/equipmentAddResult',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),
