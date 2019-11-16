@@ -176,9 +176,10 @@ public class SocketTask implements Runnable {
         // 从网关发来的只带一个字节有效数据的帧长度就是8，比这个小的就是坏掉的或无关的
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
-            int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
+            int responseLength = byteArrayList.get(3); // 回复内容长度
+            System.out.println("指令0304:返回内容长度:" + responseLength);
             byte[] responseContent = new byte[responseLength];  // 回复信息就是不包括校验和(不用扣掉1位校验和)
-            int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
+            int checkSum = (byteArrayList.get(byteArrayList.size()-3) + 256) % 256; // 校验和
 
             if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
                 System.out.println("SocketTask: The byte head is not FEFE");
@@ -205,10 +206,11 @@ public class SocketTask implements Runnable {
             int check = 0;
             for (int i = 0; i < responseLength; ++i) {
                 check = check + responseContent[i];
-                if(check > 256) {
+                if(check > 255) {
                     check = check % 256;
                 }
             }
+            check = (check + 256) % 256;
             if (check != checkSum) {
                 System.out.println("[SocketTask]: {check/checkSum: "+check+" "+checkSum+"} data check error... ");
                 byteArrayList.remove(0);
@@ -310,22 +312,25 @@ public class SocketTask implements Runnable {
 
         byte[] byteArrayDeviceID = new byte[deviceIDLength];
         System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
-        String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+        String deviceID = byteArrayToString(byteArrayDeviceID, 16).toUpperCase();
 
         byte[] byteArrayTimestamp = new byte[timestampLength];
         System.arraycopy(responseContent, deviceIDLength+2, byteArrayTimestamp, 0, byteArrayTimestamp.length);
         String timestamp = byteArrayToString(byteArrayTimestamp, 10);
+        SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+        String timeinformat = format.format(Long.parseLong(timestamp + "000"));
 
         byte[] byteArrayType = new byte[typeLength];
         System.arraycopy(responseContent, deviceIDLength+timestampLength+3, byteArrayType, 0, byteArrayType.length);
         String typeBinaryString = toUnsignedBinaryString(byteArrayType);
+        char[] typeBinaryCharArray = typeBinaryString.toCharArray();
 
         byte[] byteArraySensorData = new byte[sensorDataLength];
         System.arraycopy(responseContent, deviceIDLength+timestampLength+typeLength+4 , byteArraySensorData, 0, byteArraySensorData.length);
 
-        String sensorType = deviceID.substring(4,6); //A000304
+        String sensorType = deviceID.substring(5); //A000304
 
-        System.out.println("[SocketTask:指令3&4]:deviceId/timestamp/type:"+deviceID+" "+timestamp+" "+typeBinaryString);
+        System.out.println("[SocketTask:指令3&4]:deviceId/timestamp/type/sensorType:"+deviceID+" "+timestamp+" "+typeBinaryString + " " + sensorType);
 
         //连接InfluxDB
         influxDBConnector = new InfluxDBConnector("Andy","123456",
@@ -348,13 +353,17 @@ public class SocketTask implements Runnable {
 
         int low = 0;
         for(int i = 0;i < 8 * typeLength; ++i) {
+            System.out.println("typeBianryCharArray: " + typeBinaryCharArray[i]);
             if(low > byteArraySensorData.length){
                 System.out.println("[SocketTask:handleOrder3and4Response]: low > bytearraysensordata.length");
                 break;
             }
-            if(typeBinaryString.indexOf(i) == '1') {
+            if(typeBinaryCharArray[i] == '1') {
+
+                //是16进制🐎
                 sensorDataArray[i] = byteToUnsignedValue(byteArraySensorData[low]) +
-                        byteToUnsignedValue(byteArraySensorData[low+1]);
+                        byteToUnsignedValue(byteArraySensorData[low+1])*100;
+                System.out.println("传感器数据"+ i + sensorDataArray[i]);
             }
             low = low + 2;
         }
@@ -365,8 +374,9 @@ public class SocketTask implements Runnable {
         System.out.println(" ");
 
         //床垫
-        if(sensorType.equals("01")) {
+        if(sensorType.equals("00")) {
 
+            System.out.println("床垫先跳过");
         }
         //血压
         else if(sensorType.equals("02")) {
@@ -395,18 +405,19 @@ public class SocketTask implements Runnable {
             System.out.println("SocketTask: 血氧数据已插入数据库, 数据采集时间" + timestamp);
         }
         //温度
-        else if(sensorType.equals("04")) {
+        else if(sensorType.equals("01")) {
             tags.clear();
             fields.clear();
             tags.put("netmaskId", "1");
             tags.put("eqpId", deviceID);
             tags.put("objectId", "hitwhob001");
-            tags.put("sendTime",timestamp);
+            tags.put("sendTime",timeinformat);
             fields.put("bodyTemp", sensorDataArray[1]/100);
-            fields.put("envTemp", sensorDataArray[1]/100);
+            fields.put("envTemp", sensorDataArray[0]/100);
             influxDBConnector.insertData("temperature", tags, fields);
             System.out.println("SocketTask: 温度数据已插入数据库, 数据采集时间" + timestamp);
         }
+        System.out.println("指令0304返回数据处理完成");
     }
     private void handleOrder5Response(byte[] responseContent) {
         if(responseContent.length == 0) return;

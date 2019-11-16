@@ -142,6 +142,10 @@ public class UserInfoHallController {
             }
 
             System.out.println("UserInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
+
+            String order = "FEFE020404AABB";
+
+
             List<Equipment> noEquipmentList = new ArrayList<>();
             Equipment noNewEquipment = new Equipment();
             //连接InfluxDB
@@ -150,7 +154,7 @@ public class UserInfoHallController {
             if (flagTemperature01 == 1) {
 //                sendMsgQueue.offer("FEFE0401030105AABB");//wendu/////////////////////////////////////////////////
 //                sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////added0524
-                sendMessage(netMaskIdTemperature01,temperature01Order);//added0526
+                sendMessage(1, order);//added0526
 
                 for (int i = 0;i < 10;i++) {
                     bodyTempList.add(0.0);
@@ -159,9 +163,9 @@ public class UserInfoHallController {
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
                 QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "
                         +"'"+objectList.get(0).getObjectId()+"'"+" and time > "+timestamp10);
-//                System.out.println("UserInfoHallController: temperatureResults: "+temperatureResults);
+                System.out.println("UserInfoHallController: temperatureResults: "+temperatureResults);
                 if(temperatureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                    System.out.println("UserInfoHallController: temperatureResults null Line71");
+//                    System.out.println("UserInfoHallController: temperatureResults null 空");
                     bodyTempList.add(0.0);
                     envTempList.add(0.0);
                 }else {
@@ -183,7 +187,7 @@ public class UserInfoHallController {
             if (flagBloodPressure01 == 1) {
 //                sendMsgQueue.offer("FEFE0401030004AABB");//xueya//////////////////////////////////
 //                sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
-                sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
+                sendMessage(1, order);//added0526
                 for (int i = 0;i < 10;i++) {
                     highPressureList.add(0.0);
                     lowPressureList.add(0.0);
@@ -219,7 +223,7 @@ public class UserInfoHallController {
             if (flagBloodOxygen01 == 1) {
 //                sendMsgQueue.offer("FEFE0401030206AABB");//xueyang////////////////////////////////////
 //                sendMsgQueue.get(netMaskIdBloodOxygen01-1).offer(bloodOxygen01Order);////added0524
-                sendMessage(netMaskIdBloodOxygen01,bloodOxygen01Order);//added0526
+                sendMessage(1, order);//added0526
 
                 for (int i = 0;i < 10;i++) {
                     spo2List.add(0.0);
