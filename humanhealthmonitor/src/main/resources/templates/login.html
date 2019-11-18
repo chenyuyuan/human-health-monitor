@@ -1,76 +1,136 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>人体健康监测平台-登录</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
-    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
-    <style>
-        #wrapper {
-            min-height: 100%;
-            position: relative;
-        }
-
-        #footerFrame {
-            bottom: 0;
-            position: absolute;
-            width: 100%;
-        }
-
-        #centralDiv {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>请登录</title>
+	<link rel="icon" type="image/x-icon" href="http://localhost:8080/img/favicon.ico">
+	<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	
+	<style>
+		button:focus{
+			outline:0;
+		}
+		.btn:focus,.btn:active:focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn.active.focus {
+			outline: none;
+			border-color: transparent;
+			box-shadow:none;
+		}
+		.shadow{
+			-webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+			-moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+			box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+		}
+		.shadow-smaller{
+			-webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+			-moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+			box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+		}
+		body{
+			background-color: #fafafa;
+			padding:60px
+		}
+		.logo{
+			font-family: Catull;
+			font-size: 50px;
+			padding:0 auto;
+		}
+	</style>
 </head>
-
 <body>
-<div id="wrapper">
-    <div id="header">
-        <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
-        <br/>
-        <div style="float: left;width: 80%;text-align: left">
-            <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
-        </div>
-        <div style="float: left;width: 20%;text-align: right">
-            <a href="/register" style="text-align: right;font-size: 18px">注册&nbsp|</a>
-            <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
-        </div>
-    </div>
-    <hr width="100%" color="#0080FF" size="2"/>
-    <!--<br/>-->
-
-    <div id="centralDiv">
-        <form id="loginForm" name="loginFrom" action="/loginSubmit" accept-charset="utf-8" method="post"
-              style="text-align:center;">
-            <!--margin:auto;margin-top:15%-->
-            <div class="d" style="height:350px;background-color:white;width:400px;
-        border: 1px solid lightgrey;margin: auto;">
-                <br/>
-                <p style="font-size: 28px;text-align: left">&nbsp&nbsp&nbsp&nbsp登录到您的账户
-                </p>
-                <p>
-                    <!--<label for="userId" style="font-size: 26px;">账号:</label>-->
-                    <input type="text" id="userId" name="userId" placeholder="在此输入账号" class="inputStyle1"/>
-                </p>
-                <p>
-                    <!--<label for="password" style="font-size: 26px">密码:</label>-->
-                    <input type="password" id="password" name="password" placeholder="在此输入密码" class="inputStyle1"/>
-                </p>
-                <input type="submit" id="loginSubmit" name="loginSubmit"
-                       style="font-size: 18px;height: 50px;width: 83%;background-color: #FFA500;border: none;color: white"
-                       value="登    录" onmouseover="submitOnMouseUpL()" onmouseleave="submitOnMouseLeaveL()"/>
-                <p style="text-align: right">
-                    <a href="/register">立即注册&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</a>
-                </p>
-            </div>
-        </form>
-    </div>
-
-    <iframe id="footerFrame" frameborder="0" scrolling="no" marginwidth="0" marginheight="0"
-            th:src="@{/master/footer.html}"></iframe>
-
+<div class="container" style="font-size: 15px;">
+	
+	<div class="container">
+		
+		<form id="loginForm" name="loginFrom" action="/loginSubmit" accept-charset="utf-8" method="post">
+		
+			<div style="text-align: center;margin-bottom: 40px">
+				<span class="logo" style="color: #0d83ff">请登录</span>
+			</div>
+			<input id="userId" type="text" name="userId" class="form-control center-block" placeholder="账号" style="width:300px;height: 48px">
+			<input id="password" type="password" name="password" class="form-control center-block" placeholder="密码" style="width:300px;height: 48px;border-top: 0px">
+			<p id="tips" class="text-center text-muted" style="margin-top: 10px">&nbsp</p>
+			<button id="loginSubmit" type="submit" class="btn btn-primary center-block" style="width:300px;height: 40px;margin-top: 20px">登录</button>
+			<div style="width: 300px;margin:0 auto;margin-top: 7px">
+				<a href="register"><span>注册</span></a>
+			</div>
+		</form>
+	</div>
+	<div style="margin:300px "></div>
+	<hr class="divider">
+	<footer style="padding-left:200px">
+		<p>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</p>
+		<p>关于</p>
+		<p class="pull-right"><a href="#top">回到顶部</a></p>
+		<a href="http://localhost:8080/loginadmin">管理员登录</a>
+	</footer>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#account").click(function () {
+            $("#tips").html("")
+        })
+        $("#password").click(function () {
+            if($("#account").val()==""){
+                $("#tips").html("账号不能为空")
+            }
+            else{
+                $("#tips").html("")
+            }
+        })
+        // $("#login").click(function () {
+        //     account=$("#account").val();
+        //     password=$("#password").val();
+        //     if(account==""&&password==""){
+        //         $("#tips").html("账号密码不能为空")
+        //     }
+        //     else if(account==""){
+        //         $("#tips").html("账号不能为空")
+        //     }
+        //     else if(password==""){
+        //         $("#tips").html("密码不能为空")
+        //     }
+        //     else{
+        //         data=JSON.stringify({
+        //             "account":account,
+        //             "password":password
+        //         })
+        //         $.ajax({
+        //             type:'POST',
+        //             url:'http://localhost:8080/api/login',
+        //             contentType: 'application/json; charset=UTF-8',
+        //             data:data,
+        //             dataType:'json',
+        //             xhrFields: {
+        //                 withCredentials: true
+        //             },
+        //             success:function (data) {
+        //                 console.log(data)
+        //                 if(data["data"]["msg"]=="login successfully") {
+        //                     window.location.href="http://localhost:8080/home"
+        //                 }
+        //                 else if(data["data"]["message"]=="loginerror") {
+        //                     $("#tips").html("密码错误")
+        //                 }
+        //                 else if(data["data"]["message"]=="wronginput") {
+        //                     $("#tips").html("账号不存在")
+        //                 }
+        //             },
+        //             error:function(a,b,c) {
+        //                 console.log(a.status+"::"+a.readyState+"::"+b)
+        //             }
+        //         })
+        //     }
+        // })
+    })
+</script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 </body>
 </html>
+

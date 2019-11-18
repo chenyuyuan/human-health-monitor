@@ -2,8 +2,6 @@ package com.humanhealthmonitor.controller;
 
 //import com.example.humanhealthmonitor.pojo.*;
 
-import com.humanhealthmonitor.service.*;
-
 import com.humanhealthmonitor.service.ObjectService;
 import com.humanhealthmonitor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

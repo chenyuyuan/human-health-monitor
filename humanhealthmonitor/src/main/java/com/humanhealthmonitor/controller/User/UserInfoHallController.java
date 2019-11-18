@@ -161,8 +161,10 @@ public class UserInfoHallController {
                     envTempList.add(0.0);
                 }
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
-                QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "
-                        +"'"+objectList.get(0).getObjectId()+"'"+" and time > "+timestamp10);
+//                QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "
+//                        +"'"+objectList.get(0).getObjectId()+"'"+" and time > "+timestamp10);
+
+                QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = 'hitwhob001' time > "+timestamp10);
                 System.out.println("UserInfoHallController: temperatureResults: "+temperatureResults);
                 if(temperatureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
 //                    System.out.println("UserInfoHallController: temperatureResults null 空");

@@ -46,7 +46,22 @@ public class NetMaskApplication implements Runnable {
         // order 4
         if(s.equals("fefe"+"02" + "04" + "04" +"aabb")){ //✔
             System.out.println("return the order type 4");
-            return "fefe"+"04"+"11"+"040a000801"+"045dcbc2ab"+"0103"+"0400140027"+"f3"+"aabb"; // ✔
+            int checkSum = 0;
+            Long timestampCurrent = System.currentTimeMillis() / 1000;
+            byte[] timeByteArray = new byte[4];
+            for(int i=0; i<4; ++i) {
+                timeByteArray[3 - i] = (byte)(timestampCurrent % 256);
+                checkSum=checkSum + timeByteArray[3-i];
+                timestampCurrent = timestampCurrent/256;
+            }
+            checkSum = (checkSum + 4+10+8+1 + 4 + 1+3 + 4+16+4+32+7)%256;
+            String checkSumStr = Integer.toHexString(checkSum).toUpperCase();
+            if(checkSumStr.length() == 1) {
+                checkSumStr = "0" + checkSumStr;
+            }
+            String timestamp = byteArrayToString(timeByteArray, 16);
+            String returnOrder = "fefe"+"04"+"11"+"040a000801"+ "04"+timestamp+"0103"+"0400140027" +checkSumStr+"aabb"; // ✔
+            return returnOrder;
         }
         //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb
         //add if below
