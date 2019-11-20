@@ -56,6 +56,8 @@ public class ObjInfoHallController {
         List<Equipment> objEquipmentList = equipmentService.queryAllEquipmentByObjectId(object.getObjectId());
         request.setAttribute("equipmentList", objEquipmentList);
 
+        String order = "FEFE020404AABB";
+        sendMessage(1, order);
         //判断监测对象有没有设备
         if (objEquipmentList.size() != 0) {//如果有设备
 //            sendMsgQueue.offer("FEFE0401040005AABB");
@@ -127,7 +129,7 @@ public class ObjInfoHallController {
             }
             System.out.println("ObjInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
 
-            String order = "FEFE020404AABB";
+
 
             List<Equipment> noEquipmentList = new ArrayList<>();
             //连接InfluxDB
@@ -307,6 +309,10 @@ public class ObjInfoHallController {
         int netMaskIdTemp;
         int deviceSerialTemp;
         int checkCal;
+
+        String order = "FEFE020404AABB";
+        sendMessage(1, order);
+
         for (int i = 0;i < objEquipmentList.size();i++) {
             if(objEquipmentList.get(i).getEqpType().equals("BloodOxygen01")) {
                 flagBloodOxygen01 = 1;

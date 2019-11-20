@@ -70,6 +70,9 @@ public class UserInfoHallController {
         request.setAttribute("equipmentList", equipmentList);
         request.setAttribute("objectNameSelected", objectList.get(0).getObjectName());
 
+        String order = "FEFE020404AABB";
+        sendMessage(1, order);
+
         //判断监测对象有没有设备
         if (equipmentList.size() != 0) { //如果有设备
 //            int netMaskId = equipmentList.get(0).getNetmaskId();//added0524
@@ -100,7 +103,6 @@ public class UserInfoHallController {
             int deviceSerialTemp;
             int checkCal;
 
-            String order = "FEFE020404AABB";
 
             for (int i = 0;i < equipmentList.size();i++) {
                 if (equipmentList.get(i).getEqpType().equals("Temperature01")) {
@@ -296,6 +298,7 @@ public class UserInfoHallController {
         int checkCal;
 
         String order = "FEFE020404AABB";
+        sendMessage(1, order);
 
         for (int i = 0;i < equipmentList.size();i++) {
             if(equipmentList.get(i).getEqpType().equals("BloodOxygen01")) {
@@ -455,6 +458,9 @@ public class UserInfoHallController {
 //            spo2List.add(0.0);
 //        }
 
+        String order = "FEFE020404AABB";
+        sendMessage(1, order);
+
         //判断监测对象有没有设备
         if (equipmentList.size() != 0) {//如果有设备
 //            int netMaskId = equipmentList.get(0).getNetmaskId();//comment0526
@@ -481,7 +487,6 @@ public class UserInfoHallController {
             int deviceSerialTemp;
             int checkCal;
 
-            String order = "FEFE020404AABB";
 
             for (int i = 0;i < equipmentList.size();i++) {
                 if (equipmentList.get(i).getEqpType().equals("Temperature01")) {
