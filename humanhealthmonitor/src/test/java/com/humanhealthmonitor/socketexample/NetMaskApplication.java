@@ -15,7 +15,7 @@ public class NetMaskApplication implements Runnable {
     private Socket socket;
     private InputStream din;
     private OutputStream dout;
-    private int a = 10;
+    private int a = 100;
 
     private static String getResponse(String s) {
         s = s.toLowerCase();

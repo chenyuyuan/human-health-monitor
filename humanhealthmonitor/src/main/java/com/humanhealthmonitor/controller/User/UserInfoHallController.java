@@ -261,7 +261,7 @@ public class UserInfoHallController {
 
         return "monitorCenter/infoHallOnTime";
     }
-    //监测中心-监测设备数据刷新//映射地址为要刷新的地址/AuoRefresh
+    //监测中心-监测设备数据刷新//映射地址为要刷新的地址//AutoRefresh
     @RequestMapping("/infoHallOnTimeGetInfo/AutoRefresh")
     @ResponseBody
     public Map<String,ArrayList<Double>> monitorCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array) {

@@ -15,6 +15,7 @@ public class health_data {
     private int blood_oxygen;
     private int breath;
     private int act;
+    private int data_type;
 
     public int getId() {
         return id;
@@ -126,5 +127,13 @@ public class health_data {
 
     public void setAct(int act) {
         this.act = act;
+    }
+
+    public int getData_type() {
+        return data_type;
+    }
+
+    public void setData_type(int data_type) {
+        this.data_type = data_type;
     }
 }
