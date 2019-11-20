@@ -361,13 +361,20 @@ public class SocketTask implements Runnable {
             if(typeBinaryCharArray[i] == '1') {
 
                 //是16进制🐎
-                sensorDataArray[i] = byteToUnsignedValue(byteArraySensorData[low]) +
-                        byteToUnsignedValue(byteArraySensorData[low+1])*100;
-                System.out.println("传感器数据"+ i + sensorDataArray[i]);
+                sensorDataArray[i] =byteToUnsignedValue (byteArraySensorData[low])*256 +
+                        byteToUnsignedValue(byteArraySensorData[low+1]);
+                System.out.println("传感器数据"+ i +":"+ low);
+                System.out.println("传感器数据"+ i +":"+ byteArraySensorData[low]);
+                System.out.println("传感器数据"+ i +":"+ sensorDataArray[i]);
             }
             low = low + 2;
         }
+        System.out.print("[SocketTask:指令3&4]: byteArraySensorData: ");
+        for(byte sd:byteArraySensorData) {
+            System.out.print(byteToUnsignedValue(sd) + " ");
+        }
         System.out.print("[SocketTask:指令3&4]: 传感器数据: ");
+
         for(int sd:sensorDataArray) {
             System.out.print(sd + " ");
         }
@@ -405,13 +412,13 @@ public class SocketTask implements Runnable {
             System.out.println("SocketTask: 血氧数据已插入数据库, 数据采集时间" + timestamp);
         }
         //温度
-        else if(sensorType.equals("01")) {
+        else if(sensorType.equals("04")) {
             tags.clear();
             fields.clear();
             tags.put("netmaskId", "1");
             tags.put("eqpId", deviceID);
             tags.put("objectId", "hitwhob001");
-            tags.put("sendTime",timeinformat);
+            tags.put("sendTime", timeinformat);
             fields.put("bodyTemp", sensorDataArray[1]/100);
             fields.put("envTemp", sensorDataArray[0]/100);
             influxDBConnector.insertData("temperature", tags, fields);

@@ -33,7 +33,7 @@ public class NetMaskApplication implements Runnable {
         }
         // order 2 改
         //fefe07020a00040313aabb
-        if(s.equals("fefe"+"07"+"02"   +"04"+"0a000403"+    "17"+"aabb")) { //✔
+        if(s.equals("fefe"+"07"+"02"   +"04"+"0a000403"+ "00" +  "17"+"aabb")) { //✔
             System.out.println("returned the order type 2");
             return "fefe"+"02"+"06" +  "04"+"0a000403"+"01"  +"16"+"aabb"; //✔ //添加成功
             //return "fefe"+"02"+"07"+"0a00060309"+"00"+"21"+"aabb"; //添加失败
@@ -61,6 +61,8 @@ public class NetMaskApplication implements Runnable {
             }
             String timestamp = byteArrayToString(timeByteArray, 16);
             String returnOrder = "fefe"+"04"+"11"+"040a000801"+ "04"+timestamp+"0103"+"0400140027" +checkSumStr+"aabb"; // ✔
+            returnOrder = "fefe0411040a000304045dd3b833010304091f08f763aabb";
+            System.out.println("指令3&4返回："+returnOrder);
             return returnOrder;
         }
         //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb

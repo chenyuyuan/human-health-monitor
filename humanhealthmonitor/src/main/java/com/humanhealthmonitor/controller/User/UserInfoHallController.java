@@ -99,6 +99,9 @@ public class UserInfoHallController {
             int netMaskIdTemp;
             int deviceSerialTemp;
             int checkCal;
+
+            String order = "FEFE020404AABB";
+
             for (int i = 0;i < equipmentList.size();i++) {
                 if (equipmentList.get(i).getEqpType().equals("Temperature01")) {
                     flagTemperature01 = 1;
@@ -143,7 +146,6 @@ public class UserInfoHallController {
 
             System.out.println("UserInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
 
-            String order = "FEFE020404AABB";
 
 
             List<Equipment> noEquipmentList = new ArrayList<>();
@@ -152,9 +154,7 @@ public class UserInfoHallController {
             influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
             influxDBConnector.connectToDatabase();
             if (flagTemperature01 == 1) {
-//                sendMsgQueue.offer("FEFE0401030105AABB");//wendu/////////////////////////////////////////////////
-//                sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////added0524
-                sendMessage(1, order);//added0526
+                sendMessage(1, order);
 
                 for (int i = 0;i < 10;i++) {
                     bodyTempList.add(0.0);
@@ -187,8 +187,6 @@ public class UserInfoHallController {
                 noEquipmentList.add(noNewEquipment);
             }
             if (flagBloodPressure01 == 1) {
-//                sendMsgQueue.offer("FEFE0401030004AABB");//xueya//////////////////////////////////
-//                sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
                 sendMessage(1, order);//added0526
                 for (int i = 0;i < 10;i++) {
                     highPressureList.add(0.0);
@@ -223,9 +221,7 @@ public class UserInfoHallController {
                 noEquipmentList.add(noNewEquipment);
             }
             if (flagBloodOxygen01 == 1) {
-//                sendMsgQueue.offer("FEFE0401030206AABB");//xueyang////////////////////////////////////
-//                sendMsgQueue.get(netMaskIdBloodOxygen01-1).offer(bloodOxygen01Order);////added0524
-                sendMessage(1, order);//added0526
+                sendMessage(1, order);
 
                 for (int i = 0;i < 10;i++) {
                     spo2List.add(0.0);
@@ -249,6 +245,8 @@ public class UserInfoHallController {
                 }
                 noEquipmentList.add(noNewEquipment);
             }
+
+
             //设值
             request.setAttribute("bodyTempList",bodyTempList);
             request.setAttribute("envTempList",envTempList);
@@ -265,12 +263,6 @@ public class UserInfoHallController {
     @RequestMapping("/infoHallOnTimeGetInfo/AutoRefresh")
     @ResponseBody
     public Map<String,ArrayList<Double>> monitorCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array) {
-//        System.out.println("array: "+array);
-//        System.out.println("ajaxTest");
-
-//        ,HttpServletRequest request//HttpServletRequest request added0525
-//        User user = (User) request.getSession().getAttribute("user");//added0525
-//        request.setAttribute("user", user);//added0525
 
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectSelectedIdS);
 
@@ -289,8 +281,6 @@ public class UserInfoHallController {
 //        System.out.println("heartRateList"+heartRateList);
 //        System.out.println("spo2List: "+spo2List);
 
-
-//        if ()
         int flagTemperature01 = 0;
         String temperature01Order="";
         int netMaskIdTemperature01=0;
@@ -304,6 +294,9 @@ public class UserInfoHallController {
         int netMaskIdTemp;
         int deviceSerialTemp;
         int checkCal;
+
+        String order = "FEFE020404AABB";
+
         for (int i = 0;i < equipmentList.size();i++) {
             if(equipmentList.get(i).getEqpType().equals("BloodOxygen01")) {
                 flagBloodOxygen01 = 1;
@@ -349,10 +342,9 @@ public class UserInfoHallController {
         //连接InfluxDB
         influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
         influxDBConnector.connectToDatabase();
+
         if (flagTemperature01 == 1) {
-//            sendMsgQueue.offer("FEFE0401030105AABB");//wendu//////////////////////
-//            sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////////added0524
-            sendMessage(netMaskIdTemperature01,temperature01Order);//added0526
+            sendMessage(1, order);
 
             bodyTempList.remove(0);//去掉开头
             envTempList.remove(0);
@@ -375,9 +367,7 @@ public class UserInfoHallController {
             System.out.println("UserInfoHallController: envTempList"+envTempList);
         }
         if (flagBloodPressure01 == 1) {
-            //            sendMsgQueue.offer("FEFE0401030004AABB");//xueya/////////////////////
-            //            sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
-            sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
+            sendMessage(1, order);
 
             highPressureList.remove(0);
             lowPressureList.remove(0);
@@ -406,9 +396,7 @@ public class UserInfoHallController {
             System.out.println("UserInfoHallController: heartRateList"+heartRateList);
         }
         if (flagBloodOxygen01 == 1) {
-//            sendMsgQueue.offer("FEFE0401030206AABB");//xueyang/////////////////////////////
-//            sendMsgQueue.get(netMaskIdBloodOxygen01-1).offer(bloodOxygen01Order);////added0524
-            sendMessage(netMaskIdBloodOxygen01,bloodOxygen01Order);//added0526
+            sendMessage(1, order);
 
             spo2List.remove(0);
             long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
@@ -432,13 +420,6 @@ public class UserInfoHallController {
         map.put("lowPressureList",lowPressureList);
         map.put("heartRateList",heartRateList);
         map.put("spo2List",spo2List);
-
-//        ArrayList<Double> timeArrayList = new ArrayList<>();
-//        for (int i = 0;i<100;i++)
-//        {
-//            timeArrayList.add(182821232323.0+i);
-//        }
-//        map.put("timeArrayList",timeArrayList);
 
         return map;
     }
@@ -499,6 +480,9 @@ public class UserInfoHallController {
             int netMaskIdTemp;
             int deviceSerialTemp;
             int checkCal;
+
+            String order = "FEFE020404AABB";
+
             for (int i = 0;i < equipmentList.size();i++) {
                 if (equipmentList.get(i).getEqpType().equals("Temperature01")) {
                     flagTemperature01 = 1;
@@ -549,7 +533,7 @@ public class UserInfoHallController {
             if (flagTemperature01 == 1) {
 //                sendMsgQueue.offer("FEFE0401030105AABB");//wendu/////////////////////
 //                sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////added0524
-                sendMessage(netMaskIdTemperature01,temperature01Order);//added0526
+                sendMessage(1, order);//added0526
 
                 for (int i = 0;i < 10;i++) {
                     bodyTempList.add(0.0);
@@ -580,10 +564,7 @@ public class UserInfoHallController {
                 noEquipmentList.add(noNewEquipment);
             }
             if (flagBloodPressure01 == 1) {
-//                sendMsgQueue.offer("FEFE0401030004AABB");//xueya///////////////
-//                sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////added0524
-                sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
-
+                sendMessage(1, order);
                 for (int i = 0;i < 10;i++) {
                     highPressureList.add(0.0);
                     lowPressureList.add(0.0);
@@ -619,10 +600,7 @@ public class UserInfoHallController {
                 noEquipmentList.add(noNewEquipment);
             }
             if (flagBloodOxygen01 == 1) {
-//                sendMsgQueue.offer("FEFE0401030206AABB");//xueyang
-//                sendMsgQueue.get(netMaskIdBloodOxygen01-1).offer(bloodOxygen01Order);////added0524
-                sendMessage(netMaskIdBloodOxygen01,bloodOxygen01Order);//added0526
-
+                sendMessage(1, order);
                 for (int i = 0;i < 10;i++) {
                     spo2List.add(0.0);
                 }

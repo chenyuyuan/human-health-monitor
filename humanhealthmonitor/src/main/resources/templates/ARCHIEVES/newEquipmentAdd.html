@@ -146,7 +146,7 @@
         console.log("send start")
         console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
         $.ajax({
-            url:'http://localhost:8081/rest/monitorCenter/equipmentAddResult',
+            url:'http://101.132.105.38:8081/rest/monitorCenter/equipmentAddResult',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),

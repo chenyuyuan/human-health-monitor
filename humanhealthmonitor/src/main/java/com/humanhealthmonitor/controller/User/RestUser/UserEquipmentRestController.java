@@ -69,7 +69,7 @@ public class UserEquipmentRestController {
                 //组装查询命令
                 String startStr = "FEFE";
                 String endStr = "AABB";
-                String dataLengthStr = "07"; //数据长度
+                String dataLengthStr = "08"; //数据长度
                 String orderTypeStr = "02"; //指令码
 //                ？？？ 先直接发给1号网关
 //                for(int i = 0;i <32;i++) {
@@ -92,7 +92,7 @@ public class UserEquipmentRestController {
                     if(checkCalStr.length() == 1)
                         checkCalStr = "0" + checkCalStr;
                     String deviceRegisterOrder = startStr + dataLengthStr + orderTypeStr
-                            + eqpIdLength + eqpIdAddZero + checkCalStr + endStr;
+                            + eqpIdLength + eqpIdAddZero + "00" + checkCalStr + endStr;
                     System.out.println("The Order is " + deviceRegisterOrder);
 
                     // 根据该网关使用的协议发送查询命令
