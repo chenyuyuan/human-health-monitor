@@ -9,14 +9,87 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Hello, world!</title>
+    <style>
+      button:focus{
+        outline:0;
+      }
+      .btn:focus,.btn:active:focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn.active.focus {
+        outline: none;
+        border-color: transparent;
+        box-shadow:none;
+      }
+      .shadow{
+        -webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+        -moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+        box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+      }
+      .shadow-smaller{
+        -webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+        -moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+        box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+      }
+      body{
+        background-color: #fafafa;
+        padding:60px
+      }
+      .logo{
+        font-family: Catull;
+        font-size: 50px;
+        padding:0 auto;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello, world!</h1>
+    <div class="container" style="font-size: 15px;">
 
+      <div class="container">
+      
+        <form id="loginForm" name="loginFrom" action="/loginSubmit" accept-charset="utf-8" method="post">
+        
+          <div style="text-align: center;margin-bottom: 40px">
+            <span class="logo" style="color: #0d83ff">请登录</span>
+          </div>
+          <input id="userId" type="text" name="userId" class="form-control center-block" placeholder="账号" style="width:28%;height: 48px;margin-left: 36%;margin-right: 36%;">
+          <input id="password" type="password" name="password" class="form-control center-block" placeholder="密码" style="width:28%;height: 48px;border-top: auto;margin-left: 36%;margin-right: 36%;">
+          <p id="tips" class="text-center text-muted" style="margin-top: 10px">&nbsp</p>
+          <button id="loginSubmit" type="submit" class="btn btn-primary center-block" style="width:28%;height: 40px;margin-top: 20px;margin-left: 36%;margin-right: 36%;">登录</button>
+          <div style="width: 28%;margin:0 auto;margin-top: 7px;margin-left: 36%;margin-right: 36%;">
+            <a href="register"><span>注册</span></a>
+          </div>
+        </form>
+      </div>
+      <div style="margin:250px "></div>
+      <hr class="divider">
+      <footer style="padding-left:20%;padding-right: 20%;">
+        <p>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</p>
+        <p>关于</p>
+        <p class="pull-right"><a href="#top">回到顶部</a></p>
+        <a style="float: right;" href="http://localhost:8080/loginadmin">管理员登录</a>
+      </footer>
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#userId").attr("z-index",2)
+      $("#password").attr("z-index",1)
+      $("#account").click(function () {
+          $("#tips").html("")
+      })
+      $("#password").click(function () {
+          if($("#account").val()==""){
+              $("#tips").html("账号不能为空")
+          }
+          else{
+              $("#tips").html("")
+          }
+      })
+    })
+</script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 </html>

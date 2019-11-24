@@ -517,7 +517,7 @@ public class UserEquipmentController {
     }
 
     //向网关发送获取数据的命令
-    public void sendMessage(int netMaskId,String order) {
+    public void sendMessage(int netMaskId, String order) {
         if (MsgQueue.protocolState[netMaskId - 1] == 1 ) {
             MsgQueue.sendMsgQueue.get(netMaskId - 1).offer(order);////added0524
         } else if (MsgQueue.protocolState[netMaskId - 1] == 2) {
