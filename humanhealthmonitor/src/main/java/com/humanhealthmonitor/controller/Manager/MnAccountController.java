@@ -38,12 +38,9 @@ public class MnAccountController {
         //从页面取得原密码和新密码
         String oldPassword = request.getParameter("oldPassword");
         String newPassword = request.getParameter("newPassword1");
-//        System.out.println(oldPassword);
-//        System.out.println(newPassword);
 
         //查看原密码是否输入正确
-        if (oldPassword.equals(admin.getPwd()))//如果输入正确，则修改密码成功
-        {
+        if (oldPassword.equals(admin.getPwd())) {//如果输入正确，则修改密码成功
             //在数据库中更新管理员密码(session中的密码未改变)
             admin.setPwd(newPassword);
             adminService.updateAdminPassword(admin);
@@ -55,8 +52,7 @@ public class MnAccountController {
             HttpSession session = request.getSession();
             session.removeAttribute("admin");
             return "login";
-        } else//如果原密码错误，则提示用户原密码不对
-        {
+        } else {//如果原密码错误，则提示用户原密码不对
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('原密码不正确！密码修改失败');</script>");

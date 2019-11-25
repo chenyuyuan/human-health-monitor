@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="icon" type="image/x-icon" href="http://localhost:8080/img/favicon.ico">
 	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <title>Hello, world!</title>
     <style>
       button:focus{
@@ -33,7 +33,8 @@
       }
       body{
         background-color: #fafafa;
-        padding: 0px
+        padding: 0px;
+        padding-top: 60px;
       }
       .logo{
         font-family: Catull;
@@ -61,10 +62,10 @@
           </div>
         </form>
       </div>
-      <div style="margin:250px "></div>
+      <div style="margin:240px "></div>
       <hr class="divider">
       <footer style="padding-left:20%;padding-right: 20%;">
-        <p style="font-family: Microsoft Yahei;">Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</p>
+        <p>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</p>
         <p style="font-family: Microsoft Yahei;">关于</p>
         <p style="float: left;"><a href="#top">回到顶部</a></p>
         <a style="float: right;" href="http://localhost:8080/loginadmin">管理员登录</a>
@@ -75,20 +76,23 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+    <script src="js/my-uitls.js"></script>
+</body>
   <script type="text/javascript">
     $(document).ready(function () {
-      $("#account").click(function () {
-          $("#tips").html("")
-      })
-      $("#password").click(function () {
-          if($("#account").val()==""){
-              $("#tips").html("账号不能为空")
-          }
-          else{
-              $("#tips").html("")
-          }
-      })
+        var mobile_flag = isMobile();
+        if(mobile_flag == true) console.log("Current device is a MOBILE DEVICE!");else console.log("Current device is a Computer");
+        $("#account").click(function () {
+            $("#tips").html("")
+        })
+        $("#password").click(function () {
+            if($("#account").val()==""){
+                $("#tips").html("账号不能为空")
+            }
+            else{
+                $("#tips").html("")
+            }
+        })
     })
 </script>
 </html>
