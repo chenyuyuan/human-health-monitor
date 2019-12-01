@@ -15,7 +15,9 @@ public interface EquipmentMapper {
     int insertEquipment(Equipment equipment);
 
 
-    @Delete("delete from equipment where eqpId = #{eqpId}")
+    @Delete("SET FOREIGN_KEY_CHECKS = 0;" +
+            "delete from equipment where eqpId = #{eqpId};" +
+            "SET FOREIGN_KEY_CHECKS = 1;")
     int deleteEquipmentBydeviceID(@Param("eqpId") String eqpId);
 
 
