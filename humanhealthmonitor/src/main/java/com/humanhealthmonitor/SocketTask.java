@@ -279,22 +279,34 @@ public class SocketTask implements Runnable {
                 " socketIp = " + socketIp + " socketPort = " + socketPort +
                 " socketAddress =" + socketAddress + " netMaskId =" + netMaskId + "\n");
 
-
-        Equipment newEquipment = new Equipment();
-        newEquipment.setEqpId(deviceID);
-        newEquipment.setEqpName(deviceID); //设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
-        //newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-        //newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
-        newEquipment.setSpecial(false); //该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
-        newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
-        newEquipment.setNetmaskId(netMaskId);
-        //newEquipment.setDeviceSerial(deviceSerialNew);
-        int insertEquitmentResult = socketTask.equipmentService.insertEquipment(newEquipment); //
-        if(insertEquitmentResult < 0) {
-            //插入失败
-            return;
+        if(flag == 17) {
+            //返回删除成功
+            socketTask.equipmentService.deleteEquipmentByDeviceID(deviceID);
+        }
+        else if(flag == 16) {
+            //返回删除失败
+        }
+        else if(flag == 1) {
+            //返回添加成功
+            Equipment newEquipment = new Equipment();
+            newEquipment.setEqpId(deviceID);
+            newEquipment.setEqpName(deviceID); //设备名暂时设置为eqpId一样，等待网页后台添加设备部分获取用户输入自动修改
+            //newEquipment.setObjectId(objectId);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+            //newEquipment.setEqpType(eqpType);//NULL，暂时不设置，等待网页后台添加设备部分获取用户输入自动修改
+            newEquipment.setSpecial(false); //该设备默认使用默认警报值而非特殊警报值，有需要单独去设置
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
+            newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
+            newEquipment.setNetmaskId(netMaskId);
+            //newEquipment.setDeviceSerial(deviceSerialNew);
+            int insertEquitmentResult = socketTask.equipmentService.insertEquipment(newEquipment); //
+            if(insertEquitmentResult < 0) {
+                //插入失败
+                return;
+            }
+        }
+        else if(flag == 0) {
+            //返回添加失败
         }
 
     }

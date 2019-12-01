@@ -15,6 +15,9 @@ public interface EquipmentMapper {
     int insertEquipment(Equipment equipment);
 
 
+    @Delete("delete from equipment where eqpId = #{eqpId}")
+    int deleteEquipmentBydeviceID(@Param("eqpId") String eqpId);
+
 
     //监测设备更换绑定人并修改设备名称
     @Update("update equipment set objectId=#{objectId},eqpName=#{eqpName} where eqpId=#{eqpId}")

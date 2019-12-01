@@ -22,6 +22,12 @@ public class EquipmentService {
         }
     }
 
+    public int deleteEquipmentByDeviceID(String deviceID) {
+        return equipmentMapper.deleteEquipmentBydeviceID(deviceID);
+    }
+
+
+
     //监测设备更换绑定人并修改设备名称
     public int updateEquipmentObject(Equipment equipment) {
         return equipmentMapper.updateEquipmentObject(equipment);
