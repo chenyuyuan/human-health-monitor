@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
 
@@ -129,13 +129,10 @@
         </div>
     </ul>
     <!-- End of Sidebar -->
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
         <!-- Main Content -->
         <div id="content">
-
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -321,165 +318,49 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800"></h1>
                 </div>
-
                 <div class="row">
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-lg-3">
+                    </div>
+                    <div class="col-lg-6">
+                        <!--margin:auto;margin-top:15%-->
+                        <div class="d" style="height:700px;background-color:white;width:600px;
+        border: 1px solid lightgrey;margin: auto;">
+                            <br/>
+                            <p style="font-size: 28px;text-align: left;text-indent: 2em">添加设备</p>
+                            <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">设备类型</p>
+                            <select id="eqpTypeSelected" name="eqpTypeSelected"
+                                    style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
+                                <option th:each="eqpType:${eqpTypeList}" th:value="${eqpType.eqpType}"
+                                        th:text="${eqpType.eqpType}"></option>
+                            </select>
+                            <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">设备号</p>
+                            <input type="text" id="eqpId" name="eqpId" placeholder="请输入设备上标注的设备识别号码" class="inputStyle1"/>
+                            <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">设备名称</p>
+                            <input type="text" id="eqpName" name="eqpName" value="" placeholder="只能由汉字、字母、数字和下划线组成"
+                                   class="inputStyle1"/>
+                            <p class="equipmentModifyReminder" style="text-align: left;font-size: 18px;text-indent: 3em">绑定对象</p>
+                            <select id="objectSelected" name="objectSelected"
+                                    style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
+                                <option th:each="object:${objectList}" th:value="${object.objectId}"
+                                        th:text="${object.objectName}"></option>
+                            </select>
+                            <p style="height: 36px"></p>
+                            <p style="text-align: left;font-size: 12px;text-indent: 4em">点击下方“添加”按钮后请等待15秒，15秒后将返回添加结果</p>
+                            <input type="submit" id="equipmentAddSubmit" name="equipmentAddSubmit"
+                                   style="font-size: 18px;height: 50px;width: 83%;background-color: #FFA500;border: none;color: white" th:onclick="'javascript:send()'"
+                                   value="添    加" onmouseover="submitOnMouseUpEquipmentAdd()"
+                                   onmouseleave="submitOnMouseLeaveEquipmentAdd()"/>
                         </div>
                     </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm mr-2">
-                                                    <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-lg-3">
                     </div>
                 </div>
-
-                <div class="row">
-
-                    <div class="col-lg-6">
-
-                        <!-- Default Card Example -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                Default Card Example
-                            </div>
-                            <div class="card-body">
-                                This card uses Bootstrap's default styling with no utility classes added. Global styles are the only things modifying the look and feel of this default card example.
-                            </div>
-                        </div>
-
-                        <!-- Basic Card Example -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6>
-                            </div>
-                            <div class="card-body">
-                                The styling for this basic card example is created by using default Bootstrap utility classes. By using utility classes, the style of the card component can be easily modified with no need for any custom CSS!
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6">
-
-                        <!-- Dropdown Card Example -->
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Dropdown Card Example</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                Dropdown menus can be placed in the card header in order to extend the functionality of a basic card. In this dropdown card example, the Font Awesome vertical ellipsis icon in the card header can be clicked on in order to toggle a dropdown menu.
-                            </div>
-                        </div>
-
-                        <!-- Collapsable Card Example -->
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Accordion -->
-                            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                                <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6>
-                            </a>
-                            <!-- Card Content - Collapse -->
-                            <div class="collapse show" id="collapseCardExample">
-                                <div class="card-body">
-                                    This is a collapsable card example using Bootstrap's built in collapse functionality. <strong>Click on the card header</strong> to see the card body collapse and expand!
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
             </div>
             <!-- /.container-fluid -->
-
         </div>
         <!-- End of Main Content -->
 
@@ -492,18 +373,14 @@
             </div>
         </footer>
         <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
-
 </div>
 <!-- End of Page Wrapper -->
-
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
-
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -522,17 +399,62 @@
         </div>
     </div>
 </div>
+<script type = "text/javascript">
+    ipAddress = "101.132.105.38"
+    checkEquipmentAdd = function () {
+        var form = document.getElementById("");
+        if ($("#eqpId").val() == "" || $("#eqpName").val() == "") {
+            alert("您有信息尚未填写，请补充未填写的信息");
+        }
+        else if ($("#eqpId").val() > 32 || $("#eqpName").val() > 32){
+            alert("设备名称和设备号均不能超过32个字符");
+        }
+        else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test($("#eqpName").val())) {
+            alert("设备名称只能由汉字、字母、数字和下划线组成");
+        }
+    }
+    send = function (){
+        checkEquipmentAdd()
+        console.log("[function: send]: start");
+        tosenddata={
+            "eqpTypeSelected": $("#eqpTypeSelected").val(),
+            "eqpId": $("#eqpId").val(),
+            "eqpName": $("#eqpName").val(),
+            "objectSelected": $("#objectSelected").val()
+        };
+        console.log("send start")
+        console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
+        $.ajax({
+            url:'http://'+ipAddress+':8081/rest/monitorCenter/equipmentAddResult',
+            type:"POST",
+            contentType: 'application/json; charset=UTF-8',
+            data:JSON.stringify(tosenddata),
+            dataType:'json',
+            success:function (data) {
+                console.log("[function:send:ajax]the success return message is " + data.msg);
+                if(data.msg === "success"){
+                    //console.log("the return message is " + data.msg);
+                }
+                else {
+                    //console.log("the return message is " + data.msg);
+                }
+            },
+            error:function(a,b,c) {
+                console.log("[function:send:ajax]the error return message is " + data.msg);
+                console.log(a.status+"::"+a.readyState+"::"+b)
+            }
+        })
+    }
+    $(document).ready(function () {
+    })
+</script>
 
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
 <!-- Core plugin JavaScript-->
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.min.js"></script>
-
 </body>
-
 </html>
