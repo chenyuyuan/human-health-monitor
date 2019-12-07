@@ -9,7 +9,8 @@
     <title>HumanHealthMonitor - 管理设备</title>
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <style>
@@ -19,6 +20,7 @@
             width: 40%;
             text-indent: 0.5em;
         }
+
         table {
             border: none;
             line-height: 35px;
@@ -72,41 +74,46 @@
             }
             firstPage();
         };
+
         function checkEquipmentModify() {
             var form = document.getElementById("equipmentModifyForm");
             if (form.eqpName.value == "") {
                 alert("设备名称不能为空");
                 window.event.returnValue = false;//验证失败不提交action
-            }
-            else if (form.eqpName.value.length > 32) {
+            } else if (form.eqpName.value.length > 32) {
                 alert("设备名称不能超过32个字符");
                 window.event.returnValue = false;//验证失败不提交action
-            }
-            else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(form.eqpName.value)) {
+            } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(form.eqpName.value)) {
                 alert("设备名称只能由汉字、字母、数字和下划线组成");
                 window.event.returnValue = false;//验证失败不提交action
             }
         }
+
         function submitOnMouseUpEquipmentModify() {
             var modifySubmit = document.getElementById("equipmentModifySubmit");
             modifySubmit.style.backgroundColor = "#EE7700";
         }
+
         function submitOnMouseLeaveEquipmentModify() {
             var modifySubmit = document.getElementById("equipmentModifySubmit");
             modifySubmit.style.backgroundColor = "#FFA500";
         }
+
         function submitOnMouseUpEqpIdToModify() {
             var modifySubmit = document.getElementById("eqpIdToModifySubmit");
             modifySubmit.style.backgroundColor = "#EE7700";
         }
+
         function submitOnMouseLeaveEqpIdToModify() {
             var modifySubmit = document.getElementById("eqpIdToModifySubmit");
             modifySubmit.style.backgroundColor = "#FFA500";
         }
+
         function submitOnMouseUpEqpIdToModifyAlarm() {
             var modifySubmit = document.getElementById("eqpIdToModifyAlarmSubmit");
             modifySubmit.style.backgroundColor = "#EE7700";
         }
+
         function submitOnMouseLeaveEqpIdToModifyAlarm() {
             var modifySubmit = document.getElementById("eqpIdToModifyAlarmSubmit");
             modifySubmit.style.backgroundColor = "#FFA500";
@@ -120,7 +127,8 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+        style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
             <div class="sidebar-brand-icon rotate-n-15">
@@ -138,7 +146,8 @@
         </li>
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true" aria-controls="collapseTwo">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+               aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>检测信息</span></a>
             <div id="collapseMonitor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -156,7 +165,8 @@
         </div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+               aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>检测设备</span>
             </a>
@@ -170,11 +180,13 @@
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+               aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
                 <span>检测对象</span>
             </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="hhm-addobject.html">添加检测对象</a>
                     <a class="collapse-item" href="hhm-manageobject.html">检测对象管理</a>
@@ -183,11 +195,13 @@
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask" aria-expanded="true" aria-controls="collapseUtilities">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask"
+               aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
                 <span>网关管理</span>
             </a>
-            <div id="collapseNetmask" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div id="collapseNetmask" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="hhm-addnetmask.html">添加网关</a>
                     <a class="collapse-item" href="hhm-managenetmask.html">网关管理</a>
@@ -202,7 +216,8 @@
         </div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+               aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>账户管理</span>
             </a>
@@ -244,7 +259,8 @@
                 <!-- Topbar Search -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                               aria-label="Search" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-search fa-sm"></i>
@@ -258,14 +274,18 @@
 
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
                         <!-- Dropdown - Messages -->
-                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                             aria-labelledby="searchDropdown">
                             <form class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                           placeholder="Search for..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="button">
                                             <i class="fas fa-search fa-sm"></i>
@@ -278,13 +298,15 @@
 
                     <!-- Nav Item - Alerts -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
                             <!-- Counter - Alerts -->
                             <span class="badge badge-danger badge-counter">3+</span>
                         </a>
                         <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="alertsDropdown">
                             <h6 class="dropdown-header">
                                 Alerts Center
                             </h6>
@@ -327,53 +349,67 @@
 
                     <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-envelope fa-fw"></i>
                             <!-- Counter - Messages -->
                             <span class="badge badge-danger badge-counter">7</span>
                         </a>
                         <!-- Dropdown - Messages -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="messagesDropdown">
                             <h6 class="dropdown-header">
                                 Message Center
                             </h6>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60"
+                                         alt="">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div class="font-weight-bold">
-                                    <div class="text-truncate">Hi there! I am wondering if you can help me with a problem I've been having.</div>
+                                    <div class="text-truncate">Hi there! I am wondering if you can help me with a
+                                        problem I've been having.
+                                    </div>
                                     <div class="small text-gray-500">Emily Fowler · 58m</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60"
+                                         alt="">
                                     <div class="status-indicator"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">I have the photos that you ordered last month, how would you like them sent to you?</div>
+                                    <div class="text-truncate">I have the photos that you ordered last month, how would
+                                        you like them sent to you?
+                                    </div>
                                     <div class="small text-gray-500">Jae Chun · 1d</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/CS2uCrpNzJY/60x60" alt="">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/CS2uCrpNzJY/60x60"
+                                         alt="">
                                     <div class="status-indicator bg-warning"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Last month's report looks great, I am very happy with the progress so far, keep up the good work!</div>
+                                    <div class="text-truncate">Last month's report looks great, I am very happy with the
+                                        progress so far, keep up the good work!
+                                    </div>
                                     <div class="small text-gray-500">Morgan Alvarez · 2d</div>
                                 </div>
                             </a>
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="">
+                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                         alt="">
                                     <div class="status-indicator bg-success"></div>
                                 </div>
                                 <div>
-                                    <div class="text-truncate">Am I a good boy? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...</div>
+                                    <div class="text-truncate">Am I a good boy? The reason I ask is because someone told
+                                        me that people say this to all dogs, even if they aren't good...
+                                    </div>
                                     <div class="small text-gray-500">Chicken the Dog · 2w</div>
                                 </div>
                             </a>
@@ -385,12 +421,14 @@
 
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
                             <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                         </a>
                         <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
@@ -435,12 +473,15 @@
                                 </tr>
                                 <tr th:each="equipment:${equipmentList}">
                                     <td>
-                                        <form id="equipmentForm" action="/monitorCenter/equipmentInfoManageSelect" name="equipmentForm"
+                                        <form id="equipmentForm" action="/monitorCenter/equipmentInfoManageSelect"
+                                              name="equipmentForm"
                                               accept-charset="utf-8" method="post"
                                               style="text-align:center">
-                                            <input type="hidden" id="eqpId" name="eqpId" th:value="${equipment.eqpId}" readonly="true"/>
+                                            <input type="hidden" id="eqpId" name="eqpId" th:value="${equipment.eqpId}"
+                                                   readonly="true"/>
                                             <!--<p align="left">-->
-                                            <input type="submit" id="eqpName1" name="eqpName1" class="inputSubmitOnLeave"
+                                            <input type="submit" id="eqpName1" name="eqpName1"
+                                                   class="inputSubmitOnLeave"
                                                    th:value="${equipment.eqpName}"
                                                    style="font-size: 23px;background-color: white;border: none;color: blue"/>
                                             <!--</p>-->
@@ -448,14 +489,16 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div id="pagiDiv" style="text-align: left;font-size: 16px;margin-top: 20px;margin-left: 10px">
+                            <div id="pagiDiv"
+                                 style="text-align: left;font-size: 16px;margin-top: 20px;margin-left: 10px">
                                 <!--width:60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;-->
                                 <span id="spanFirst" style="font-size: 16px">首页</span>&nbsp;&nbsp;
                                 <span id="spanPre" style="font-size: 16px">上一页</span>&nbsp;&nbsp;
                                 <span id="spanNext" style="font-size: 16px">下一页</span>&nbsp;&nbsp;
                                 <span id="spanLast" style="font-size: 16px">尾页</span>&nbsp;&nbsp;
-                                第&nbsp;<span id="spanPageNum" style="font-size: 16px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage"
-                                                                                                                  style="font-size: 16px"></span>&nbsp;页
+                                第&nbsp;<span id="spanPageNum" style="font-size: 16px"></span>&nbsp;页/共&nbsp;<span
+                                    id="spanTotalPage"
+                                    style="font-size: 16px"></span>&nbsp;页
                             </div>
                         </div>
                     </div>
@@ -468,55 +511,70 @@
                                 <!--margin:auto;margin-top:15%-->
                                 <div class="d"
                                      style="height:400px;background-color:white;width:950px;border: 0 solid lightgrey;margin-left: 20px;">
-                                    <form id="equipmentModifyForm" name="equipmentModifyForm" action="/monitorCenter/equipmentInfoModify"
+                                    <form id="equipmentModifyForm" name="equipmentModifyForm"
+                                          action="/monitorCenter/equipmentInfoModify"
                                           accept-charset="utf-8" method="post"
                                           style="text-align:center;" onsubmit="checkEquipmentModify()">
                                         <br/>
-                                        <p style="font-size: 28px;text-align: left;color: blue;text-indent: 2em">&nbsp基本信息</p>
+                                        <p style="font-size: 28px;text-align: left;color: blue;text-indent: 2em">
+                                            &nbsp基本信息</p>
                                         <p style="text-align: left;text-indent: 4em">
-                                            <span class="equipmentModifyReminder" style="text-align: left;font-size: 28px">设备号:</span>
+                                            <span class="equipmentModifyReminder"
+                                                  style="text-align: left;font-size: 28px">设备号:</span>
                                             <span th:text="${equipment.eqpId}" th:value="${equipment.eqpId}"
                                                   style="text-align: left;font-size: 28px"></span>
-                                            <input type="hidden" id="eqpIdShow" name="eqpIdShow" th:value="${equipment.eqpId}"/>
+                                            <input type="hidden" id="eqpIdShow" name="eqpIdShow"
+                                                   th:value="${equipment.eqpId}"/>
                                         </p>
                                         <p style="text-align: left;text-indent: 4em;margin-top: 15px">
                                             <nobr>
-                                                <span class="equipmentModifyReminder" style="text-align: left;font-size: 28px">设备名称:</span>
-                                                <input type="text" id="eqpName2" name="eqpName2" th:value="${equipment.eqpName}"
+                                                <span class="equipmentModifyReminder"
+                                                      style="text-align: left;font-size: 28px">设备名称:</span>
+                                                <input type="text" id="eqpName2" name="eqpName2"
+                                                       th:value="${equipment.eqpName}"
                                                        class="inputStyle2"
                                                        onfocus="this.ready()" onmouseout="this.blur()"/>
-                                                <input type="submit" id="equipmentModifySubmit" name="equipmentModifySubmit"
+                                                <input type="submit" id="equipmentModifySubmit"
+                                                       name="equipmentModifySubmit"
                                                        style="font-size: 18px;height: 40px;width: 60px;background-color: #FFA500;border: none;color: white;margin-left: 30px"
                                                        value="保 存" onmouseover="submitOnMouseUpEquipmentModify()"
                                                        onmouseleave="submitOnMouseLeaveEquipmentModify()"/>
                                             </nobr>
                                         </p>
                                         <p style="text-align: left;text-indent: 4em;margin-top: 15px">
-                                            <span class="equipmentModifyReminder" style="text-align: left;font-size: 28px">设备类型:</span>
+                                            <span class="equipmentModifyReminder"
+                                                  style="text-align: left;font-size: 28px">设备类型:</span>
                                             <span th:text="${equipment.eqpType}" th:value="${equipment.eqpType}"
                                                   style="text-align: left;font-size: 28px"></span>
                                             <!--<input type="text" id="eqpType" name="eqpType" th:value="${equipment.eqpType}"  class="inputStyle2"/>-->
                                         </p>
                                         <p style="text-align: left;text-indent: 4em;margin-top: 15px">
-                                            <span class="equipmentModifyReminder" style="text-align: left;font-size: 28px">注册日期:</span>
-                                            <span th:value="${equipment.registerDate}" th:text="${equipment.registerDate}"
+                                            <span class="equipmentModifyReminder"
+                                                  style="text-align: left;font-size: 28px">注册日期:</span>
+                                            <span th:value="${equipment.registerDate}"
+                                                  th:text="${equipment.registerDate}"
                                                   style="text-align: left;font-size: 28px"></span>
                                         </p>
                                         <p style="text-align: left;text-indent: 4em;margin-top: 15px">
-                                            <span class="equipmentModifyReminder" style="text-align: left;font-size: 28px">绑定对象:</span>
+                                            <span class="equipmentModifyReminder"
+                                                  style="text-align: left;font-size: 28px">绑定对象:</span>
                                             <span th:value="${equipment.objectId}" th:text="${equipment.objectId}"
                                                   style="text-align: left;font-size: 28px"></span>
-                                            <input type="hidden" id="eqpIdToModify" name="eqpIdToModify" th:value="${equipment.eqpId}"/>
+                                            <input type="hidden" id="eqpIdToModify" name="eqpIdToModify"
+                                                   th:value="${equipment.eqpId}"/>
                                             <input type="submit" id="eqpIdToModifySubmit" value="更 改"
                                                    formaction="/monitorCenter/modifyBanding"
-                                                   onmouseover="submitOnMouseUpEqpIdToModify()" onmouseleave="submitOnMouseLeaveEqpIdToModify()"
+                                                   onmouseover="submitOnMouseUpEqpIdToModify()"
+                                                   onmouseleave="submitOnMouseLeaveEqpIdToModify()"
                                                    style="align-self: right;font-size: 18px;height:40px;width:60px;background-color: #FFA500;border: none;color: white;margin-left: 30px"/>
                                         </p>
                                     </form>
                                 </div>
-                                <div class="d" style="min-height:300px;background-color:white;width:950px;border: 0 solid lightgrey;margin-left: 20px;margin-top: 30px">
+                                <div class="d"
+                                     style="min-height:300px;background-color:white;width:950px;border: 0 solid lightgrey;margin-left: 20px;margin-top: 30px">
                                     <nobr><span style="font-size: 28px;text-align: left;margin-left:56px;color: blue">&nbsp警报界限信息</span>
-                                    <form action="/monitorCenter/modifyAlarmValue" accept-charset="utf-8" method="post"
+                                        <form action="/monitorCenter/modifyAlarmValue" accept-charset="utf-8"
+                                              method="post"
                                               style="margin: 0;display: inline">
                                             <input type="hidden" id="eqpIdToModifyAlarm" name="eqpIdToModifyAlarm"
                                                    th:value="${equipment.eqpId}"/>
@@ -524,11 +582,15 @@
                                                    onmouseover="submitOnMouseUpEqpIdToModifyAlarm()"
                                                    onmouseleave="submitOnMouseLeaveEqpIdToModifyAlarm()"
                                                    style="font-size: 18px;background-color: #FFA500;border: none;color: white;height: 40px;margin-left: 30px"/>
-                                    </form></nobr>
-                                    <p th:each="alarmValue:${alarmValueList}" style="text-align: left;text-indent: 4em;margin-top: 15px">
-                                        <span th:value="${alarmValue.valueName}" th:text="${alarmValue.valueName}" style="text-align: left;font-size: 28px"></span><span
+                                        </form>
+                                    </nobr>
+                                    <p th:each="alarmValue:${alarmValueList}"
+                                       style="text-align: left;text-indent: 4em;margin-top: 15px">
+                                        <span th:value="${alarmValue.valueName}" th:text="${alarmValue.valueName}"
+                                              style="text-align: left;font-size: 28px"></span><span
                                             style="font-size: 28px">:&nbsp&nbsp</span>
-                                        <span id="value" th:value="${alarmValue.value}" th:text="${alarmValue.value}"></span>
+                                        <span id="value" th:value="${alarmValue.value}"
+                                              th:text="${alarmValue.value}"></span>
                                         <span id="measurementUnit" th:value="${alarmValue.measurementUnit}"
                                               th:text="${alarmValue.measurementUnit}"></span>
                                     </p>
@@ -558,7 +620,8 @@
     <i class="fas fa-angle-up"></i>
 </a>
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
