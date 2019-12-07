@@ -44,9 +44,15 @@
       </li>
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="hhm-monitorinfo.html">
-          <i class="fas fa-fw fa-chart-area"></i>
+          <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-chart-area"></i>
           <span>检测信息</span></a>
+          <div id="collapseMonitor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+              <div class="bg-white py-2 collapse-inner rounded">
+                  <a class="collapse-item" href="hhm-monitorinfo.html">实时数据</a>
+                  <a class="collapse-item" href="hhm-monitorhistory.html">历史数据</a>
+              </div>
+          </div>
       </li>
       <!-- Divider -->
       <hr class="sidebar-divider">
