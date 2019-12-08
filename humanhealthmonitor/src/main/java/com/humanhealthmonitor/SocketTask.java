@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.apache.el.stream.StreamELResolverImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -442,29 +443,48 @@ public class SocketTask implements Runnable {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[0]);
 
+        if(flag == 0) {
+            //改为Modbus
+
+        }
+        else {
+            //改为AMQP
+
+        }
+
+
     }
+    //指令6：设备信息获取
     private void handleOrder6Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
-        int netMaskIDLength = byteToUnsignedValue(responseContent[0]);
-        int deviceIDLength = byteToUnsignedValue(responseContent[1 + netMaskIDLength + 1 - 1]);
+        int deviceIDLength = byteToUnsignedValue(responseContent[0]);
+        int timestampLength = byteToUnsignedValue(responseContent[1 + deviceIDLength + 1 - 1]);
 
-        byte[] byteArrayNetMaskID = new byte[netMaskIDLength];
-        System.arraycopy(responseContent, 1, byteArrayNetMaskID, 0, byteArrayNetMaskID.length);
-        String netmaskID = byteArrayToString(byteArrayNetMaskID, 10);
         byte[] byteArrayDeviceID = new byte[deviceIDLength];
-        System.arraycopy(responseContent, netMaskIDLength + 2, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+        System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
         String deviceID = byteArrayToString(byteArrayDeviceID, 16);
-        byte[] byteArrayTimestamp = new byte[4];
-        System.arraycopy(responseContent, netMaskIDLength + deviceIDLength + 2, byteArrayNetMaskID, 0, 4);
+        byte[] byteArrayTimestamp = new byte[timestampLength];
+        System.arraycopy(responseContent, deviceIDLength + 2, byteArrayTimestamp, 0, timestampLength);
         int timestamp = byteArrayToInt(byteArrayTimestamp, 0, byteArrayTimestamp.length - 1);
 
     }
     private void handleOrder7Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[responseContent.length - 1]);
-        byte[] byteArrayDeviceID = new byte[responseContent.length - 1];
-        System.arraycopy(responseContent, 0, byteArrayDeviceID, 0, byteArrayDeviceID.length);
+
+        int deviceIDLength = byteToUnsignedValue(responseContent[0]);
+
+        byte[] byteArrayDeviceID = new byte[deviceIDLength];
+        System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
         String deviceID = byteArrayToString(byteArrayDeviceID, 16);
+
+        if(flag == 0) {
+            //不存在
+
+        }
+        else if(flag == 1) {
+            //成功
+        }
 
     }
 

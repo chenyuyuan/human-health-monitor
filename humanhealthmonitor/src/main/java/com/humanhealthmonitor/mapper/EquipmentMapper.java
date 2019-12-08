@@ -15,9 +15,9 @@ public interface EquipmentMapper {
     int insertEquipment(Equipment equipment);
 
 
-    @Delete("SET FOREIGN_KEY_CHECKS = 0;" +
-            "delete from equipment where eqpId = #{eqpId};" +
-            "SET FOREIGN_KEY_CHECKS = 1;")
+    //Error: alarmLog`, CONSTRAINT `alarmLog_equipment__fk` 要同时修改或者删除AlarmLog表
+    //但由于没有用AlarmLog，所以不会出现这个错误，先不管
+    @Delete("delete from equipment where eqpId = #{eqpId}")
     int deleteEquipmentBydeviceID(@Param("eqpId") String eqpId);
 
 

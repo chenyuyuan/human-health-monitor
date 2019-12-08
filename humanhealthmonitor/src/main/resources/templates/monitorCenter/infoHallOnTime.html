@@ -22,29 +22,24 @@
             border-collapse: collapse;
             / / 边框合成单一的边框
         }
-
         table tr th {
             /*border: 1px solid black;*/
             border: none;
             font-size: 22px;
         }
-
         table tr td {
             border: 1px solid black;
             font-size: 22px;
             width: 83%;
-            / /
         }
     </style>
     <script>
-
         //全局变量
         var numCount;       //数据总数量
         var columnsCounts;  //数据列数量
         var pageCount;      //每页显示的数量
         var pageNum;        //总页数
         var currPageNum;   //当前页数
-
         //页面标签变量
         var blockTable;
         var preSpan;
@@ -55,24 +50,23 @@
         var currPageSpan;
 
         window.onload = function () {
-        //页面标签变量
-        blockTable = document.getElementById("blocks");
-        preSpan = document.getElementById("spanPre");
-        firstSpan = document.getElementById("spanFirst");
-        nextSpan = document.getElementById("spanNext");
-        lastSpan = document.getElementById("spanLast");
-        pageNumSpan = document.getElementById("spanTotalPage");
-        currPageSpan = document.getElementById("spanPageNum");
-
-        numCount = document.getElementById("blocks").rows.length - 1;       //取table的行数作为数据总数量（减去标题行1）
-        // alert(numCount);
-        columnsCounts = blockTable.rows[0].cells.length;
-        pageCount = 8;
-        pageNum = parseInt(numCount / pageCount);
+            //页面标签变量
+            blockTable = document.getElementById("blocks");
+            preSpan = document.getElementById("spanPre");
+            firstSpan = document.getElementById("spanFirst");
+            nextSpan = document.getElementById("spanNext");
+            lastSpan = document.getElementById("spanLast");
+            pageNumSpan = document.getElementById("spanTotalPage");
+            currPageSpan = document.getElementById("spanPageNum");
+    
+            numCount = document.getElementById("blocks").rows.length - 1;       //取table的行数作为数据总数量（减去标题行1）
+            // alert(numCount);
+            columnsCounts = blockTable.rows[0].cells.length;
+            pageCount = 8;
+            pageNum = parseInt(numCount / pageCount);
         if (0 != numCount % pageCount) {
-        pageNum += 1;
+            pageNum += 1;
         }
-
         firstPage();
         };
     </script>
@@ -88,8 +82,7 @@
             }
         });
         // 使用
-        require(
-            [
+        require([
                 'echarts',
                 'echarts/chart/line', //加载line模块，折线图
                 'echarts/chart/bar' // 加载bar模块，柱状图
@@ -119,8 +112,7 @@
                         }
                     },
                     calculable : true,
-                    xAxis : [
-                        {
+                    xAxis : [{
                             type : 'category',
                             name : '时间',
                             boundaryGap : false,
@@ -128,16 +120,14 @@
                                 '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
                         }
                     ],
-                    yAxis : [
-                        {
+                    yAxis : [{
                             type : 'value',
                             axisLabel : {
                                 formatter: '{value} ℃'
                             }
                         }
                     ],
-                    series : [
-                        {
+                    series : [{
                             name:'体温',
                             type:'line',
                             data:[[${bodyTempList}]],
@@ -152,8 +142,7 @@
                                     {type : 'average', name: '平均值'}
                                 ]
                             }
-                        },
-                        {
+                        }, {
                             name:'环境温度',
                             type:'line',
                             data:[[${envTempList}]],
@@ -173,7 +162,6 @@
                 };
                 // 为echarts对象加载数据
                 temperatureChart.setOption(option);
-
                 bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
                 var option2 = {
                     title : {
@@ -197,8 +185,7 @@
                         }
                     },
                     calculable : true,
-                    xAxis : [
-                        {
+                    xAxis : [{
                             type : 'category',
                             name : '时间',
                             boundaryGap : false,
@@ -220,8 +207,7 @@
                             }
                         }
                     ],
-                    series : [
-                        {
+                    series : [{
                             name:'血压高压',
                             type:'line',
                             data:[[${highPressureList}]],
@@ -236,8 +222,7 @@
                                     {type : 'average', name: '平均值'}
                                 ]
                             }
-                        },
-                        {
+                        }, {
                             name:'血压低压',
                             type:'line',
                             data:[[${lowPressureList}]],
@@ -274,8 +259,6 @@
                 };
                 // 为echarts对象加载数据
                 bloodPressureChart.setOption(option2);
-
-
                 bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
                 var option3 = {
                     title : {
@@ -316,8 +299,7 @@
                             }
                         }
                     ],
-                    series : [
-                        {
+                    series : [{
                             name:'血氧饱和度',
                             type:'line',
                             data:[[${spo2List}]],
@@ -339,7 +321,6 @@
                 bloodOxygenChart.setOption(option3);
             }
         );//require end
-
 
         function ajaxRefresh() {
             var url = "/infoHallOnTimeGetInfo/AutoRefresh";
