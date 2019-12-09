@@ -16,47 +16,47 @@ public class TestPageController {
 
         return "test";
     }
-    @RequestMapping("/hhm-login")
+    @RequestMapping("/hhm-login.html")
     public String hhm_login(HttpServletRequest request) throws InterruptedException {
         return "hhm-login";
     }
-    @RequestMapping("/hhm-adddevice")
+    @RequestMapping("/hhm-adddevice.html")
     public String hhm_adddevice(HttpServletRequest request) throws InterruptedException {
         return "hhm-adddevice";
     }
-    @RequestMapping("/hhm-addnetmask")
+    @RequestMapping("/hhm-addnetmask.html")
     public String hhm_addnetmask(HttpServletRequest request) throws InterruptedException {
         return "hhm-addnetmask";
     }
-    @RequestMapping("/hhm-addobject")
+    @RequestMapping("/hhm-addobject.html")
     public String hhm_addobject(HttpServletRequest request) throws InterruptedException {
         return "hhm-addobject";
     }
-    @RequestMapping("/hhm-index")
+    @RequestMapping("/hhm-index.html")
     public String hhm_index(HttpServletRequest request) throws InterruptedException {
         return "hhm-index";
     }
-    @RequestMapping("/hhm-managedevice")
+    @RequestMapping("/hhm-managedevice.html")
     public String hhm_managedevice(HttpServletRequest request) throws InterruptedException {
         return "hhm-managedevice";
     }
-    @RequestMapping("/hhm-managenetmask")
+    @RequestMapping("/hhm-managenetmask.html")
     public String hhm_managenetmask(HttpServletRequest request) throws InterruptedException {
         return "hhm-managenetmask";
     }
-    @RequestMapping("/hhm-manageobject")
+    @RequestMapping("/hhm-manageobject.html")
     public String hhm_manageobject(HttpServletRequest request) throws InterruptedException {
         return "hhm-manageobject";
     }
-    @RequestMapping("/hhm-monitorinfo")
+    @RequestMapping("/hhm-monitorinfo.html")
     public String hhm_monitorinfo(HttpServletRequest request) throws InterruptedException {
         return "hhm-monitorinfo";
     }
-    @RequestMapping("/hhm-monitorhistory")
+    @RequestMapping("/hhm-monitorhistory.html")
     public String hhm_monitorhistory(HttpServletRequest request) throws InterruptedException {
         return "hhm-monitorhistory";
     }
-    @RequestMapping("/hhm-register")
+    @RequestMapping("/hhm-register.html")
     public String hhm_register(HttpServletRequest request) throws InterruptedException {
         return "hhm-register";
     }

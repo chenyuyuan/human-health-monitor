@@ -16,7 +16,386 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-
+    <style>
+        table {
+            /*border: 1px solid black;*/
+            border: none;
+            /*width: 60%;*/
+            /*margin-left: 20%;*/
+            /*margin-right: 20%;*/
+            line-height: 35px;
+            text-align: center;
+            border-collapse: collapse;
+        / / 边框合成单一的边框
+        }
+        table tr th {
+            /*border: 1px solid black;*/
+            border: none;
+            font-size: 22px;
+        }
+        table tr td {
+            border: 1px solid black;
+            font-size: 22px;
+            width: 83%;
+        }
+    </style>
+    <script>
+        //全局变量
+        var numCount;       //数据总数量
+        var columnsCounts;  //数据列数量
+        var pageCount;      //每页显示的数量
+        var pageNum;        //总页数
+        var currPageNum;   //当前页数
+        //页面标签变量
+        var blockTable;
+        var preSpan;
+        var firstSpan;
+        var nextSpan;
+        var lastSpan;
+        var pageNumSpan;
+        var currPageSpan;
+        
+        window.onload = function () {
+            //页面标签变量
+            blockTable = document.getElementById("blocks");
+            preSpan = document.getElementById("spanPre");
+            firstSpan = document.getElementById("spanFirst");
+            nextSpan = document.getElementById("spanNext");
+            lastSpan = document.getElementById("spanLast");
+            pageNumSpan = document.getElementById("spanTotalPage");
+            currPageSpan = document.getElementById("spanPageNum");
+            
+            numCount = document.getElementById("blocks").rows.length - 1;       //取table的行数作为数据总数量（减去标题行1）
+            // alert(numCount);
+            columnsCounts = blockTable.rows[0].cells.length;
+            pageCount = 8;
+            pageNum = parseInt(numCount / pageCount);
+            if (0 != numCount % pageCount) {
+                pageNum += 1;
+            }
+            firstPage();
+        };
+    </script>
+    
+    <script>
+        var temperatureChart;
+        var bloodPressureChart;
+        var bloodOxygenChart;
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+        // 使用
+        require([
+                    'echarts',
+                    'echarts/chart/line', //加载line模块，折线图
+                    'echarts/chart/bar' // 加载bar模块，柱状图
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    temperatureChart = ec.init(document.getElementById('Temperature01'));
+                    var option = {
+                        title : {
+                            text: '体温、环境温度实时监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['体温','环境温度']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [{
+                            type : 'category',
+                            name : '时间',
+                            boundaryGap : false,
+                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        }
+                        ],
+                        yAxis : [{
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value} ℃'
+                            }
+                        }
+                        ],
+                        series : [{
+                            name:'体温',
+                            type:'line',
+                            data:[[${bodyTempList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }, {
+                            name:'环境温度',
+                            type:'line',
+                            data:[[${envTempList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    temperatureChart.setOption(option);
+                    bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
+                    var option2 = {
+                        title : {
+                            text: '血压、心率实时监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['血压高压','血压低压','心率']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [{
+                            type : 'category',
+                            name : '时间',
+                            boundaryGap : false,
+                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}mmHg'
+                                }
+                            },
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}次/分'
+                                }
+                            }
+                        ],
+                        series : [{
+                            name:'血压高压',
+                            type:'line',
+                            data:[[${highPressureList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }, {
+                            name:'血压低压',
+                            type:'line',
+                            data:[[${lowPressureList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                            {
+                                name:'心率',
+                                type:'line',
+                                yAxisIndex: 1,
+                                data:[[${heartRateList}]],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    bloodPressureChart.setOption(option2);
+                    bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
+                    var option3 = {
+                        title : {
+                            text: '血氧实时监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['血氧饱和度(spo2)']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '时间',
+                                boundaryGap : false,
+                                data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                    '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}%'
+                                }
+                            }
+                        ],
+                        series : [{
+                            name:'血氧饱和度',
+                            type:'line',
+                            data:[[${spo2List}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    bloodOxygenChart.setOption(option3);
+                }
+        );//require end
+        
+        function ajaxRefresh() {
+            var url = "/infoHallOnTimeGetInfo/AutoRefresh";
+            // var alarmMessageCountList = [[${alarmMessageCountList}]];
+            // var onlineCountList = [[${onlineCountList}]];
+            // var objectIdSelected = [[${objectIdSelected}]];
+            var option = temperatureChart.getOption();
+            var option2 = bloodPressureChart.getOption();
+            var option3 = bloodOxygenChart.getOption();
+            var bodyTempList = option.series[0].data;
+            var envTempList = option.series[1].data;
+            var highPressureList = option2.series[0].data;
+            var lowPressureList = option2.series[1].data;
+            var heartRateList = option2.series[2].data;
+            var spo2List = option3.series[0].data;
+            
+            var array = new Array();
+            array[0] = bodyTempList;
+            array[1] = envTempList;
+            array[2] = highPressureList;
+            array[3] = lowPressureList;
+            array[4] = heartRateList;
+            array[5] = spo2List;
+            $.ajax({
+                url: url,
+                type: 'POST',
+                cache: 'false',
+                data: JSON.stringify(array),
+                dataType: 'json',
+                headers : {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/json;charset=utf-8'
+                    // contentType : 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                success: function (data) {
+                    // console.log(result);
+                    var bodyTempList = data.bodyTempList;
+                    var envTempList = data.envTempList;
+                    var highPressureList = data.highPressureList;
+                    var lowPressureList = data.lowPressureList;
+                    var heartRateList = data.heartRateList;
+                    var spo2List = data.spo2List;
+                    // var timeArrayList = data.timeArrayList;
+                    option.series[0].data = bodyTempList;
+                    option.series[1].data = envTempList;
+                    temperatureChart.setOption(option);
+                    option2.series[0].data = highPressureList;
+                    option2.series[1].data = lowPressureList;
+                    option2.series[2].data = heartRateList;
+                    bloodPressureChart.setOption(option2);
+                    // option3.xAxis[0].data = timeArrayList;
+                    option3.series[0].data = spo2List;
+                    bloodOxygenChart.setOption(option3);
+                    
+                    
+                },
+                error: function(data){
+                    console.log("[infoHallOnTime:ajaxrefresh]:request error!!!???!!!");
+                    //alert("操作异常");
+                }
+            });
+        }//end function
+        setInterval('ajaxRefresh()',10000);//向后台请求最新数据
+        
+        // function test() {
+        //     var ppp = document.getElementById("buttonTest");
+        //     ppp.value = "测试完毕";
+        // }
+    </script>
 
 </head>
 
@@ -24,7 +403,7 @@
 
 <!-- Page Wrapper -->
 <div id="wrapper">
-
+    
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
         style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
@@ -39,7 +418,7 @@
         <hr class="sidebar-divider my-0">
         <!-- Nav Item - Charts -->
         <li class="nav-item">
-            <a class="nav-link" href="charts.html">
+            <a class="nav-link" href="hhm-index.html">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>小贴士</span></a>
         </li>
@@ -72,9 +451,8 @@
             <!--class: show展开-->
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="buttons.html">添加设备</a>
-                    <a class="collapse-item" href="cards.html">删除设备</a>
-                    <a class="collapse-item" href="cards.html">设备信息管理</a>
+                    <a class="collapse-item" href="hhm-adddevice.html">添加设备</a>
+                    <a class="collapse-item" href="hhm-managedevice.html">设备信息管理</a>
                 </div>
             </div>
         </li>
@@ -88,8 +466,8 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="utilities-color.html">添加检测对象</a>
-                    <a class="collapse-item" href="utilities-border.html">检测对象管理</a>
+                    <a class="collapse-item" href="hhm-addobject.html">添加检测对象</a>
+                    <a class="collapse-item" href="hhm-manageobject.html">检测对象管理</a>
                 </div>
             </div>
         </li>
@@ -103,9 +481,8 @@
             <div id="collapseNetmask" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="utilities-color.html">添加网关</a>
-                    <a class="collapse-item" href="utilities-color.html">删除网关</a>
-                    <a class="collapse-item" href="utilities-border.html">网关管理</a>
+                    <a class="collapse-item" href="hhm-addnetmask.html">添加网关</a>
+                    <a class="collapse-item" href="hhm-managenetmask.html">网关管理</a>
                 </div>
             </div>
         </li>
@@ -126,13 +503,13 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="hhm-login.html">基本信息</a>
                     <a class="collapse-item" href="hhm-register.html">密码修改</a>
-                    <a class="collapse-item" href="blank.html">退出登录</a>
+                    <a class="collapse-item" href="hhm-login.html">退出登录</a>
                 </div>
             </div>
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-            <a class="nav-link" href="tables.html">
+            <a class="nav-link" href="hhm-others.html">
                 <i class="fas fa-fw fa-table"></i>
                 <span>其它</span></a>
         </li>
@@ -144,6 +521,7 @@
         </div>
     </ul>
     <!-- End of Sidebar -->
+    
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
