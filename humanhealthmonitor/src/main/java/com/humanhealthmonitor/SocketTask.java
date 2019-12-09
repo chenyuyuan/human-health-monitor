@@ -372,8 +372,6 @@ public class SocketTask implements Runnable {
                 break;
             }
             if(typeBinaryCharArray[i] == '1') {
-
-                //是16进制🐎
                 sensorDataArray[i] =byteToUnsignedValue (byteArraySensorData[low])*256 +
                         byteToUnsignedValue(byteArraySensorData[low+1]);
                 System.out.println("传感器数据"+ i +":"+ low);
@@ -387,15 +385,12 @@ public class SocketTask implements Runnable {
             System.out.print(byteToUnsignedValue(sd) + " ");
         }
         System.out.print("[SocketTask:指令3&4]: 传感器数据: ");
-
         for(int sd:sensorDataArray) {
             System.out.print(sd + " ");
         }
         System.out.println(" ");
-
         //床垫
         if(sensorType.equals("00")) {
-
             System.out.println("床垫先跳过");
         }
         //血压
@@ -451,8 +446,6 @@ public class SocketTask implements Runnable {
             //改为AMQP
 
         }
-
-
     }
     //指令6：设备信息获取
     private void handleOrder6Response(byte[] responseContent) {

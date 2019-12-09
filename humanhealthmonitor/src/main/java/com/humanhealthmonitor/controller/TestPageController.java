@@ -19,6 +19,6 @@ public class TestPageController {
     @RequestMapping("/loginnew")
     public String loginNew(HttpServletRequest request) throws InterruptedException {
 
-        return "login";
+        return "hhm-login";
     }
 }
