@@ -48,13 +48,13 @@
         </li>
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="infoHallOnTime.html" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+            <a class="nav-link" href="infoHallOnTime" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
                aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>检测信息</span></a>
             <div id="collapseMonitor" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="infoHallOnTime.html">实时数据</a>
+                    <a class="collapse-item" href="infoHallOnTime">实时数据</a>
                     <a class="collapse-item" href="hhm-monitorhistory.html">历史数据</a>
                 </div>
             </div>
@@ -365,8 +365,8 @@
                     <h1 class="h3 mb-0 text-gray-800"></h1>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div style="width: 27%;float: left;padding-left: 3%">
+                    <div class="col-lg-4">
+                        <div style="width: 100%;float: left;padding-left: 3%">
                             <form id="searchHistoryForm" name="searchHistoryForm" onsubmit="checkTimeRange()" action="/infoHallHistorySearchResult"
                                   accept-charset="utf-8" method="post"
                                   style="text-align:left;">
@@ -379,10 +379,10 @@
                                 </select>
                                 <!--th:selected="${#strings.contains(instance.objectSelect,object.objectId)}"-->
             
-                                <p id="startTime" style="font-size: 18px">起始时间：</p>
-                                <input type="datetime-local" id="startTime" name="startTime" th:value="${startTime}" class="inputStyle1"/>
-                                <p id="endTime" style="font-size: 18px">截止时间：</p>
-                                <input type="datetime-local" id="endTime" name="endTime" th:value="${endTime}" class="inputStyle1"/>
+                                <p id="startTime1" style="font-size: 18px">起始时间：</p>
+                                <input type="datetime-local" id="startTime2" name="startTime" th:value="${startTime}" class="inputStyle1"/>
+                                <p id="endTime1" style="font-size: 18px">截止时间：</p>
+                                <input type="datetime-local" id="endTime2" name="endTime" th:value="${endTime}" class="inputStyle1"/>
                                 <p></p>
             
                                 <input type="submit" id="searchHistorySubmit" name="searchHistorySubmit"
@@ -391,19 +391,9 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div style="width: 67%;float: left;margin-right: 3%">
-                            <p align="center" th:text="${objectNameSelected}"
-                               style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
-                            <!--<span th:text="${startTime}"></span><span>&#45;&#45;</span><span th:text="${endTime}"></span>-->
-                            <!--<h2 style="text-align: center" th:text="${objectNameSelected}"></h2>-->
-                            <!--<table th:each="listAlarmValue:${listAlarmValueList}>-->
-                            <!--<table>-->
-                            <!--<tr >-->
-                            <!---->
-                            <!--</tr>-->
-                            <!--</table>-->
-                            <!--</table>-->
+                    <div class="col-lg-8">
+                        <div style="width: 100%;float: left;margin-right: 3%">
+                            <p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
         
                             <table id="equipmentTable" style="width: 100%">
                                 <tr th:each="equipment:${equipmentList}">
