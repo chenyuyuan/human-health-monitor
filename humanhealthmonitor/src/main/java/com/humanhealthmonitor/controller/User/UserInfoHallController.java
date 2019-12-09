@@ -1,13 +1,11 @@
 package com.humanhealthmonitor.controller.User;
 
 import com.humanhealthmonitor.InfluxDBConnector;
-import com.humanhealthmonitor.pojo.*;
 import com.humanhealthmonitor.pojo.Object;
 import com.humanhealthmonitor.service.*;
 import com.humanhealthmonitor.MsgQueue;
 import com.humanhealthmonitor.pojo.Equipment;
 import com.humanhealthmonitor.pojo.User;
-import com.humanhealthmonitor.service.*;
 import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -447,17 +445,6 @@ public class UserInfoHallController {
         request.setAttribute("objectNameSelected", objectNameSelected);
 //        return "monitorCenter/infoHallOnTime::objectTable";
 
-
-//        for (int i = 0;i < 11;i++)
-//        {
-//            bodyTempList.add(0.0);
-//            envTempList.add(0.0);
-//            highPressureList.add(0.0);
-//            lowPressureList.add(0.0);
-//            heartRateList.add(0.0);
-//            spo2List.add(0.0);
-//        }
-
         String order = "FEFE020404AABB";
         sendMessage(1, order);
 
@@ -637,7 +624,8 @@ public class UserInfoHallController {
             request.setAttribute("spo2List",spo2List);
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
-        return "monitorCenter/infoHallOnTime";
+        return "monitorCenter" +
+                "/infoHallOnTime";
     }
 
     //监测中心-历史信息

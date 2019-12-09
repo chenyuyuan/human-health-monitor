@@ -51,7 +51,7 @@ public class HumanhealthmonitorApplication {
             ServerSocket serverSocket = new ServerSocket(14900);
             System.out.println("Application: Server Listening...");
 
-            new Thread(new AutomaticallyFetchDataThread()).start();
+            //new Thread(new AutomaticallyFetchDataThread()).start();
 
             while (true) {//循环监听
                 System.out.println("Application: Socket ready to accept...");

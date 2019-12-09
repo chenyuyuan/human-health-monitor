@@ -2,406 +2,32 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-
+    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>HumanHealthMonitor - 历史数据</title>
+    
+    <title>HumanHealthMonitor - 主页</title>
+    
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-<!--    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"-->
-<!--          rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-    <script>
-        function submitOnMouseUpH() {
-            var searchSubmit = document.getElementById("searchHistorySubmit");
-            searchSubmit.style.backgroundColor = "#EE7700";
-        }
+    
+    <script src="static/js/echarts.js"></script>
 
-        function submitOnMouseLeaveH() {
-            var searchSubmit = document.getElementById("searchHistorySubmit");
-            searchSubmit.style.backgroundColor = "#FFA500";
-        }
-
-        //起始时间与截止时间的合法性检验
-        function checkTimeRange() {
-            var form = document.getElementById("searchHistoryForm");
-            if (form.startTime.value == "" || form.endTime.value == "") {
-                alert("请先填写查询起止时间");
-                window.event.returnValue = false;//验证失败不提交action
-                // return false;
-            } else if (new Date(form.startTime.value).getTime() >= new Date(form.endTime.value).getTime()) {
-                alert("起始时间必须小于截止时间，请修改后再查询");
-                window.event.returnValue = false;//验证失败不提交action
-            } else if (new Date(form.endTime.value).getTime() > (new Date().getTime())) {
-                alert("截止时间不能大于系统时间，请修改后再查询");
-                window.event.returnValue = false;//验证失败不提交action
-            }
-        }
-    </script>
-    <script>
-        var xBloodOxygen = ['100秒前', '90秒前', '80秒前', '70秒前', '60秒前', '50秒前', '40秒前', '30秒前', '20秒前', '10秒前', '现在'];
-        // var timeTemperature = new Array();
-        // var timeValue = new Array();
-        // timeValue = document.getElementById("timeTemperature").value;
-        // for(var i = 0;i < timeValue.length;i++){
-        //     timeTemperature.push(timeValue[i].toString());
-        // }
-        // var xBloodOxygenList = new Array();
-        // var str = [[${strrr}]].toString();
-        // xBloodOxygenList.push(str);
-        // var key;
-        // for(key in [[${strArray}]]){
-        //     xBloodOxygenList.push(key);
-        // }
-        // xBloodOxygenList.push("100秒前");
-        // xBloodOxygenList.push("90秒前");
-        // xBloodOxygenList.push("80秒前");
-        // xBloodOxygenList.push("70秒前");
-        // xBloodOxygenList.push("60秒前");
-        // xBloodOxygenList.push("50秒前");
-        // xBloodOxygenList.push("40秒前");
-        // xBloodOxygenList.push("30秒前");
-        // xBloodOxygenList.push("20秒前");
-        // xBloodOxygenList.push("10秒前");
-        // xBloodOxygenList.push("现在");
-        var temperatureChart;
-        var bloodPressureChart;
-        var bloodOxygenChart;
-        // 路径配置
-        require.config({
-            paths: {
-                echarts: 'http://echarts.baidu.com/build/dist'
-            }
-        });
-        // 使用
-        require([
-                'echarts',
-                'echarts/chart/line', //加载line模块，折线图
-                'echarts/chart/bar' // 加载bar模块，柱状图
-            ],
-            function (ec) {
-                // 基于准备好的dom，初始化echarts图表
-                temperatureChart = ec.init(document.getElementById('Temperature01'));
-                var option = {
-                    title: {
-                        text: '体温、环境温度历史监测曲线'
-                        // subtext: '次标题'
-                    },
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data: ['体温', '环境温度']
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            mark: {show: true},
-                            dataView: {show: true, readOnly: false},
-                            magicType: {show: true, type: ['bar', 'line']},
-                            restore: {show: true},
-                            saveAsImage: {show: true}
-                        }
-                    },
-                    calculable: true,
-                    xAxis: [{
-                        type: 'category',
-                        name: '时间',
-                        boundaryGap: false,
-                        data: ['100秒前', '90秒前', '80秒前', '70秒前', '60秒前',
-                            '50秒前', '40秒前', '30秒前', '20秒前', '10秒前', '现在']
-                        // data: [[${temperature01TimeStampList}]]
-                    }
-                    ],
-                    yAxis: [{
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value} ℃'
-                        }
-                    }
-                    ],
-                    series: [{
-                        name: '体温',
-                        type: 'line',
-                        data: [[${bodyTempList}]],
-                        // data:[11,12,23,44,12,34,21,45,12,34,11],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }, {
-                        name: '环境温度',
-                        type: 'line',
-                        data: [[${envTempList}]],
-                        // data:[11,12,23,44,12,34,21,45,12,34,11],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }
-                    ]
-                };
-                // 为echarts对象加载数据
-                temperatureChart.setOption(option);
-                bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
-                var option2 = {
-                    title: {
-                        text: '血压、心率历史监测曲线'
-                        // subtext: '次标题'
-                    },
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data: ['血压高压', '血压低压', '心率']
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            mark: {show: true},
-                            dataView: {show: true, readOnly: false},
-                            magicType: {show: true, type: ['bar', 'line']},
-                            restore: {show: true},
-                            saveAsImage: {show: true}
-                        }
-                    },
-                    calculable: true,
-                    xAxis: [
-                        {
-                            type: 'category',
-                            name: '时间',
-                            boundaryGap: false,
-                            data: ['100秒前', '90秒前', '80秒前', '70秒前', '60秒前',
-                                '50秒前', '40秒前', '30秒前', '20秒前', '10秒前', '现在']
-                            // data: [[${bloodPressure01TimeStampList}]]
-                        }
-                    ],
-                    yAxis: [{
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value}mmHg'
-                        }
-                    }, {
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value}次/分'
-                        }
-                    }
-                    ],
-                    series: [{
-                        name: '血压高压',
-                        type: 'line',
-                        data: [[${highPressureList}]],
-                        // data:[11,12,23,44,12,34,21,45,12,34,11],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }, {
-                        name: '血压低压',
-                        type: 'line',
-                        data: [[${lowPressureList}]],
-                        // data:[11,12,23,44,12,34,21,45,12,34,11],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }, {
-                        name: '心率',
-                        type: 'line',
-                        yAxisIndex: 1,
-                        data: [[${heartRateList}]],
-                        // data:[11,12,23,44,12,34,21,45,12,34,11],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }
-                    ]
-                };
-                // 为echarts对象加载数据
-                bloodPressureChart.setOption(option2);
-                bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
-                var option3 = {
-                    title: {
-                        text: '血氧历史监测曲线'
-                        // subtext: '次标题'
-                    },
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data: ['血氧饱和度(spo2)']
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            mark: {show: true},
-                            dataView: {show: true, readOnly: false},
-                            magicType: {show: true, type: ['bar', 'line']},
-                            restore: {show: true},
-                            saveAsImage: {show: true}
-                        }
-                    },
-                    calculable: true,
-                    xAxis: [{
-                        // type : 'time',
-                        // splitLine: {
-                        //     show: false
-                        // }
-                        // splitNumber: 100
-                        type: 'category',
-                        name: '时间',
-                        boundaryGap: false,
-                        data: xBloodOxygen
-                        // data: timeTemperature
-                        // data: xBloodOxygenList
-                        // type: 'value',
-                        // data:[1,2,3,4,5,6,7,8,9,10,11]
-                        // data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                        //     '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
-                        // data: [[${bloodOxygen01TimeStampList}]]
-                        // data: [${strArray}]
-                        // data: xZuZhuangBO
-                        // data: ['hhh0', 'hhh1', 'hhh2', 'hhh3', 'hhh4', 'hhh5', 'hhh6', 'hhh7', 'hhh8', 'hhh9', 'hhh10']
-                    }
-                    ],
-                    yAxis: [{
-                        type: 'value',
-                        axisLabel: {
-                            formatter: '{value}%'
-                        }
-                    }
-                    ],
-                    series: [{
-                        name: '血氧饱和度',
-                        type: 'line',
-                        data: [[${spo2List}]],
-                        // data:times,
-                        // data:[11,12,23,44,12,34,21,45,12,34,11],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }
-                    ]
-                };
-                // 为echarts对象加载数据
-                bloodOxygenChart.setOption(option3);
-            }
-        );//require end
-
-        function ajaxGetData() {
-            var url = "/infoHallHistorySearchResult/AutoRefresh";
-            var option = temperatureChart.getOption();
-            var option2 = bloodPressureChart.getOption();
-            var option3 = bloodOxygenChart.getOption();
-            // var bodyTempList = option.series[0].data;
-            // var envTempList = option.series[1].data;
-            // var highPressureList = option2.series[0].data;
-            // var lowPressureList = option2.series[1].data;
-            // var heartRateList = option2.series[2].data;
-            // var spo2List = option3.series[0].data;
-            var array = new Array();
-            // array[0] = bodyTempList;
-            // array[1] = envTempList;
-            // array[2] = highPressureList;
-            // array[3] = lowPressureList;
-            // array[4] = heartRateList;
-            // array[5] = spo2List;
-            $.ajax({
-                url: url,
-                type: 'POST',
-                cache: 'false',
-                data: JSON.stringify(array),
-                dataType: 'json',
-                headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/json;charset=utf-8'
-                    // contentType : 'application/x-www-form-urlencoded;charset=UTF-8'
-                },
-                success: function (data) {
-                    // console.log(result);
-                    // var bodyTempList = data.bodyTempList;
-                    // var envTempList = data.envTempList;
-                    // var highPressureList = data.highPressureList;
-                    // var lowPressureList = data.lowPressureList;
-                    // var heartRateList = data.heartRateList;
-                    // var spo2List = data.spo2List;
-                    var timeListTemperature01 = data.timeListTemperature01;
-                    var timeListBloodPressure01 = data.timeListBloodPressure01;
-                    var timeListBloodOxygen01 = data.timeListBloodOxygen01;
-                    // option.series[0].data = bodyTempList;
-                    // option.series[1].data = envTempList;
-                    option.xAxis[0].data = timeListTemperature01;
-                    temperatureChart.setOption(option);
-                    // option2.series[0].data = highPressureList;
-                    // option2.series[1].data = lowPressureList;
-                    // option2.series[2].data = heartRateList;
-                    option2.xAxis[0].data = timeListBloodPressure01;
-                    bloodPressureChart.setOption(option2);
-                    // option3.series[0].data = spo2List;
-                    option3.xAxis[0].data = timeListBloodOxygen01;
-                    bloodOxygenChart.setOption(option3);
-                },
-                error: function (data) {
-                    //alert("操作异常");
-                }
-            });
-        }//end function
-        // setInterval('ajaxGetData()',10000);//向后台请求最新数据
-    </script>
 </head>
-<body id="page-top" onload="ajaxGetData()">
+
+<body id="page-top">
+
 <!-- Page Wrapper -->
 <div id="wrapper">
+    
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
         style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
@@ -422,13 +48,13 @@
         </li>
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+            <a class="nav-link" href="infoHallOnTime.html" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
                aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>检测信息</span></a>
-            <div id="collapseMonitor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseMonitor" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="hhm-monitorinfo.html">实时数据</a>
+                    <a class="collapse-item" href="infoHallOnTime.html">实时数据</a>
                     <a class="collapse-item" href="hhm-monitorhistory.html">历史数据</a>
                 </div>
             </div>
@@ -441,7 +67,7 @@
         </div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+            <a class="nav-link" href="hhm-managedevice.html" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
                aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>检测设备</span>
@@ -456,7 +82,7 @@
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <a class="nav-link collapsed" href="hhm-manageobject.html" data-toggle="collapse" data-target="#collapseUtilities"
                aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
                 <span>检测对象</span>
@@ -471,7 +97,7 @@
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask"
+            <a class="nav-link collapsed" href="hhm-managenetmask.html" data-toggle="collapse" data-target="#collapseNetmask"
                aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
                 <span>网关管理</span>
@@ -492,7 +118,7 @@
         </div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+            <a class="nav-link collapsed" href="hhm-login.html" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>账户管理</span>
@@ -519,16 +145,21 @@
         </div>
     </ul>
     <!-- End of Sidebar -->
+    
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
+        
         <!-- Main Content -->
         <div id="content">
+            
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                
                 <!-- Sidebar Toggle (Topbar) -->
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
+                
                 <!-- Topbar Search -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
@@ -541,8 +172,10 @@
                         </div>
                     </div>
                 </form>
+                
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
+                    
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -566,6 +199,7 @@
                             </form>
                         </div>
                     </li>
+                    
                     <!-- Nav Item - Alerts -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -616,7 +250,7 @@
                             <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                         </div>
                     </li>
-
+                    
                     <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
@@ -686,9 +320,9 @@
                             <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                         </div>
                     </li>
-
+                    
                     <div class="topbar-divider d-none d-sm-block"></div>
-
+                    
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -718,9 +352,12 @@
                             </a>
                         </div>
                     </li>
+                
                 </ul>
+            
             </nav>
             <!-- End of Topbar -->
+    
             <!-- Begin Page Content -->
             <div class="container-fluid">
                 <!-- Page Heading -->
@@ -729,65 +366,65 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
+                        <div style="width: 27%;float: left;padding-left: 3%">
+                            <form id="searchHistoryForm" name="searchHistoryForm" onsubmit="checkTimeRange()" action="/infoHallHistorySearchResult"
+                                  accept-charset="utf-8" method="post"
+                                  style="text-align:left;">
+                                <p style="font-size: 28px;text-align: left">查询选项</p>
+                                <p id="personCared" style="font-size: 18px">监测对象：</p>
+                                <select id="objectSelected" name="objectSelected"
+                                        style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
+                                    <option th:each="object:${objectList}" th:value="${object.objectId}"
+                                            th:text="${object.objectName}" th:selected="${objectSelected eq object.objectId}"></option>
+                                </select>
+                                <!--th:selected="${#strings.contains(instance.objectSelect,object.objectId)}"-->
+            
+                                <p id="startTime" style="font-size: 18px">起始时间：</p>
+                                <input type="datetime-local" id="startTime" name="startTime" th:value="${startTime}" class="inputStyle1"/>
+                                <p id="endTime" style="font-size: 18px">截止时间：</p>
+                                <input type="datetime-local" id="endTime" name="endTime" th:value="${endTime}" class="inputStyle1"/>
+                                <p></p>
+            
+                                <input type="submit" id="searchHistorySubmit" name="searchHistorySubmit"
+                                       style="font-size: 18px;height: 50px;width: 82%;background-color: #FFA500;border: none;color: white"
+                                       value="查   询" onmouseover="submitOnMouseUpH()" onmouseleave="submitOnMouseLeaveH()"/>
+                            </form>
+                        </div>
                     </div>
                     <div class="col-lg-6">
-                        <div style="width: 100%;min-height: 80%">
-                            <div style="width: 27%;float: left;padding-left: 3%">
-                                <form id="searchHistoryForm" name="searchHistoryForm" onsubmit="checkTimeRange()"
-                                      action="/infoHallHistorySearchResult"
-                                      accept-charset="utf-8" method="post"
-                                      style="text-align:left;">
-                                    <p style="font-size: 28px;text-align: left">查询选项</p>
-                                    <p id="personCared" style="font-size: 18px">监测对象：</p>
-                                    <select id="objectSelected" name="objectSelected"
-                                            style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
-                                        <option th:each="object:${objectList}" th:value="${object.objectId}"
-                                                th:text="${object.objectName}"
-                                                th:selected="${objectSelected eq object.objectId}"></option>
-                                    </select>
-                                    <!--th:selected="${#strings.contains(instance.objectSelect,object.objectId)}"-->
-
-                                    <p id="startTime1" style="font-size: 18px">起始时间：</p>
-                                    <input type="datetime-local" id="startTime" name="startTime" th:value="${startTime}"
-                                           class="inputStyle1"/>
-                                    <p id="startTime2" style="font-size: 18px">截止时间：</p>
-                                    <input type="datetime-local" id="endTime" name="endTime" th:value="${endTime}"
-                                           class="inputStyle1"/>
-                                    <p></p>
-                                    <input type="submit" id="searchHistorySubmit" name="searchHistorySubmit"
-                                           style="font-size: 18px;height: 50px;width: 82%;background-color: #FFA500;border: none;color: white"
-                                           value="查   询" onmouseover="submitOnMouseUpH()"
-                                           onmouseleave="submitOnMouseLeaveH()"/>
-                                </form>
-                            </div>
-                            <div style="width: 67%;float: left;margin-right: 3%">
-                                <p align="center" th:text="${objectNameSelected}"
-                                   style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
-
-                                <table id="equipmentTable" style="width: 100%">
-                                    <tr th:each="equipment:${equipmentList}">
-                                        <td>
-                                            <div th:id="${equipment.eqpType}"
-                                                 style="width: 100%;height: 400px;border: 1px solid blue">
-                                                <p style="font-size: 20px;text-align: left"
-                                                   th:text="${equipment.eqpName}"></p>
-                                                <!--在此绘图-->
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                        <div style="width: 67%;float: left;margin-right: 3%">
+                            <p align="center" th:text="${objectNameSelected}"
+                               style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
+                            <!--<span th:text="${startTime}"></span><span>&#45;&#45;</span><span th:text="${endTime}"></span>-->
+                            <!--<h2 style="text-align: center" th:text="${objectNameSelected}"></h2>-->
+                            <!--<table th:each="listAlarmValue:${listAlarmValueList}>-->
+                            <!--<table>-->
+                            <!--<tr >-->
+                            <!---->
+                            <!--</tr>-->
+                            <!--</table>-->
+                            <!--</table>-->
+        
+                            <table id="equipmentTable" style="width: 100%">
+                                <tr th:each="equipment:${equipmentList}">
+                                    <td>
+                                        <div th:id="${equipment.eqpType}" style="width: 100%;height: 400px;border: 1px solid blue">
+                                            <p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>
+                                            <!--在此绘图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                     <div class="col-lg-0">
                     </div>
                 </div>
             </div>
-            <!-- /.container-fluid -->
-
-
+        
         </div>
         <!-- End of Main Content -->
+        
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -797,10 +434,13 @@
             </div>
         </footer>
         <!-- End of Footer -->
+    
     </div>
     <!-- End of Content Wrapper -->
+
 </div>
 <!-- End of Page Wrapper -->
+
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
