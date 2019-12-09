@@ -16,9 +16,48 @@ public class TestPageController {
 
         return "test";
     }
-    @RequestMapping("/loginnew")
-    public String loginNew(HttpServletRequest request) throws InterruptedException {
-
+    @RequestMapping("/hhm-login")
+    public String hhm_login(HttpServletRequest request) throws InterruptedException {
         return "hhm-login";
+    }
+    @RequestMapping("/hhm-adddevice")
+    public String hhm_adddevice(HttpServletRequest request) throws InterruptedException {
+        return "hhm-adddevice";
+    }
+    @RequestMapping("/hhm-addnetmask")
+    public String hhm_addnetmask(HttpServletRequest request) throws InterruptedException {
+        return "hhm-addnetmask";
+    }
+    @RequestMapping("/hhm-addobject")
+    public String hhm_addobject(HttpServletRequest request) throws InterruptedException {
+        return "hhm-addobject";
+    }
+    @RequestMapping("/hhm-index")
+    public String hhm_index(HttpServletRequest request) throws InterruptedException {
+        return "hhm-index";
+    }
+    @RequestMapping("/hhm-managedevice")
+    public String hhm_managedevice(HttpServletRequest request) throws InterruptedException {
+        return "hhm-managedevice";
+    }
+    @RequestMapping("/hhm-managenetmask")
+    public String hhm_managenetmask(HttpServletRequest request) throws InterruptedException {
+        return "hhm-managenetmask";
+    }
+    @RequestMapping("/hhm-manageobject")
+    public String hhm_manageobject(HttpServletRequest request) throws InterruptedException {
+        return "hhm-manageobject";
+    }
+    @RequestMapping("/hhm-monitorinfo")
+    public String hhm_monitorinfo(HttpServletRequest request) throws InterruptedException {
+        return "hhm-monitorinfo";
+    }
+    @RequestMapping("/hhm-monitorhistory")
+    public String hhm_monitorhistory(HttpServletRequest request) throws InterruptedException {
+        return "hhm-monitorhistory";
+    }
+    @RequestMapping("/hhm-register")
+    public String hhm_register(HttpServletRequest request) throws InterruptedException {
+        return "hhm-register";
     }
 }
