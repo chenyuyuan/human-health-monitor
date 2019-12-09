@@ -13,7 +13,7 @@
     <title>HumanHealthMonitor - 主页</title>
     
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
     
@@ -48,6 +48,22 @@
             border: 1px solid black;
             font-size: 22px;
             width: 83%;
+        }
+        .shadow{
+            -webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+            -moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+            box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+        }
+        .shadow-smaller{
+            -webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+            -moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+            box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
+        }
+        .border-radius-4{
+            border-top-right-radius:4px;
+            border-top-left-radius:4px;
+            border-bottom-left-radius:4px;
+            border-bottom-right-radius:4px;
         }
     </style>
     <script>
@@ -751,7 +767,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4">
-                        <div style="width: 100%;float: left;padding-left: 1%">
+                        <div style="font-family:'Microsoft JhengHei UI';width: 100%;float: left;padding-left: 1%">
                             <!--<h2 style="text-align: left">点击选择监测对象：</h2>-->
                             <table id="blocks">
                                 <tr style="text-align: left">
@@ -760,19 +776,19 @@
                                     </th>
                                 </tr>
                                 <tr th:each="object:${objectList}">
-                                    <td>
+                                    <td class="border-radius-4" style="border-color: #aaaaaa">
                                         <form class="objectForm" action="/infoHallOnTimeGetInfo" name="objectFrom"
                                               accept-charset="utf-8" method="post"
                                               style="text-align:center">
                                             <input type="hidden" id="objectId" name="objectId" th:value="${object.objectId}"/>
                                             <!--<p align="left">-->
                                             <input type="submit" name="objectName" id="objectName" class="inputSubmitOnLeave"
-                                                   th:value="${object.objectName}" style="font-size: 22px;width: 100%;background-color: white;border: none;color: blue"/>
+                                                   th:value="${object.objectName}" style="font-size: 18px;width: 100%;background-color: white;border: none;color: blue"/>
                                         </form>
                                     </td>
                                 </tr>
                             </table>
-                            <div id="pagiDiv" style="text-align: left;font-size: 16px;margin-top: 20px;margin-left: 10px">
+                            <div id="pagiDiv" style="text-align: left;font-size: 14px;margin-top: 20px;margin-left: 10px">
                                 <!--width:60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;-->
                                 <span id="spanFirst" style="font-size: 16px">首页</span>&nbsp;&nbsp;
                                 <span id="spanPre" style="font-size: 16px">上一页</span>&nbsp;&nbsp;
@@ -784,7 +800,7 @@
                         </div>
                     </div>
                     <div class="col-lg-8">
-                        <div style="width: 100%;float: left;margin-right: 1%">
+                        <div style="font-family:'Microsoft JhengHei UI';width: 100%;float: left;margin-right: 1%">
                             <p align="center" th:text="${objectNameSelected}"
                                style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
         
