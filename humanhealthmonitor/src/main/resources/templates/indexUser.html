@@ -413,13 +413,14 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800"></h1>
                 </div>
-                <form id="picForm" name="picForm" action="/monitorCenter/newsPageUserMainPic">
-                    <input type="image" id="mainPic" name="mainPic" th:src="${mainPicList.get(0).getPicUrl()}"
-                           onclick="document.picForm.submit()"
-                           style="margin-top: 0;margin-bottom: 10px;width: 100%;height: 800px"/>
-                    <input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>
-                </form>
-            </div>
+                <div id="picDiv">
+                    <form id="picForm" name="picForm" action="/monitorCenter/newsPageUserMainPic">
+                        <input type="image" id="mainPic" name="mainPic" th:src="${mainPicList.get(0).getPicUrl()}"
+                               onclick="document.picForm.submit()"
+                               style="margin-top: 0;margin-bottom: 10px;width: 100%;height: 800px"/>
+                        <input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>
+                    </form>
+                </div>
                 <div class="row">
                     <div class="col-lg-4">
                         <div id="newest" style="width: auto;float: left;margin-left: 8%">
@@ -501,7 +502,6 @@
                 </div>
             </div>
             <!-- /.container-fluid -->
-        
         </div>
         <!-- End of Main Content -->
         
