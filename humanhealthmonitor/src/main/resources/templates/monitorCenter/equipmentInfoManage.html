@@ -45,6 +45,11 @@
             font-size: 22px;
             min-width: 350px;
         }
+        .shadow-5{
+            -webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+            -moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+            box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
+        }
     </style>
     <script>
         //全局变量
@@ -448,9 +453,9 @@
                                     </th>
                                 </tr>
                                 <tr th:each="equipment:${equipmentList}">
-                                    <td>
+                                    <td class="shadow-5" style="border-color: lightgrey;border-radius: 4px;">
                                         <form id="equipmentForm" action="/monitorCenter/equipmentInfoManageSelect" name="equipmentForm"
-                                              accept-charset="utf-8" method="post" style="text-align:center">
+                                              accept-charset="utf-8" method="post" style="background-color: white;text-align:center">
                                             <input type="hidden" id="eqpId" name="eqpId" th:value="${equipment.eqpId}" readonly="true"/>
                                             <!--<p align="left">-->
                                             <input type="submit" name="eqpName" id="eqpName1" class="inputSubmitOnLeave"
@@ -474,7 +479,7 @@
                     </div>
                     <div class="col-lg-8">
                         <div style="width: auto;float: left;margin-right: 0">
-                            <div class="d" style="height:400px;background-color:white;width:auto;border: 1px solid lightgrey;margin-left: 20px;border-radius: 10px;">
+                            <div class="d shadow-5" style="height:400px;background-color:white;width:auto;border: 1px solid lightgrey;margin-left: auto;border-radius: 8px;">
                                 <form id="equipmentModifyForm" name="equipmentModifyForm" action="/monitorCenter/equipmentInfoModify"
                                       accept-charset="utf-8" method="post" style="text-align:center;" onsubmit="checkEquipmentModify()">
                                     <br/>
@@ -490,7 +495,7 @@
                                             <input type="text" id="eqpName2" name="eqpName" th:value="${equipment.eqpName}"
                                                    class="inputStyle2"
                                                    onfocus="this.ready()" onmouseout="this.blur()"/>
-                                            <input type="submit" id="equipmentModifySubmit" name="equipmentModifySubmit" style="font-size: 18px;height: 40px;width: 60px;background-color: #FFA500;border: none;color: white;margin-left: 30px"
+                                            <input type="submit" id="equipmentModifySubmit" name="equipmentModifySubmit" style="font-size: 18px;height: 40px;width: 60px;background-color: #4673df;border-radius: 4px;border: none;color: white;margin-left: 30px"
                                                    value="保 存" onmouseover="submitOnMouseUpEquipmentModify()" onmouseleave="submitOnMouseLeaveEquipmentModify()"/>
                                         </nobr>
                                     </p>
@@ -510,12 +515,12 @@
                                         <input type="hidden" id="eqpIdToModify" name="eqpIdToModify" th:value="${equipment.eqpId}"/>
                                         <input type="submit" id="eqpIdToModifySubmit" value="更 改" formaction="/monitorCenter/modifyBanding"
                                                onmouseover="submitOnMouseUpEqpIdToModify()" onmouseleave="submitOnMouseLeaveEqpIdToModify()"
-                                               style="align-self: auto;font-size: 18px;height:40px;width:60px;background-color: #FFA500;border: none;color: white;margin-left: 30px"/>
+                                               style="align-self: auto;font-size: 18px;height:40px;width:60px;background-color: #4673df;border-radius: 4px;border: none;color: white;margin-left: 30px"/>
                                     </p>
                                 </form>
                             </div>
                             
-                            <div class="d" style="min-height:300px;background-color:white;width:auto;border: 1px solid lightgrey;margin-left: 20px;margin-top: 30px;border-radius: 10px;">
+                            <div class="d shadow-5" style="min-height:300px;padding:10% 0 0 0;background-color:white;width:auto;border: 1px solid lightgrey;margin-left: auto;margin-top: 30px;border-radius: 8px;">
                                 <nobr>
                                     <span style="ext-align: left;margin-left:56px;color: #4673df">&nbsp警报界限信息</span>
                                     <form action="/monitorCenter/modifyAlarmValue" accept-charset="utf-8" method="post" style="margin: 0;display: inline">
@@ -523,7 +528,7 @@
                                                th:value="${equipment.eqpId}"/>
                                         <input type="submit" id="eqpIdToModifyAlarmSubmit" value="更 改"
                                                onmouseover="submitOnMouseUpEqpIdToModifyAlarm()" onmouseleave="submitOnMouseLeaveEqpIdToModifyAlarm()"
-                                               style="background-color: #FFA500;border: none;color: white;height: 40px;margin-left: 30px"/>
+                                               style="background-color: #4673df;border-radius: 4px;border: none;color: white;height: 40px;margin-left: 30px"/>
                                     </form>
                                 </nobr>
                                 <p th:each="alarmValue:${alarmValueList}" style="text-align: left;text-indent: 4em;margin-top: 15px">
