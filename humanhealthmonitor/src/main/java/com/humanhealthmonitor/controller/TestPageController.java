@@ -11,9 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 public class TestPageController {
     private static final Logger log = LoggerFactory.getLogger(TestPageController.class);
 
+    @RequestMapping("/sendorder")
+    public String sendorder(HttpServletRequest request) throws InterruptedException {
+        return "sendOrderPage";
+    }
+
     @RequestMapping("/test")
     public String login(HttpServletRequest request) throws InterruptedException {
-
         return "test";
     }
     @RequestMapping("/hhm-login.html")

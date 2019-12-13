@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>HumanHealthMonitor - 添加设备</title>
+    <title>HumanHealthMonitor - 发送命令</title>
     
     <!-- Custom fonts for this template-->
     <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
@@ -19,15 +19,61 @@
     <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
     <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
-
+    
     <style>
-        .shadow-5{
+        input.inputStyle2 {
+            font-size: 18px;
+            height: 36px;
+            width: 60%;
+            text-indent: 0.5em;
+        }
+        .shadow-5 {
             -webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
             -moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
             box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
         }
     </style>
-    
+    <script>
+        function checkPwdModify() {
+            var form = document.getElementById("pwdModifyForm");
+            if (form.oldPassword.value == "" || form.newPassword1.value == "" || form.newPassword2.value == "") {
+                alert("原密码和新密码都需要填写，请补充未填写的信息");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (form.newPassword1.value != form.newPassword2.value) {
+                alert("两次输入密码不一致！请核对后再提交修改");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (form.newPassword1.value.length < 8 || form.newPassword1.value.length > 32) {
+                alert("新密码至少8个字符，且不能超过32个字符");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (!/^\w+$/.test(form.newPassword1.value)) {
+                alert("密码只能由字母、数字和下划线组成");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (form.newPassword1.value == form.oldPassword.value) {
+                alert("您的新密码与原密码一致，不需要修改");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+        }
+        function submitOnMouseUpPwdModify() {
+            var modifySubmit = document.getElementById("pwdModifySubmit");
+            modifySubmit.style.backgroundColor = "#EE7700";
+        }
+        function submitOnMouseLeavePwdModify() {
+            var modifySubmit = document.getElementById("pwdModifySubmit");
+            modifySubmit.style.backgroundColor = "#FFA500";
+        }
+        function submitOnMouseUpBack() {
+            var modifySubmit = document.getElementById("back");
+            modifySubmit.style.backgroundColor = "#EE7700";
+        }
+        function submitOnMouseLeaveBack() {
+            var modifySubmit = document.getElementById("back");
+            modifySubmit.style.backgroundColor = "#FFA500";
+        }
+    </script>
 </head>
 <style>
     .shadow{
@@ -361,41 +407,17 @@
                     <div class="col-lg-3">
                     </div>
                     <div class="col-lg-6">
-                        <!--margin:auto;margin-top:15%-->
-                        <div class="d shadow-5" style="font-family:'Microsoft JhengHei UI';padding:0 10% 10% 10%;height:auto;background-color:#fefefe;width:600px;border: 1px solid lightgrey;margin: auto;
-                               border-radius: 10px;">
-                            <br/>
-                            <p class="center-block" style="font-size: 24px;text-align: center;text-indent: 2em">添加设备</p>
-                            <div style="width: auto">
-                                <p class="equipmentModifyReminder" style="display: inline;width: 20%;margin:0;text-align: center;font-size: 18px;text-indent: 3em">设备类型</p>
-                                <select class="form-control bg-light border-0 small" id="eqpTypeSelected" name="eqpTypeSelected" style="display:inline;margin-left:0;margin-right:0;font-size: 18px;height: 36px;width: 70%;text-indent: 0.5em;">
-                                    <option th:each="eqpType:${eqpTypeList}" th:value="${eqpType.eqpType}" th:text="${eqpType.eqpType}"></option>
-                                </select>
+                        <div style="align-self: center;font-family: 'Microsoft JhengHei UI'">
+                            <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
+                            <div class="d shadow-5" style="padding: 10%;height:auto;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin: auto;">
+                                <label class="form-inline" for="deviceName">指令7设备名称：
+                                    <input style="width:50%" type="text" id="deviceName" name="objectId" value="" placeholder="输入设备名称" class="form-control bg-light border-0 small"/>
+                                </label>
+                                <label class="form-inline" for="bindObject">指令7绑定对象：
+                                    <input style="width:50%" type="text" id="bindObject" name="objectId" value="" placeholder="输入绑定对象" class="form-control bg-light border-0 small"/>
+                                </label>
+                                <button id="sendButton" th:onclick="'javascript:send()'" type="submit" class="btn btn-primary center-block" style="width:28%;height: 40px;margin-top: 20px;margin-left: 36%;margin-right: 36%;">发送指令</button>
                             </div>
-                            <br/>
-                            <div style="width: auto">
-                                <p class="equipmentModifyReminder" style="display: inline;width:20%;text-align: center;font-size: 18px;text-indent: 3em">设备编号</p>
-                                <input type="text" id="eqpId" name="eqpId" placeholder="  请输入设备上标注的设备识别号码" class="form-control bg-light border-0 small" style="display: inline;width: 70%;margin-left: 0;margin-right: 0;"/>
-                            </div>
-                            <br/>
-                            <div style="width: auto">
-                                <p class="equipmentModifyReminder" style="display: inline;width:20%;text-align: center;font-size: 18px;text-indent: 3em">设备名称</p>
-                                <input type="text" id="eqpName" name="eqpName" value="" placeholder="  只能由汉字、字母、数字和下划线组成"
-                                       class="form-control bg-light border-0 small" style="display: inline;width: 70%;margin-left: 0;margin-right: 0;"/>
-                            </div>
-                            <br/>
-                            <div style="width: auto">
-                                <p class="equipmentModifyReminder" style="display: inline;width:20%;text-align: center;font-size: 18px;text-indent: 3em">绑定对象</p>
-                                <select id="objectSelected" name="objectSelected" class="form-control bg-light border-0 small" style="display: inline;font-size: 18px;height: 36px;width: 70%;margin-left:0;margin-right:0;text-indent: 0.5em;">
-                                    <option th:each="object:${objectList}" th:value="${object.objectId}"
-                                            th:text="${object.objectName}"></option>
-                                </select>
-                            </div>
-                            <br/>
-                            <p style="height: 36px"></p>
-                            <p style="text-align: center;font-size: 12px;text-indent: 4em">点击下方“添加”按钮后请等待15秒，15秒后将返回添加结果</p>
-                            <input type="submit" id="equipmentAddSubmit" name="equipmentAddSubmit" class="border-radius-4"
-                                   style="font-size: 18px;height: 50px;margin-left: 20%;width: 60%;background-color: #4b5bc2;border: none;color: white" th:onclick="'javascript:send()'" value="添         加"/>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -441,33 +463,19 @@
         </div>
     </div>
 </div>
+
 <script type = "text/javascript">
-    ipAddress = "101.132.105.38"
-    checkEquipmentAdd = function () {
-        var form = document.getElementById("");
-        if ($("#eqpId").val() == "" || $("#eqpName").val() == "") {
-            alert("您有信息尚未填写，请补充未填写的信息");
-        }
-        else if ($("#eqpId").val() > 32 || $("#eqpName").val() > 32){
-            alert("设备名称和设备号均不能超过32个字符");
-        }
-        else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test($("#eqpName").val())) {
-            alert("设备名称只能由汉字、字母、数字和下划线组成");
-        }
-    }
+    ipAddress = "39.98.66.7"
+    // ipAddress = "localhost"
     send = function (){
-        checkEquipmentAdd()
         console.log("[function: send]: start");
         tosenddata={
-            "eqpTypeSelected": $("#eqpTypeSelected").val(),
-            "eqpId": $("#eqpId").val(),
-            "eqpName": $("#eqpName").val(),
-            "objectSelected": $("#objectSelected").val()
+            "deviceName": $("#deviceName").val(),
+            "bindObject": $("#bindObject").val()
         };
         console.log("send start")
-        console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
         $.ajax({
-            url:'http://'+ipAddress+':8081/rest/monitorCenter/equipmentAddResult',
+            url:'http://'+ipAddress+':8081/rest/sendorder7',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),

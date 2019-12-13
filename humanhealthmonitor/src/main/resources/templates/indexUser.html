@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
 <head>
-    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
     
     <script>
@@ -401,12 +398,9 @@
                             </a>
                         </div>
                     </li>
-                
                 </ul>
-            
             </nav>
             <!-- End of Topbar -->
-    
             <!-- Begin Page Content -->
             <div class="container-fluid">
                 <!-- Page Heading -->
@@ -430,7 +424,7 @@
                                 <form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
                                     <input type="hidden" name="newsType" value="最新消息"/>
                                     <input id="moreClass1" type="submit" value="更多>>"
-                                           style="border: 0;background-color: white;color: blue;font-size: x-large"
+                                           style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
                                            onmouseover="fontBold1()" onmouseleave="fontNormal1()"/>
                                 </form>
                             </nobr>
@@ -440,7 +434,7 @@
                                         <form action="/monitorCenter/newsPageUser">
                                             <input type="hidden" name="newsId" th:value="${latestNews.getNewsId()}"/>
                                             <input type="submit" th:value="${latestNews.getNewsHead()}"
-                                                   style="border: 0;background-color: white;color: blue;font-size: x-large"/>
+                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
                                         </form>
                                     </td>
                                 </tr>
@@ -455,7 +449,7 @@
                                 <form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
                                     <input type="hidden" name="newsType" value="健康阅读"/>
                                     <input id="moreClass2" type="submit" value="更多>>"
-                                           style="border: 0;background-color: white;color: blue;font-size: x-large"
+                                           style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
                                            onmouseover="fontBold2()" onmouseleave="fontNormal2()"/>
                                 </form>
                                 <!--<a id="moreClass2" class="moreClass" href="#" style="font-size: x-large;color: blue" onmouseover="fontBold2()"  onmouseleave="fontNormal2()">更多>></a>-->
@@ -466,7 +460,7 @@
                                         <form action="/monitorCenter/newsPageUser">
                                             <input type="hidden" name="newsId" th:value="${healthNews.getNewsId()}"/>
                                             <input type="submit" th:value="${healthNews.getNewsHead()}"
-                                                   style="border: 0;background-color: white;color: blue;font-size: x-large"/>
+                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
                                         </form>
                                     </td>
                                 </tr>
@@ -481,7 +475,7 @@
                                 <form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
                                     <input type="hidden" name="newsType" value="热点新闻"/>
                                     <input id="moreClass3" type="submit" value="更多>>"
-                                           style="border: 0;background-color: white;color: blue;font-size: x-large"
+                                           style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
                                            onmouseover="fontBold3()" onmouseleave="fontNormal3()"/>
                                 </form>
                             </nobr>
@@ -491,7 +485,7 @@
                                         <form action="/monitorCenter/newsPageUser">
                                             <input type="hidden" name="newsId" th:value="${hotPointNews.getNewsId()}"/>
                                             <input type="submit" th:value="${hotPointNews.getNewsHead()}"
-                                                   style="border: 0;background-color: white;color: blue;font-size: x-large"/>
+                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
                                         </form>
                                     </td>
                                 </tr>
@@ -504,7 +498,6 @@
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->
-        
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -514,18 +507,14 @@
             </div>
         </footer>
         <!-- End of Footer -->
-    
     </div>
     <!-- End of Content Wrapper -->
-
 </div>
 <!-- End of Page Wrapper -->
-
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
-
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -552,6 +541,5 @@
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.min.js"></script>
-
 </body>
 </html>
