@@ -50,12 +50,12 @@ public class TestRestController {
         byte[] bindObjectByteArray = bindObject.getBytes("utf-8");
         String deviceNameHex = byteArrayToString(deviceNameByteArray,16);
         deviceNameHex = deviceNameHex.length() % 2 == 1? "0" + deviceNameHex : deviceNameHex;
-        String deviceNameHexLength = deviceNameHex.length() < 10?"0"+deviceNameHex.length(): String.valueOf(deviceNameHex.length());
+        String deviceNameHexLength = deviceNameHex.length()/2 < 10?"0"+deviceNameHex.length()/2: Integer.toHexString(deviceNameHex.length()/2);
         String bindObjectHex = byteArrayToString(bindObjectByteArray,16);
         bindObjectHex = bindObjectHex.length() % 2 == 1? "0" + bindObjectHex : deviceNameHex;
-        String bindObjectHexLength = bindObjectHex.length() < 10?"0"+bindObjectHex.length(): String.valueOf(bindObjectHex.length());
+        String bindObjectHexLength = bindObjectHex.length()/2 < 10?"0"+bindObjectHex.length()/2: Integer.toHexString(bindObjectHex.length()/2);
 
-        String orderLength = String.valueOf(6 + 1 + Integer.parseInt(deviceNameHexLength)/2 + 1 + Integer.parseInt(bindObjectHexLength)/2 +5+1);
+        String orderLength = Integer.toHexString(6+1+Integer.parseInt(deviceNameHexLength)/2+1+Integer.parseInt(bindObjectHexLength)/2 +5+1);
 
         int check = 4 + 10 + 4 + 3 + Integer.parseInt(deviceNameHexLength) + Integer.parseInt(bindObjectHexLength);
         check = check + 4 + 0x5D + 0x62 + 0x44 + 0x6A;
@@ -70,7 +70,7 @@ public class TestRestController {
 
         String order = "FEFE"+orderLength+"07"+"040a000403"+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"045D62446A"+Integer.toHexString(check)+"AABB";
 
-        order.toUpperCase();
+        order = order.toUpperCase();
 
         System.out.println("发送的指令：" + order);
         sendMessage(1, order);
