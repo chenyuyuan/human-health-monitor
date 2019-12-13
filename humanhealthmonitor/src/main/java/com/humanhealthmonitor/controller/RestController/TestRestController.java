@@ -70,6 +70,8 @@ public class TestRestController {
 
         String order = "FEFE"+orderLength+"07"+"040a000403"+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"045D62446A"+Integer.toHexString(check)+"AABB";
 
+        order.toUpperCase();
+
         System.out.println("发送的指令：" + order);
         sendMessage(1, order);
         HashMap res = new HashMap();
