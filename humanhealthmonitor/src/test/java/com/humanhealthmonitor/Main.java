@@ -1,13 +1,9 @@
 package com.humanhealthmonitor;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
-import static com.humanhealthmonitor.util.ByteUtils.bytesToHexString;
 
 public class Main{
     public static void main(String[] args) throws UnsupportedEncodingException {
@@ -43,7 +39,6 @@ public class Main{
         String order = "FEFE"+orderLength+"07"+"040a000403"+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"045D62446A"+Integer.toHexString(check)+"AABB";
 
         order = order.toUpperCase();
-
         System.out.println("发送的指令：" + order);
     }
 }

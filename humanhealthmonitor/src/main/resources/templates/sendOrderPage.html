@@ -73,6 +73,11 @@
             var modifySubmit = document.getElementById("back");
             modifySubmit.style.backgroundColor = "#FFA500";
         }
+        $(".card-cus").hover(function() {
+            $(this).css("border-color","#898989")
+        }, function() {
+            $(this).css("border-color","lightgrey")
+        })
     </script>
 </head>
 <style>
@@ -406,12 +411,12 @@
                 <div class="row">
                     <div class="col-lg-3">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 card-cus">
                         <div style="align-self: center;font-family: 'Microsoft JhengHei UI'">
                             <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
-                            <div class="d shadow-5" style="padding: 10%;height:auto;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin: auto;">
+                            <div id="hov" class="card-cus shadow-5" style="padding: 10%;height:auto;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin: auto;">
                                 <label class="form-inline" for="deviceName">指令7设备名称：
-                                    <input style="width:50%" type="text" id="deviceName" name="objectId" value="" placeholder="输入设备名称" class="form-control bg-light border-0 small"/>
+                                    <input style="width:50%" type="text" id="deviceName" name="objectId" value="" placeholder="输入设备名称" class="card-cus form-control bg-light border-0 small"/>
                                 </label>
                                 <label class="form-inline" for="bindObject">指令7绑定对象：
                                     <input style="width:50%" type="text" id="bindObject" name="objectId" value="" placeholder="输入绑定对象" class="form-control bg-light border-0 small"/>
@@ -494,8 +499,15 @@
                 console.log(a.status+"::"+a.readyState+"::"+b)
             }
         })
-    }
+    };
+    
     $(document).ready(function () {
+        $("#hov").hover(function() {
+            $(this).css("border-color","#898989")
+        }, function() {
+            $(this).css("border-color","lightgrey")
+        })
+    
     })
 </script>
 
