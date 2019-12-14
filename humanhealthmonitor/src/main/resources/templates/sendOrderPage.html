@@ -417,10 +417,13 @@
                             <div id="hov" class="card-cus shadow-5" style="padding: 5%;height:auto;background-color:white;width:400px;border-radius: 8px;border: 1px solid lightgrey;margin: auto;">
                                 <span style="text-align: center">指令7</span>
                                 <label class="form-inline" for="deviceName">设备名称：
-                                    <input style="width:50%" type="text" id="deviceName" name="objectId" value="" placeholder="输入设备名称" class="card-cus form-control bg-light border-0 small"/>
+                                    <input style="width:50%" type="text" id="deviceName" value="" placeholder="输入设备名称" class="card-cus form-control bg-light border-0 small"/>
                                 </label>
                                 <label class="form-inline" for="bindObject">绑定对象：
-                                    <input style="width:50%" type="text" id="bindObject" name="objectId" value="" placeholder="输入绑定对象" class="form-control bg-light border-0 small"/>
+                                    <input style="width:50%" type="text" id="bindObject" value="" placeholder="输入绑定对象" class="form-control bg-light border-0 small"/>
+                                </label>
+                                <label class="form-inline" for="bindObject">设备号：
+                                    <input style="width:50%" type="text" id="deviceID" value="" placeholder="输入绑定对象" class="form-control bg-light border-0 small"/>
                                 </label>
                                 <button id="sendButton" th:onclick="'javascript:send()'" type="submit" class="btn btn-primary center-block" style="width:28%;height: 40px;margin-top: 20px;margin-left: 36%;margin-right: 36%;">发送指令</button>
                             </div>
@@ -477,7 +480,8 @@
         console.log("[function: send]: start");
         tosenddata={
             "deviceName": $("#deviceName").val(),
-            "bindObject": $("#bindObject").val()
+            "bindObject": $("#bindObject").val(),
+            "deviceID": $("#deviceID").val()
         };
         console.log("send start")
         $.ajax({

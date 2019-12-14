@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
+import static com.humanhealthmonitor.util.ByteUtils.stringToByteArray;
 
 @RestController
 public class TestRestController {
@@ -42,8 +43,16 @@ public class TestRestController {
         System.out.println("<TestRestController:sendorder7>:");
         //String content = params.getString("content");
 
+
         String deviceName = params.getString("deviceName");
         String bindObject = params.getString("bindObject");
+        String deviceID = params.getString("deviceID");
+
+        byte[] deviceIDByteArray = stringToByteArray(deviceID);
+
+        deviceID = deviceID.length() % 2 == 1? "0" + deviceID : deviceID;
+
+
         int timestamp = 1566721130;
         byte[] timestampByteArray = new byte[4];
         timestampByteArray[3] = (byte)(timestamp%256);
@@ -72,7 +81,7 @@ public class TestRestController {
 
         String orderLength = Integer.toHexString(6+1+deviceNameHex.length()/2+1+bindObjectHex.length()/2 +5+1);
 
-        int check = 7+  4+10+4+3 + deviceNameHex.length()/2 + bindObjectHex.length()/2 + 4;
+        int check = 7+  4 + deviceNameHex.length()/2 + bindObjectHex.length()/2 + 4;
 
         for (byte b: deviceNameByteArray) {
             check = check + b;
@@ -83,9 +92,16 @@ public class TestRestController {
         for (byte b: timestampByteArray) {
             check = check + b;
         }
+        for (byte b: deviceIDByteArray) {
+            check = check + b;
+        }
         check = (check% 256 + 256)%256;
 
-        String order = "FEFE"+orderLength+"07"+"040a000403"+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"04"+timestampHex+Integer.toHexString(check)+"AABB";
+        String checkStr = Integer.toHexString(check);
+        checkStr = checkStr.length() % 2 == 1? "0" + checkStr : checkStr;
+
+
+        String order = "FEFE"+orderLength+"07"+"04"+deviceID+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"04"+timestampHex+checkStr+"AABB";
 
         order = order.toUpperCase();
         System.out.println("发送的指令：" + order);
