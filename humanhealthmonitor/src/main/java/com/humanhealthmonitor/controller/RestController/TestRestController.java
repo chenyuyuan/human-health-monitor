@@ -44,21 +44,35 @@ public class TestRestController {
 
         String deviceName = params.getString("deviceName");
         String bindObject = params.getString("bindObject");
+        int timestamp = 1566721130;
+        byte[] timestampByteArray = new byte[4];
+        timestampByteArray[3] = (byte)(timestamp%256);
+        timestamp = timestamp/256;
+        timestampByteArray[2] = (byte)(timestamp%256);
+        timestamp = timestamp/256;
+        timestampByteArray[1] = (byte)(timestamp%256);
+        timestamp = timestamp/256;
+        timestampByteArray[0] = (byte)(timestamp%256);
+        String timestampHex = byteArrayToString(timestampByteArray,16);
+        timestampHex = timestampHex.length() % 2 == 1? "0" + timestampHex : timestampHex;
+
         System.out.print(deviceName + " " + bindObject + "\n");
 
         byte[] deviceNameByteArray = deviceName.getBytes("utf-8");
         byte[] bindObjectByteArray = bindObject.getBytes("utf-8");
         String deviceNameHex = byteArrayToString(deviceNameByteArray,16);
         deviceNameHex = deviceNameHex.length() % 2 == 1? "0" + deviceNameHex : deviceNameHex;
-        String deviceNameHexLength = deviceNameHex.length()/2 < 10?"0"+deviceNameHex.length()/2: Integer.toHexString(deviceNameHex.length()/2);
+        String deviceNameHexLength = deviceNameHex.length()/2 < 16?"0"+Integer.toHexString(deviceNameHex.length()/2): Integer.toHexString(deviceNameHex.length()/2);
         String bindObjectHex = byteArrayToString(bindObjectByteArray,16);
-        bindObjectHex = bindObjectHex.length() % 2 == 1? "0" + bindObjectHex : deviceNameHex;
-        String bindObjectHexLength = bindObjectHex.length()/2 < 10?"0"+bindObjectHex.length()/2: Integer.toHexString(bindObjectHex.length()/2);
+        bindObjectHex = bindObjectHex.length() % 2 == 1? "0" + bindObjectHex : bindObjectHex;
+        String bindObjectHexLength = bindObjectHex.length()/2 < 10?"0"+Integer.toHexString(bindObjectHex.length()/2): Integer.toHexString(bindObjectHex.length()/2);
 
-        String orderLength = Integer.toHexString(6+1+Integer.parseInt(deviceNameHexLength)/2+1+Integer.parseInt(bindObjectHexLength)/2 +5+1);
+        System.out.println("deviceNameHexLength:" + deviceNameHexLength + "; bindObjectHexLength: " + bindObjectHexLength);
+        System.out.println("deviceNameHex:" + deviceNameHex + "; bindObject: " + bindObjectHex);
 
-        int check = 4 + 10 + 4 + 3 + Integer.parseInt(deviceNameHexLength) + Integer.parseInt(bindObjectHexLength);
-        check = check + 4 + 0x5D + 0x62 + 0x44 + 0x6A;
+        String orderLength = Integer.toHexString(6+1+deviceNameHex.length()/2+1+bindObjectHex.length()/2 +5+1);
+
+        int check = 7+  4+10+4+3 + deviceNameHex.length()/2 + bindObjectHex.length()/2 + 4;
 
         for (byte b: deviceNameByteArray) {
             check = check + b;
@@ -66,12 +80,14 @@ public class TestRestController {
         for (byte b: bindObjectByteArray) {
             check = check + b;
         }
+        for (byte b: timestampByteArray) {
+            check = check + b;
+        }
         check = (check% 256 + 256)%256;
 
-        String order = "FEFE"+orderLength+"07"+"040a000403"+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"045D62446A"+Integer.toHexString(check)+"AABB";
+        String order = "FEFE"+orderLength+"07"+"040a000403"+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"04"+timestampHex+Integer.toHexString(check)+"AABB";
 
         order = order.toUpperCase();
-
         System.out.println("发送的指令：" + order);
         sendMessage(1, order);
         HashMap res = new HashMap();

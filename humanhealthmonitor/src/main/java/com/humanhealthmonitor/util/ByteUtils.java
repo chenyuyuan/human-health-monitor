@@ -77,6 +77,7 @@ public class ByteUtils {
      * 将byte[]转为各种进制的字符串
      * @param radix 基数可以转换进制的范围(2-36)，从Character.MIN_RADIX到Character.MAX_RADIX，超出范围后变为10进制
      * @return 转换后的字符串
+     * 对于b[0] = 1;b[1] = 2; b[2] = 21;十六进制的会转化为20115，所以使用时前面得加个0;
      */
     public static String byteArrayToString (byte[] byteArray, int radix) {
         return new BigInteger(1, byteArray).toString(radix);

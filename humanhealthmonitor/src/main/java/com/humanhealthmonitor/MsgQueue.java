@@ -22,6 +22,7 @@ public class MsgQueue {
 
     public static int[] protocolState = new int[32]; // 初始化为0即未工作状态，为1代表MODBUS，2代表AMQP
 
+    public static String ipAddress = "39.98.66.7";
 
     public static Hashtable<String, Integer> ipNetmaskIDTable = new Hashtable<>();
 

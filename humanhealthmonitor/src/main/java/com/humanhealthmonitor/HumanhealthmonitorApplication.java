@@ -43,8 +43,10 @@ public class HumanhealthmonitorApplication {
     //方法添加于2019.04.04
     public static void keepSocketListening() {
         try {
-            new Thread(new RabbitReceiver()).start();
-            new Thread(new RabbitSender()).start();
+            //先不开
+            //new Thread(new RabbitReceiver()).start();
+            //new Thread(new RabbitSender()).start();
+            //先不开
             // System.out.println("keepRabbitListening...");
             // 给rabbitsend开一个线程，创建一个全局队列，向里面发命令，收到命令后自动发送给网关
 

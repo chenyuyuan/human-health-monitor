@@ -470,8 +470,8 @@
 </div>
 
 <script type = "text/javascript">
-    // ipAddress = "39.98.66.7"
-    ipAddress = "localhost"
+    ipAddressServer = "39.98.66.7"
+    ipAddressLocal = "localhost"
     send = function (){
         console.log("[function: send]: start");
         tosenddata={
@@ -480,7 +480,27 @@
         };
         console.log("send start")
         $.ajax({
-            url:'http://'+ipAddress+':8081/rest/sendorder7',
+            url:'http://'+ipAddressLocal+':8081/rest/sendorder7',
+            type:"POST",
+            contentType: 'application/json; charset=UTF-8',
+            data:JSON.stringify(tosenddata),
+            dataType:'json',
+            success:function (data) {
+                console.log("[function:send:ajax]the success return message is " + data.msg);
+                if(data.msg === "success"){
+                    //console.log("the return message is " + data.msg);
+                }
+                else {
+                    //console.log("the return message is " + data.msg);
+                }
+            },
+            error:function(a,b,c) {
+                console.log("[function:send:ajax]the error return message is " + data.msg);
+                console.log(a.status+"::"+a.readyState+"::"+b)
+            }
+        })
+        $.ajax({
+            url:'http://'+ipAddressServer+':8081/rest/sendorder7',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),

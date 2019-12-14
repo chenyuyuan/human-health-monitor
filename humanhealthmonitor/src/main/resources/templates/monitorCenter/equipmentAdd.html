@@ -442,7 +442,8 @@
     </div>
 </div>
 <script type = "text/javascript">
-    ipAddress = "101.132.105.38"
+    ipAddressServer = "39.98.66.7";
+    ipAddressLocal = "localhost";
     checkEquipmentAdd = function () {
         var form = document.getElementById("");
         if ($("#eqpId").val() == "" || $("#eqpName").val() == "") {
@@ -467,7 +468,27 @@
         console.log("send start")
         console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
         $.ajax({
-            url:'http://'+ipAddress+':8081/rest/monitorCenter/equipmentAddResult',
+            url:'http://'+ipAddressLocal+':8081/rest/monitorCenter/equipmentAddResult',
+            type:"POST",
+            contentType: 'application/json; charset=UTF-8',
+            data:JSON.stringify(tosenddata),
+            dataType:'json',
+            success:function (data) {
+                console.log("[function:send:ajax]the success return message is " + data.msg);
+                if(data.msg === "success"){
+                    //console.log("the return message is " + data.msg);
+                }
+                else {
+                    //console.log("the return message is " + data.msg);
+                }
+            },
+            error:function(a,b,c) {
+                console.log("[function:send:ajax]the error return message is " + data.msg);
+                console.log(a.status+"::"+a.readyState+"::"+b)
+            }
+        })
+        $.ajax({
+            url:'http://'+ipAddressServer+':8081/rest/monitorCenter/equipmentAddResult',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),
