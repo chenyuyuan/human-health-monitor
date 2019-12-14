@@ -471,14 +471,15 @@ public class SocketTask implements Runnable {
         System.arraycopy(responseContent, 1, byteArrayDeviceID, 0, byteArrayDeviceID.length);
         String deviceID = byteArrayToString(byteArrayDeviceID, 16);
 
+        System.out.println("<SocketTask: handleOrder7Response>: deviceID/flag: " + deviceID + "/ " + flag);
         if(flag == 0) {
             //不存在
 
         }
         else if(flag == 1) {
             //成功
-        }
 
+        }
     }
 
 }
