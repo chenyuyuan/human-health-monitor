@@ -356,10 +356,13 @@
         );//require end
         
         function ajaxRefresh() {
+            console.log("start ajax reflesh function")
             var url = "/infoHallOnTimeGetInfo/AutoRefresh";
             // var alarmMessageCountList = [[${alarmMessageCountList}]];
             // var onlineCountList = [[${onlineCountList}]];
             // var objectIdSelected = [[${objectIdSelected}]];
+            
+            console.log("111111111111111")
             var option = temperatureChart.getOption();
             var option2 = bloodPressureChart.getOption();
             var option3 = bloodOxygenChart.getOption();
@@ -369,7 +372,7 @@
             var lowPressureList = option2.series[1].data;
             var heartRateList = option2.series[2].data;
             var spo2List = option3.series[0].data;
-            
+    
             var array = new Array();
             array[0] = bodyTempList;
             array[1] = envTempList;
@@ -377,6 +380,7 @@
             array[3] = lowPressureList;
             array[4] = heartRateList;
             array[5] = spo2List;
+            console.log("<start ajax request>")
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -390,8 +394,10 @@
                 },
                 success: function (data) {
                     // console.log(result);
+                    console.log('返回成功')
                     var bodyTempList = data.bodyTempList;
                     var envTempList = data.envTempList;
+                    console.log('体温：' + data.bodyTempList+' 环境温度： '+data.envTempList)
                     var highPressureList = data.highPressureList;
                     var lowPressureList = data.lowPressureList;
                     var heartRateList = data.heartRateList;
@@ -409,6 +415,7 @@
                     bloodOxygenChart.setOption(option3);
                     
                     
+                    
                 },
                 error: function(data){
                     console.log("[infoHallOnTime:ajaxrefresh]:request error!!!???!!!");
@@ -416,8 +423,9 @@
                 }
             });
         }//end function
-        setInterval('ajaxRefresh()',10000);//向后台请求最新数据
-        
+        console.log("this is ahead of ajaxrefresh")
+
+        setInterval('ajaxRefresh()',5000);//向后台请求最新数据
         // function test() {
         //     var ppp = document.getElementById("buttonTest");
         //     ppp.value = "测试完毕";

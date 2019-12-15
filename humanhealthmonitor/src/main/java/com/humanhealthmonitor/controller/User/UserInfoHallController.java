@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class UserInfoHallController {
+public class
+UserInfoHallController {
     @Autowired
     private UserService userService;
     @Autowired
@@ -264,6 +265,7 @@ public class UserInfoHallController {
     @ResponseBody
     public Map<String,ArrayList<Double>> monitorCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array) {
 
+        System.out.println("<<<<<<<<<<AutoRefresh>>>>>>>>>>");
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectSelectedIdS);
 
 //        int netMaskId = equipmentList.get(0).getNetmaskId();//comment0526
