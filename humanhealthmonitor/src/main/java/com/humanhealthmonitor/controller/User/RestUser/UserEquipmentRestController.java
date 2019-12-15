@@ -96,7 +96,7 @@ public class UserEquipmentRestController {
                     System.out.println("The Order is " + deviceRegisterOrder);
 
                     // 根据该网关使用的协议发送查询命令
-                    sendMessage(1,deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
+                    sendMessage(1, deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
                     System.out.println("UserEquipmentController: deviceRegisterOrder"+(1)+": "+deviceRegisterOrder);
                 }
                 else {

@@ -173,12 +173,13 @@ public class SocketTask implements Runnable {
         String date = dateformat.format(System.currentTimeMillis());
         String yearMonth = date.substring(0,7);//如2019-03
 
+
         Equipment equipmentData;//added0521
         // 从网关发来的只带一个字节有效数据的帧长度就是8，比这个小的就是坏掉的或无关的
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteArrayList.get(3); // 回复内容长度
-            System.out.println("指令0304:返回内容长度:" + responseLength);
+            System.out.println("指令:返回内容长度:" + responseLength);
             byte[] responseContent = new byte[responseLength];  // 回复信息就是不包括校验和(不用扣掉1位校验和)
             int checkSum = (byteArrayList.get(byteArrayList.size()-3) + 256) % 256; // 校验和
 
