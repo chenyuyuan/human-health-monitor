@@ -74,7 +74,7 @@ public class TestRestController {
         String deviceNameHexLength = deviceNameHex.length()/2 < 16?"0"+Integer.toHexString(deviceNameHex.length()/2): Integer.toHexString(deviceNameHex.length()/2);
         String bindObjectHex = byteArrayToString(bindObjectByteArray,16);
         bindObjectHex = bindObjectHex.length() % 2 == 1? "0" + bindObjectHex : bindObjectHex;
-        String bindObjectHexLength = bindObjectHex.length()/2 < 10?"0"+Integer.toHexString(bindObjectHex.length()/2): Integer.toHexString(bindObjectHex.length()/2);
+        String bindObjectHexLength = bindObjectHex.length()/2 < 16?"0"+Integer.toHexString(bindObjectHex.length()/2): Integer.toHexString(bindObjectHex.length()/2);
 
         System.out.println("deviceNameHexLength:" + deviceNameHexLength + "; bindObjectHexLength: " + bindObjectHexLength);
         System.out.println("deviceNameHex:" + deviceNameHex + "; bindObject: " + bindObjectHex);
