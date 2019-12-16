@@ -780,18 +780,18 @@
                             <table id="blocks">
                                 <tr style="text-align: left">
                                     <th>
-                                        <p align="left" style="color: blue;font-size: 20px;border: 0px">监测对象列表：</p>
+                                        <p align="left" style="color: #4673df;font-size: 20px;border: 0px">监测对象列表：</p>
                                     </th>
                                 </tr>
-                                <tr th:each="object:${objectList}">
-                                    <td class="border-radius-4" style="border-color: #aaaaaa">
+                                <tr th:each="object:${objectList}" style="border-radius: 4px;">
+                                    <td class="" style="border-color: #aaaaaa;">
                                         <form class="objectForm" action="/infoHallOnTimeGetInfo" name="objectFrom"
                                               accept-charset="utf-8" method="post"
                                               style="text-align:center">
                                             <input type="hidden" id="objectId" name="objectId" th:value="${object.objectId}"/>
                                             <!--<p align="left">-->
                                             <input type="submit" name="objectName" id="objectName" class="inputSubmitOnLeave"
-                                                   th:value="${object.objectName}" style="font-size: 18px;width: 100%;background-color: white;border: none;color: blue"/>
+                                                   th:value="${object.objectName}" style="font-size: 18px;width: 100%;background-color: white;border: none;color: #4673df"/>
                                         </form>
                                     </td>
                                 </tr>
