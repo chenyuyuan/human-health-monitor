@@ -457,7 +457,7 @@
         </li>
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="infoHallOnTime" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+            <a class="nav-link show-below-div" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
                aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>检测信息</span></a>
@@ -881,6 +881,25 @@
         </div>
     </div>
 </div>
+
+<script type = "text/javascript">
+    
+    
+    $(document).ready(function () {
+        console.log('the documnt is ready!')
+        
+        $(".show-below-div").onclick(function () {
+            console.log('<display>: ' + $(this).next().css('display'));
+            if ($(this).next().css('display') === 'none') {
+                $(this).next().css('dispaly', '')
+            }
+            else {
+                $(this).next().css('display', 'none')
+            }
+        })
+    })
+</script>
+
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
