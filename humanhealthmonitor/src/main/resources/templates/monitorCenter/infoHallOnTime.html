@@ -270,8 +270,7 @@
                                     {type : 'average', name: '平均值'}
                                 ]
                             }
-                        },
-                            {
+                        }, {
                                 name:'心率',
                                 type:'line',
                                 yAxisIndex: 1,
@@ -361,25 +360,40 @@
             // var alarmMessageCountList = [[${alarmMessageCountList}]];
             // var onlineCountList = [[${onlineCountList}]];
             // var objectIdSelected = [[${objectIdSelected}]];
-            
-            console.log("111111111111111")
-            var option = temperatureChart.getOption();
-            var option2 = bloodPressureChart.getOption();
-            var option3 = bloodOxygenChart.getOption();
-            var bodyTempList = option.series[0].data;
-            var envTempList = option.series[1].data;
-            var highPressureList = option2.series[0].data;
-            var lowPressureList = option2.series[1].data;
-            var heartRateList = option2.series[2].data;
-            var spo2List = option3.series[0].data;
-    
             var array = new Array();
-            array[0] = bodyTempList;
-            array[1] = envTempList;
-            array[2] = highPressureList;
-            array[3] = lowPressureList;
-            array[4] = heartRateList;
-            array[5] = spo2List;
+            array[0] = 0;
+            array[1] = 0;
+            array[2] = 0;
+            array[3] = 0;
+            array[4] = 0;
+            array[5] = 0;
+    
+            if(document.getElementById('Temperature01')!==null) {
+                var option = temperatureChart.getOption();
+                var bodyTempList = option.series[0].data;
+                var envTempList = option.series[1].data;
+                array[0] = bodyTempList;
+                array[1] = envTempList;
+            }
+    
+            if(document.getElementById('BloodPressure01')!==null) {
+                var option2 = bloodPressureChart.getOption();
+                var highPressureList = option2.series[0].data;
+                var lowPressureList = option2.series[1].data;
+                var heartRateList = option2.series[2].data;
+                array[2] = highPressureList;
+                array[3] = lowPressureList;
+                array[4] = heartRateList;
+            }
+
+            if(document.getElementById('BloodOxygen01')!==null) {
+                // var option3 = bloodOxygenChart.getOption();
+                // var spo2List = option3.series[0].data;
+                // array[5] = spo2List;
+            }
+
+            
+            
             console.log("<start ajax request>")
             $.ajax({
                 url: url,
@@ -888,7 +902,7 @@
     $(document).ready(function () {
         console.log('the documnt is ready!')
         
-        $(".show-below-div").onclick(function () {
+        $(".show-below-div").click(function () {
             console.log('<display>: ' + $(this).next().css('display'));
             if ($(this).next().css('display') === 'none') {
                 $(this).next().css('dispaly', '')
