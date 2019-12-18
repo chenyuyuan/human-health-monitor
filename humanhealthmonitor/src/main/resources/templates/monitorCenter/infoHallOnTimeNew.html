@@ -2,15 +2,13 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-	
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
 	
-	
-	<title>HumanHealthMonitor - 主页</title>
+	<title>HumanHealthMonitor - 实时检测数据</title>
 	
 	<!-- Custom fonts for this template-->
 	<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -29,18 +27,12 @@
 	
 	<style>
 		table {
-			/*border: 1px solid black;*/
 			border: none;
-			/*width: 60%;*/
-			/*margin-left: 20%;*/
-			/*margin-right: 20%;*/
 			line-height: 35px;
 			text-align: center;
 			border-collapse: collapse;
-		/ / 边框合成单一的边框
 		}
 		table tr th {
-			/*border: 1px solid black;*/
 			border: none;
 			font-size: 22px;
 		}
@@ -49,22 +41,12 @@
 			font-size: 22px;
 			width: 83%;
 		}
-		.shadow{
+		.shadow-5{
 			-webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
 			-moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
 			box-shadow: 0 1px 5px 0 rgba(0,34,77,.12);
 		}
-		.shadow-smaller{
-			-webkit-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
-			-moz-box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
-			box-shadow: 0 1px 5px 0 rgba(0,34,77,.07);
-		}
-		.border-radius-4{
-			border-top-right-radius:4px;
-			border-top-left-radius:4px;
-			border-bottom-left-radius:4px;
-			border-bottom-right-radius:4px;
-		}
+
 	</style>
 	<script>
         //全局变量
@@ -97,7 +79,7 @@
             columnsCounts = blockTable.rows[0].cells.length;
             pageCount = 8;
             pageNum = parseInt(numCount / pageCount);
-            if (0 != numCount % pageCount) {
+            if (0 !== numCount % pageCount) {
                 pageNum += 1;
             }
             firstPage();
@@ -106,8 +88,6 @@
 	
 	<script>
         var temperatureChart;
-        var bloodPressureChart;
-        var bloodOxygenChart;
         // 路径配置
         require.config({
             paths: {
@@ -195,178 +175,17 @@
                 };
                 // 为echarts对象加载数据
                 temperatureChart.setOption(option);
-                bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
-                var option2 = {
-                    title : {
-                        text: '血压、心率实时监测曲线'
-                        // subtext: '次标题'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['血压高压','血压低压','心率']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {show: true, type: ['bar','line']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [{
-                        type : 'category',
-                        name : '时间',
-                        boundaryGap : false,
-                        data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                            '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
-                    }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value}mmHg'
-                            }
-                        },
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value}次/分'
-                            }
-                        }
-                    ],
-                    series : [{
-                        name:'血压高压',
-                        type:'line',
-                        data:[[${highPressureList}]],
-                        markPoint : {
-                            data : [
-                                {type : 'max', name: '最大值'},
-                                {type : 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine : {
-                            data : [
-                                {type : 'average', name: '平均值'}
-                            ]
-                        }
-                    }, {
-                        name:'血压低压',
-                        type:'line',
-                        data:[[${lowPressureList}]],
-                        markPoint : {
-                            data : [
-                                {type : 'max', name: '最大值'},
-                                {type : 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine : {
-                            data : [
-                                {type : 'average', name: '平均值'}
-                            ]
-                        }
-                    }, {
-                        name:'心率',
-                        type:'line',
-                        yAxisIndex: 1,
-                        data:[[${heartRateList}]],
-                        markPoint : {
-                            data : [
-                                {type : 'max', name: '最大值'},
-                                {type : 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine : {
-                            data : [
-                                {type : 'average', name: '平均值'}
-                            ]
-                        }
-                    }
-                    ]
-                };
-                // 为echarts对象加载数据
-                bloodPressureChart.setOption(option2);
-                bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
-                var option3 = {
-                    title : {
-                        text: '血氧实时监测曲线'
-                        // subtext: '次标题'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['血氧饱和度(spo2)']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {show: true, type: ['bar','line']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            name : '时间',
-                            boundaryGap : false,
-                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value}%'
-                            }
-                        }
-                    ],
-                    series : [{
-                        name:'血氧饱和度',
-                        type:'line',
-                        data:[[${spo2List}]],
-                        markPoint : {
-                            data : [
-                                {type : 'max', name: '最大值'},
-                                {type : 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine : {
-                            data : [
-                                {type : 'average', name: '平均值'}
-                            ]
-                        }
-                    }
-                    ]
-                };
-                // 为echarts对象加载数据
-                bloodOxygenChart.setOption(option3);
             }
         );//require end
 
         function ajaxRefresh() {
             console.log("start ajax reflesh function")
             var url = "/infoHallOnTimeGetInfo/AutoRefresh";
-            // var alarmMessageCountList = [[${alarmMessageCountList}]];
-            // var onlineCountList = [[${onlineCountList}]];
-            // var objectIdSelected = [[${objectIdSelected}]];
+            
             var array = new Array();
-            array[0] = 0;
+            array[0] = 2; //参数个数
             array[1] = 0;
             array[2] = 0;
-            array[3] = 0;
-            array[4] = 0;
-            array[5] = 0;
 
             if(document.getElementById('Temperature01')!==null) {
                 var option = temperatureChart.getOption();
@@ -375,26 +194,10 @@
                 array[0] = bodyTempList;
                 array[1] = envTempList;
             }
+	        
+	        
 
-            if(document.getElementById('BloodPressure01')!==null) {
-                var option2 = bloodPressureChart.getOption();
-                var highPressureList = option2.series[0].data;
-                var lowPressureList = option2.series[1].data;
-                var heartRateList = option2.series[2].data;
-                array[2] = highPressureList;
-                array[3] = lowPressureList;
-                array[4] = heartRateList;
-            }
-
-            if(document.getElementById('BloodOxygen01')!==null) {
-                // var option3 = bloodOxygenChart.getOption();
-                // var spo2List = option3.series[0].data;
-                // array[5] = spo2List;
-            }
-
-
-
-            console.log("<start ajax request>")
+            console.log('<start ajax request>')
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -403,8 +206,6 @@
                 dataType: 'json',
                 headers : {
                     'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/json;charset=utf-8'
-                    // contentType : 'application/x-www-form-urlencoded;charset=UTF-8'
                 },
                 success: function (data) {
                     // console.log(result);
@@ -412,24 +213,10 @@
                     var bodyTempList = data.bodyTempList;
                     var envTempList = data.envTempList;
                     console.log('体温：' + data.bodyTempList+' 环境温度： '+data.envTempList)
-                    var highPressureList = data.highPressureList;
-                    var lowPressureList = data.lowPressureList;
-                    var heartRateList = data.heartRateList;
-                    var spo2List = data.spo2List;
                     // var timeArrayList = data.timeArrayList;
                     option.series[0].data = bodyTempList;
                     option.series[1].data = envTempList;
-                    temperatureChart.setOption(option);
-                    option2.series[0].data = highPressureList;
-                    option2.series[1].data = lowPressureList;
-                    option2.series[2].data = heartRateList;
-                    bloodPressureChart.setOption(option2);
-                    // option3.xAxis[0].data = timeArrayList;
-                    option3.series[0].data = spo2List;
-                    bloodOxygenChart.setOption(option3);
-
-
-
+	                
                 },
                 error: function(data){
                     console.log("[infoHallOnTime:ajaxrefresh]:request error!!!???!!!");
@@ -440,10 +227,6 @@
         console.log("this is ahead of ajaxrefresh")
 
         setInterval('ajaxRefresh()',10000);//向后台请求最新数据
-        // function test() {
-        //     var ppp = document.getElementById("buttonTest");
-        //     ppp.value = "测试完毕";
-        // }
 	
 	</script>
 </head>
@@ -475,7 +258,7 @@
 			   aria-controls="collapseTwo">
 				<i class="fas fa-fw fa-chart-area"></i>
 				<span>检测信息</span></a>
-			<div id="collapseMonitor" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+			<div id="collapseMonitor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item" href="infoHallOnTime">实时数据</a>
 					<a class="collapse-item" href="infoHallHistory">历史数据</a>
@@ -490,7 +273,7 @@
 		</div>
 		<!-- Nav Item - Pages Collapse Menu -->
 		<li class="nav-item">
-			<a class="nav-link" href="hhm-managedevice.html" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+			<a class="nav-link show-below-div" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
 			   aria-controls="collapseTwo">
 				<i class="fas fa-fw fa-cog"></i>
 				<span>检测设备</span>
@@ -505,7 +288,7 @@
 		</li>
 		<!-- Nav Item - Utilities Collapse Menu -->
 		<li class="nav-item">
-			<a class="nav-link collapsed" href="hhm-manageobject.html" data-toggle="collapse" data-target="#collapseUtilities"
+			<a class="nav-link show-below-div" href="#" data-toggle="collapse" data-target="#collapseUtilities"
 			   aria-expanded="true" aria-controls="collapseUtilities">
 				<i class="fas fa-fw fa-wrench"></i>
 				<span>检测对象</span>
@@ -520,7 +303,7 @@
 		</li>
 		<!-- Nav Item - Utilities Collapse Menu -->
 		<li class="nav-item">
-			<a class="nav-link collapsed" href="hhm-managenetmask.html" data-toggle="collapse" data-target="#collapseNetmask"
+			<a class="nav-link show-below-div" href="#" data-toggle="collapse" data-target="#collapseNetmask"
 			   aria-expanded="true" aria-controls="collapseUtilities">
 				<i class="fas fa-fw fa-wrench"></i>
 				<span>网关管理</span>
@@ -541,7 +324,7 @@
 		</div>
 		<!-- Nav Item - Pages Collapse Menu -->
 		<li class="nav-item">
-			<a class="nav-link collapsed" href="hhm-login.html" data-toggle="collapse" data-target="#collapsePages"
+			<a class="nav-link show-below-div" href="#" data-toggle="collapse" data-target="#collapsePages"
 			   aria-expanded="true" aria-controls="collapsePages">
 				<i class="fas fa-fw fa-folder"></i>
 				<span>账户管理</span>
@@ -822,26 +605,13 @@
 						</div>
 					</div>
 					<div class="col-lg-8">
-						<div style="font-family:'Microsoft JhengHei UI';width: 100%;float: left;margin-right: 1%">
+						<div style="font-family:'Microsoft JhengHei UI';width: 100%;float: left;margin-right: 0%">
 							<p align="center" th:text="${objectNameSelected}"
 							   style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
-							
 							<table id="equipmentTable" style="width: 100%">
-								<tr th:each="equipment:${equipmentList}">
+								<tr th:each="equipment:${equipmentList}" style="border-radius: 8px">
 									<td>
-										<div th:id="${equipment.eqpType}" style="width: 100%;height: 500px;border: 1px solid lightgrey">
-											<!--<p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>-->
-											<!--在此绘制实时监测折线图-->
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>
-						<div style="width: 74%;float: left;margin-right: 1%;display: none">
-							<table id="noEquipmentTable" style="width: 100%">
-								<tr th:each="noEquipment:${noEquipmentList}">
-									<td>
-										<div th:id="${noEquipment.eqpType}" style="width: 100%;height: 500px;border: 1px solid lightgrey">
+										<div th:id="${equipment.eqpType}" style="width: 100%;height: 500px;border: 0px solid lightgrey">
 											<!--<p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>-->
 											<!--在此绘制实时监测折线图-->
 										</div>
@@ -897,11 +667,8 @@
 </div>
 
 <script type = "text/javascript">
-
-
     $(document).ready(function () {
         console.log('the documnt is ready!')
-
         $(".show-below-div").click(function () {
             console.log('<display>: ' + $(this).next().css('display'));
             console.log($(this).next().css('display') === 'none')
@@ -922,6 +689,5 @@
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.min.js"></script>
-
 </body>
 </html>

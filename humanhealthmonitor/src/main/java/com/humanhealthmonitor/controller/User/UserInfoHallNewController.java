@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +45,7 @@ public class UserInfoHallNewController {
     private ArrayList<String> bloodPressure01TimeStampList = new ArrayList<>();
     private ArrayList<String> bloodOxygen01TimeStampList = new ArrayList<>();
     //监测中心-实时信息
-    @RequestMapping("/infoHallOnTime")
+    @RequestMapping("/infoHallOnTimeNew")
     public String infoHallOnTime(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
@@ -135,8 +132,6 @@ public class UserInfoHallNewController {
 
             System.out.println("UserInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
 
-
-
             List<Equipment> noEquipmentList = new ArrayList<>();
             Equipment noNewEquipment = new Equipment();
             //连接InfluxDB
@@ -150,13 +145,10 @@ public class UserInfoHallNewController {
                     envTempList.add(0.0);
                 }
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
-//                QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "
-//                        +"'"+objectList.get(0).getObjectId()+"'"+" and time > "+timestamp10);
 
                 QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = 'hitwhob001' time > "+timestamp10);
                 System.out.println("UserInfoHallController: temperatureResults: "+temperatureResults);
                 if(temperatureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                    System.out.println("UserInfoHallController: temperatureResults null 空");
                     bodyTempList.add(0.0);
                     envTempList.add(0.0);
                 }else {
@@ -216,9 +208,7 @@ public class UserInfoHallNewController {
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
                 QueryResult spo2Results =  influxDBConnector.queryData("select last(spo2) from bloodOxygen where objectId = "
                         +"'"+objectList.get(0).getObjectId()+"'"+" and time > "+timestamp10);
-//                System.out.println("UserInfoHallController: spo2Results: "+spo2Results);
                 if(spo2Results.getResults().get(0).getSeries() == null){//如果值为空,赋0
-//                    System.out.println("UserInfoHallController: spo2Results null Line149");
                     spo2List.add(0.0);
                 }else {
                     double spo2 = (double)spo2Results.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取血氧饱和度,get(0)是时间戳
@@ -244,10 +234,10 @@ public class UserInfoHallNewController {
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
 
-        return "monitorCenter/infoHallOnTime";
+        return "monitorCenter/infoHallOnTimeNew";
     }
     //监测中心-监测设备数据刷新//映射地址为要刷新的地址//AutoRefresh
-    @RequestMapping("/infoHallOnTimeGetInfo/AutoRefresh")
+    @RequestMapping("/infoHallOnTimeGetInfo/AutoRefreshNew")
     @ResponseBody
     public Map<String,ArrayList<Double>> monitorCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array) {
 
@@ -300,8 +290,7 @@ public class UserInfoHallNewController {
                 String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                 if(checkCalStr.length()==1)
                     checkCalStr = "0"+checkCalStr;
-                bloodPressure01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03"
-                        +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
+                bloodPressure01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03" +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
                 netMaskIdBloodPressure01 = netMaskIdTemp;
                 System.out.println("UserInfoHallController: bloodPressure01Order: "+bloodPressure01Order);
             }
@@ -313,8 +302,7 @@ public class UserInfoHallNewController {
                 String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                 if(checkCalStr.length()==1)
                     checkCalStr = "0"+checkCalStr;
-                temperature01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03"
-                        +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
+                temperature01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03" +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
                 netMaskIdTemperature01 = netMaskIdTemp;
                 System.out.println("UserInfoHallController: temperature01Order: "+temperature01Order);////
             }
@@ -399,7 +387,7 @@ public class UserInfoHallNewController {
         return map;
     }
     //监测中心-切换实时监测对象
-    @RequestMapping("/infoHallOnTimeGetInfo")
+    @RequestMapping("/infoHallOnTimeGetInfoNew")
     public String infoHallOnTimeGetInfo(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
@@ -471,8 +459,7 @@ public class UserInfoHallNewController {
                     String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                     if(checkCalStr.length()==1)
                         checkCalStr = "0"+checkCalStr;
-                    bloodOxygen01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03"
-                            +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
+                    bloodOxygen01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03" +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
                     netMaskIdBloodOxygen01 = netMaskIdTemp;
                     System.out.println("UserInfoHallController: bloodOxygen01Order: "+bloodOxygen01Order);////
                 }
@@ -484,8 +471,7 @@ public class UserInfoHallNewController {
                     String checkCalStr = Integer.toHexString(checkCal).toUpperCase();
                     if(checkCalStr.length()==1)
                         checkCalStr = "0"+checkCalStr;
-                    bloodPressure01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03"
-                            +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
+                    bloodPressure01Order = "FEFE04"+String.format("%02d",netMaskIdTemp)+"03" +String.format("%02d",deviceSerialTemp)+checkCalStr+"AABB";
                     netMaskIdBloodPressure01 = netMaskIdTemp;
                     System.out.println("UserInfoHallController: bloodPressure01Order: "+bloodPressure01Order);
                 }
@@ -497,8 +483,6 @@ public class UserInfoHallNewController {
             influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
             influxDBConnector.connectToDatabase();
             if (flagTemperature01 == 1) {
-//                sendMsgQueue.offer("FEFE0401030105AABB");//wendu/////////////////////
-//                sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////added0524
                 sendMessage(1, order);//added0526
 
                 for (int i = 0;i < 10;i++) {
@@ -508,9 +492,7 @@ public class UserInfoHallNewController {
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
                 QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "+"'"
                         +objectIdSelected+"'"+" and time > "+timestamp10);
-//                System.out.println("UserInfoHallController: temperatureResults: "+temperatureResults);
                 if(temperatureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                    System.out.println("UserInfoHallController: temperatureResults null");
                     bodyTempList.add(0.0);
                     envTempList.add(0.0);
                 }else {
@@ -539,9 +521,7 @@ public class UserInfoHallNewController {
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
                 QueryResult bloodPressureResults =  influxDBConnector.queryData("select last(highPressure),(lowPressure),(heartRate) from bloodPressure where objectId = "+"'"
                         +objectIdSelected+"'"+" and time > "+timestamp10);
-//                System.out.println("UserInfoHallController: bloodPressureResults: "+bloodPressureResults);
                 if(bloodPressureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                    System.out.println("UserInfoHallController: bloodPressureResults null");
                     highPressureList.add(0.0);
                     lowPressureList.add(0.0);
                     heartRateList.add(0.0);
@@ -573,9 +553,7 @@ public class UserInfoHallNewController {
                 long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
                 QueryResult spo2Results =  influxDBConnector.queryData("select last(spo2) from bloodOxygen where objectId = "+"'"
                         +objectIdSelected+"'"+" and time > "+timestamp10);
-//                System.out.println("UserInfoHallController: spo2Results: "+spo2Results);
                 if(spo2Results.getResults().get(0).getSeries() == null){//如果值为空,赋0
-//                    System.out.println("UserInfoHallController: spo2Results null");
                     spo2List.add(0.0);
                 }else {
                     double spo2 = (double)spo2Results.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取血氧饱和度,get(0)是时间戳
@@ -598,7 +576,7 @@ public class UserInfoHallNewController {
             request.setAttribute("spo2List",spo2List);
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
-        return "monitorCenter/infoHallOnTime";
+        return "monitorCenter/infoHallOnTimeNew";
     }
 
     //向网关发送获取数据的命令
