@@ -668,10 +668,9 @@
 
 <script type = "text/javascript">
     $(document).ready(function () {
-        console.log('the documnt is ready!')
+        console.log('the documnt is ready!');
+	    console.log("yu: "+[[${yu}]]);
         $(".show-below-div").click(function () {
-            console.log('<display>: ' + $(this).next().css('display'));
-            console.log($(this).next().css('display') === 'none')
             if ($(this).next().css('display') === 'none') {
                 $(this).next().css('display', 'block')
             }

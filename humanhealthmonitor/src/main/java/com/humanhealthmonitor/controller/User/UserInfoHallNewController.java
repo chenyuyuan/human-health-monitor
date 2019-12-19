@@ -225,6 +225,7 @@ public class UserInfoHallNewController {
 
 
             //设值
+            request.setAttribute("chen", "yuyuan");
             request.setAttribute("bodyTempList",bodyTempList);
             request.setAttribute("envTempList",envTempList);
             request.setAttribute("highPressureList",highPressureList);

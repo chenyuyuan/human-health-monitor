@@ -2,22 +2,24 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-
+    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>HumanHealthMonitor - 添加网关</title>
-
+    
+    <title>HumanHealthMonitor - 主页</title>
+    
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
-
+    
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../../static/css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <script src="static/js/echarts.js"></script>
 
 </head>
 
@@ -25,7 +27,7 @@
 
 <!-- Page Wrapper -->
 <div id="wrapper">
-
+    
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
         style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
@@ -46,13 +48,13 @@
         </li>
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+            <a class="nav-link" href="infoHallOnTime" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
                aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>检测信息</span></a>
-            <div id="collapseMonitor" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseMonitor" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="hhm-monitorinfo.html">实时数据</a>
+                    <a class="collapse-item" href="infoHallOnTime">实时数据</a>
                     <a class="collapse-item" href="hhm-monitorhistory.html">历史数据</a>
                 </div>
             </div>
@@ -65,7 +67,7 @@
         </div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+            <a class="nav-link" href="hhm-managedevice.html" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
                aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>检测设备</span>
@@ -80,7 +82,7 @@
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <a class="nav-link collapsed" href="hhm-manageobject.html" data-toggle="collapse" data-target="#collapseUtilities"
                aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
                 <span>检测对象</span>
@@ -95,7 +97,7 @@
         </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask"
+            <a class="nav-link collapsed" href="hhm-managenetmask.html" data-toggle="collapse" data-target="#collapseNetmask"
                aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-wrench"></i>
                 <span>网关管理</span>
@@ -116,7 +118,7 @@
         </div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+            <a class="nav-link collapsed" href="hhm-login.html" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>账户管理</span>
@@ -143,18 +145,21 @@
         </div>
     </ul>
     <!-- End of Sidebar -->
-
+    
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
+        
         <!-- Main Content -->
         <div id="content">
+            
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                
                 <!-- Sidebar Toggle (Topbar) -->
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
+                
                 <!-- Topbar Search -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
@@ -167,8 +172,10 @@
                         </div>
                     </div>
                 </form>
+                
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
+                    
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -192,6 +199,7 @@
                             </form>
                         </div>
                     </li>
+                    
                     <!-- Nav Item - Alerts -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -242,7 +250,7 @@
                             <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                         </div>
                     </li>
-
+                    
                     <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
@@ -312,9 +320,9 @@
                             <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                         </div>
                     </li>
-
+                    
                     <div class="topbar-divider d-none d-sm-block"></div>
-
+                    
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -344,12 +352,12 @@
                             </a>
                         </div>
                     </li>
-
+                
                 </ul>
-
+            
             </nav>
             <!-- End of Topbar -->
-
+    
             <!-- Begin Page Content -->
             <div class="container-fluid">
                 <!-- Page Heading -->
@@ -357,20 +365,56 @@
                     <h1 class="h3 mb-0 text-gray-800"></h1>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
+                        <div style="width: 100%;float: left;padding-left: 3%">
+                            <form id="searchHistoryForm" name="searchHistoryForm" onsubmit="checkTimeRange()" action="/infoHallHistorySearchResult"
+                                  accept-charset="utf-8" method="post"
+                                  style="text-align:left;">
+                                <p style="font-size: 28px;text-align: left">查询选项</p>
+                                <p id="personCared" style="font-size: 18px">监测对象：</p>
+                                <select id="objectSelected" name="objectSelected"
+                                        style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">
+                                    <option th:each="object:${objectList}" th:value="${object.objectId}"
+                                            th:text="${object.objectName}" th:selected="${objectSelected eq object.objectId}"></option>
+                                </select>
+                                <!--th:selected="${#strings.contains(instance.objectSelect,object.objectId)}"-->
+            
+                                <p id="startTime1" style="font-size: 18px">起始时间：</p>
+                                <input type="datetime-local" id="startTime2" name="startTime" th:value="${startTime}" class="inputStyle1"/>
+                                <p id="endTime1" style="font-size: 18px">截止时间：</p>
+                                <input type="datetime-local" id="endTime2" name="endTime" th:value="${endTime}" class="inputStyle1"/>
+                                <p></p>
+            
+                                <input type="submit" id="searchHistorySubmit" name="searchHistorySubmit"
+                                       style="font-size: 18px;height: 50px;width: 82%;background-color: #FFA500;border: none;color: white"
+                                       value="查   询" onmouseover="submitOnMouseUpH()" onmouseleave="submitOnMouseLeaveH()"/>
+                            </form>
+                        </div>
                     </div>
-                    <div class="col-lg-6">
-                        <p>put html form here.</p>
+                    <div class="col-lg-8">
+                        <div style="width: 100%;float: left;margin-right: 3%">
+                            <p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>
+        
+                            <table id="equipmentTable" style="width: 100%">
+                                <tr th:each="equipment:${equipmentList}">
+                                    <td>
+                                        <div th:id="${equipment.eqpType}" style="width: 100%;height: 400px;border: 1px solid blue">
+                                            <p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>
+                                            <!--在此绘图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-0">
                     </div>
                 </div>
             </div>
-            <!-- /.container-fluid -->
-
+        
         </div>
         <!-- End of Main Content -->
-
+        
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -380,14 +424,18 @@
             </div>
         </footer>
         <!-- End of Footer -->
+    
     </div>
     <!-- End of Content Wrapper -->
+
 </div>
 <!-- End of Page Wrapper -->
+
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
+
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -408,11 +456,11 @@
     </div>
 </div>
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../../static/vendor/jquery/jquery.min.js"></script>
+<script src="../../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="../../../static/vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="../../../static/js/sb-admin-2.min.js"></script>
 </body>
 </html>
