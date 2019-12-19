@@ -411,29 +411,34 @@
                             <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
                             <form id="pwdModifyForm" name="pwdModifyForm" action="/monitorCenter/accountPwdModifyResult"
                                   accept-charset="utf-8" method="post" style="text-align:center;" onsubmit="checkPwdModify()">
-                                <div class="d shadow-5" style="height:450px;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin: auto;">
+                                <div class="d shadow-5" style="height:400px;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin: auto;">
                                     <br/>
-                                    <p style="font-size: 18px;text-align: center;color: #007BFF">密码修改</p>
-                                    <p class="form-inline" style="text-align: left;width:60%;margin:5% 20% 5% 20%">
-                                        <span class="pwdModifyReminder" style="text-align: left;font-size: 18px">原密码:</span>
+                                    <p style="font-size: 20px;text-align: center;color: #007BFF">密码修改</p>
+                                    <p class="form-inline" style="text-align: left;">
+                                        <span class="pwdModifyReminder" style="text-align: left;font-size: 16px;width: 20%;margin-left: 5%">原密码:</span>
                                         <input type="password" id="oldPassword" name="oldPassword" placeholder="在此输入原来的密码"
+                                               style="width: 50%;margin-right: 25%"
                                                onfocus="this.ready()" onmouseout="this.blur()" class="pull-right form-control bg-light border-0 small"/>
                                     </p>
-                                    <p class="form-inline" style="text-align: left;width:60%;margin:5% 20% 5% 20%">
-                                        <span class="pwdModifyReminder" style="text-align: left;font-size: 18px">新密码:</span>
+                                    <p class="form-inline" style="text-align: left;">
+                                        <span class="pwdModifyReminder" style="text-align: left;font-size: 16px;width: 20%;margin-left: 5%">新密码:</span>
                                         <input type="password" id="newPassword1" name="newPassword1" placeholder="在此输入新密码"
+                                               style="width: 50%;margin-right: 25%"
                                                onfocus="this.ready()" onmouseout="this.blur()" class="pull-right form-control bg-light border-0 small"/>
                                     </p>
-                                    <p class="form-inline" style="text-align: left;width:60%;margin:5% 20% 5% 20%">
-                                        <span class="pwdModifyReminder" style="text-align: left;font-size: 18px">确认密码:</span>
+                                    <p class="form-inline" style="text-align: left;">
+                                        <span class="pwdModifyReminder" style="text-align: left;font-size: 16px;width: 20%;margin-left: 5%">确认密码:</span>
                                         <input type="password" id="newPassword2" name="newPassword2" placeholder="再次输入新密码以核实"
+                                               style="width: 50%;margin-right: 25%"
                                                onfocus="this.ready()" onmouseout="this.blur()" class="pull-right form-control bg-light border-0 small"/>
                                     </p>
-                                    <button class="form-inline btn btn-primary center-block" type="button" id="back" name="back" style="border-radius: 6px;font-size: 16px;height: 45px;width: 50%;background-color: #007BFF;border: none;color: white;margin: 5% 25% 5% 25%"
-                                           value="取消并返回" onclick="history.back(-1);"/>
+                                    <button class="form-inline btn btn-primary center-block" type="button" id="back" name="back" style="border-radius: 6px;font-size: 16px;height: 45px;width: 50%;background-color: #007BFF;border: none;color: white;margin: 0 25% 5% 25%" onclick="history.back(-1);">
+                                        取消并返回
+                                    </button>
                                     <button class="form-inline btn btn-primary center-block" type="submit" id="pwdModifySubmit" name="pwdModifySubmit"
-                                           style="text-align:center;font-size: 16px;height: 45px;width: 50%;border-radius: 6px;background-color: #007BFF;border: none;color: white;margin: 5% 25% 5% 25%"
-                                           value="保存修改"/>
+                                           style="text-align:center;font-size: 16px;height: 45px;width: 50%;border-radius: 6px;background-color: #007BFF;border: none;color: white;margin: 0 25% 5% 25%">
+                                        保存修改
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -445,6 +450,8 @@
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->
+        
+        <br/>
         
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
