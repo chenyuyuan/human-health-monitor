@@ -235,7 +235,7 @@ public class UserInfoHallNewController {
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
 
-        return "monitorCenter/infoHallOnTimeNew";
+        return "infoHallOnTimeNewList";
     }
     //监测中心-监测设备数据刷新//映射地址为要刷新的地址//AutoRefresh
     @RequestMapping("/infoHallOnTimeGetInfo/AutoRefreshNew")
@@ -577,7 +577,7 @@ public class UserInfoHallNewController {
             request.setAttribute("spo2List",spo2List);
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
-        return "monitorCenter/infoHallOnTimeNew";
+        return "infoHallOnTimeNewList";
     }
 
     //向网关发送获取数据的命令

@@ -346,12 +346,12 @@
             // var onlineCountList = [[${onlineCountList}]];
             // var objectIdSelected = [[${objectIdSelected}]];
             var array = new Array();
-            array[0] = 0;
-            array[1] = 0;
-            array[2] = 0;
-            array[3] = 0;
-            array[4] = 0;
-            array[5] = 0;
+            array[0] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            array[1] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            array[2] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            array[3] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            array[4] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            array[5] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     
             if(document.getElementById('Temperature01')!==null) {
                 var option = temperatureChart.getOption();
@@ -359,6 +359,9 @@
                 var envTempList = option.series[1].data;
                 array[0] = bodyTempList;
                 array[1] = envTempList;
+                console.log("<array>: " + array)
+                console.log("<array[0]>: " + array[0])
+                console.log("<array[1]>: " + array[1])
             }
     
             if(document.getElementById('BloodPressure01')!==null) {
@@ -787,9 +790,9 @@
                                         <form class="objectForm" action="/infoHallOnTimeGetInfo" name="objectFrom"
                                               accept-charset="utf-8" method="post"
                                               style="text-align:center">
-                                            <input type="hidden" id="objectId" name="objectId" th:value="${object.objectId}"/>
+                                            <input type="hidden" id="${objectId} + '0'" name="objectId" th:value="${object.objectId}"/>
                                             <!--<p align="left">-->
-                                            <input type="submit" name="objectName" id="objectName" class="inputSubmitOnLeave"
+                                            <input type="submit" name="${objectName}" id="${objectId}" class="inputSubmitOnLeave"
                                                    th:value="${object.objectName}" style="font-size: 18px;width: 100%;background-color: white;border: none;color: #4673df"/>
                                         </form>
                                     </td>
