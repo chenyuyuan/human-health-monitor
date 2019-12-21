@@ -346,14 +346,14 @@
             // var onlineCountList = [[${onlineCountList}]];
             // var objectIdSelected = [[${objectIdSelected}]];
             var array = new Array();
-            array[0] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            array[1] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            array[2] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            array[3] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            array[4] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            array[5] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            array[0] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[1] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[2] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[3] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[4] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[5] = [0,0,0,0,0,0,0,0,0,0,0];
     
-            if(document.getElementById('Temperature01')!==null) {
+            if(temperatureChart!==null) {
                 var option = temperatureChart.getOption();
                 var bodyTempList = option.series[0].data;
                 var envTempList = option.series[1].data;
@@ -364,7 +364,7 @@
                 console.log("<array[1]>: " + array[1])
             }
     
-            if(document.getElementById('BloodPressure01')!==null) {
+            if(bloodPressureChart!==null) {
                 var option2 = bloodPressureChart.getOption();
                 var highPressureList = option2.series[0].data;
                 var lowPressureList = option2.series[1].data;
@@ -374,10 +374,10 @@
                 array[4] = heartRateList;
             }
 
-            if(document.getElementById('BloodOxygen01')!==null) {
-                // var option3 = bloodOxygenChart.getOption();
-                // var spo2List = option3.series[0].data;
-                // array[5] = spo2List;
+            if(bloodOxygenChart!==null) {
+                var option3 = bloodOxygenChart.getOption();
+                var spo2List = option3.series[0].data;
+                array[5] = spo2List;
             }
 
             
@@ -786,13 +786,13 @@
                                     </th>
                                 </tr>
                                 <tr th:each="object:${objectList}" style="border-radius: 4px;">
-                                    <td class="" style="border-color: #aaaaaa;">
+                                    <td class="" style="border-color: #aaaaaa;border-radius: 4px;">
                                         <form class="objectForm" action="/infoHallOnTimeGetInfo" name="objectFrom"
                                               accept-charset="utf-8" method="post"
                                               style="text-align:center">
-                                            <input type="hidden" id="${objectId} + '0'" name="objectId" th:value="${object.objectId}"/>
+                                            <input type="hidden" th:id="${object.objectId} + '0'" th:name="objectId" th:value="${object.objectId}"/>
                                             <!--<p align="left">-->
-                                            <input type="submit" name="${objectName}" id="${objectId}" class="inputSubmitOnLeave"
+                                            <input type="submit" th:name="${object.objectName}" th:id="${object.objectId}" class="inputSubmitOnLeave"
                                                    th:value="${object.objectName}" style="font-size: 18px;width: 100%;background-color: white;border: none;color: #4673df"/>
                                         </form>
                                     </td>
@@ -817,7 +817,7 @@
                             <table id="equipmentTable" style="width: 100%">
                                 <tr th:each="equipment:${equipmentList}">
                                     <td>
-                                        <div th:id="${equipment.eqpType}" style="width: 100%;height: 500px;border: 1px solid lightgrey">
+                                        <div th:id="${equipment.eqpType}" style="width: 100%;height: 500px;border-radius: 6px;border: 0px solid lightgrey">
                                             <!--<p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>-->
                                             <!--在此绘制实时监测折线图-->
                                         </div>
@@ -825,7 +825,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div style="width: 74%;float: left;margin-right: 1%;display: none">
+                        <div style="float: left;display: none">
                             <table id="noEquipmentTable" style="width: 100%">
                                 <tr th:each="noEquipment:${noEquipmentList}">
                                     <td>
@@ -843,6 +843,8 @@
         
         </div>
         <!-- End of Main Content -->
+        
+        <br/>
         
         <!-- Footer -->
         <footer class="sticky-footer bg-white">

@@ -618,8 +618,7 @@ UserInfoHallController {
             request.setAttribute("spo2List",spo2List);
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
-        return "monitorCenter" +
-                "/infoHallOnTime";
+        return "monitorCenter/infoHallOnTime";
     }
 
     //监测中心-历史信息
