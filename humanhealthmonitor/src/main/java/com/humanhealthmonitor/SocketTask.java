@@ -183,6 +183,11 @@ public class SocketTask implements Runnable {
             byte[] responseContent = new byte[responseLength];  // 回复信息就是不包括校验和(不用扣掉1位校验和)
             int checkSum = (byteArrayList.get(byteArrayList.size()-3) + 256) % 256; // 校验和
 
+
+
+
+
+
             if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
                 System.out.println("SocketTask: The byte head is not FEFE");
                 byteArrayList.remove(0);

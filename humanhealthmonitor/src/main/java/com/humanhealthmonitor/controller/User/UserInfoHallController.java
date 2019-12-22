@@ -266,6 +266,9 @@ UserInfoHallController {
     public Map<String,ArrayList<Double>> monitorCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array) {
 
         System.out.println("<<<<<<<<<<AutoRefresh>>>>>>>>>>");
+        String order = "FEFE020404AABB";
+        sendMessage(1, order);
+        System.out.println("sendMessage Have Sended Order FEFE020404AABB");
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectSelectedIdS);
 
         ArrayList<Double> bodyTempList = array.get(0);
@@ -289,8 +292,6 @@ UserInfoHallController {
         int deviceSerialTemp;
         int checkCal;
 
-        String order = "FEFE020404AABB";
-        sendMessage(1, order);
 
         for (int i = 0;i < equipmentList.size();i++) {
             if(equipmentList.get(i).getEqpType().equals("BloodOxygen01")) {
