@@ -120,6 +120,7 @@ public class NetMaskApplication implements Runnable {
                 String sendMessage = getResponse(receiveMessage);
                 byte[] sendMessageByteArray = toByteArray(sendMessage);
                 dout.write(sendMessageByteArray);
+                dout.write(sendMessageByteArray);
                 dout.flush();
 
                 count++;

@@ -156,6 +156,7 @@ public class SocketTask implements Runnable {
                 break;
             }
         }
+        System.out.println("Socket关闭");
 
         socket.shutdownInput();//added 2019/04/08关闭输入流
         socket.shutdownOutput();//added 2019/04/10关闭输出流

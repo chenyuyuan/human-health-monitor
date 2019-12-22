@@ -73,6 +73,7 @@ public class NewLinkProcessor implements Runnable{
 
     //处理Socket收到的信息
     public void socketInfoProcess(List<Byte> byteArrayList) {
+        System.out.println("byteArrayList.length:" + byteArrayList.size());
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
             int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
