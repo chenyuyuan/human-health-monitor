@@ -353,7 +353,7 @@
             array[4] = [0,0,0,0,0,0,0,0,0,0,0];
             array[5] = [0,0,0,0,0,0,0,0,0,0,0];
     
-            if(document.getElementById('Temperature01')!==null && (temperatureChart!==null)) {
+            if(document.getElementById('Temperature01')!==null && temperatureChart!==undefined) {
                 var option = temperatureChart.getOption();
                 var bodyTempList = option.series[0].data;
                 var envTempList = option.series[1].data;
@@ -364,7 +364,7 @@
                 console.log("<array[1]>: " + array[1])
             }
     
-            if(document.getElementById('BloodPressure01')!==null && bloodPressureChart!==null) {
+            if(document.getElementById('BloodPressure01')!==null && bloodPressureChart!==undefined) {
                 var option2 = bloodPressureChart.getOption();
                 var highPressureList = option2.series[0].data;
                 var lowPressureList = option2.series[1].data;
@@ -374,10 +374,10 @@
                 array[4] = heartRateList;
             }
 
-            if(document.getElementById('BloodOxygen01')!==null && bloodOxygenChart!==null) {
-                // var option3 = bloodOxygenChart.getOption();
-                // var spo2List = option3.series[0].data;
-                // array[5] = spo2List;
+            if(document.getElementById('BloodOxygen01')!==null && bloodOxygenChart!==undefined) {
+                var option3 = bloodOxygenChart.getOption();
+                var spo2List = option3.series[0].data;
+                array[5] = spo2List;
             }
 	        
             console.log("<start ajax request>")
