@@ -90,21 +90,15 @@ public class SocketTask implements Runnable {
         PrintWriter pw;
         System.out.println("SocketTask: "+socket.getInetAddress() + " transferred to socketTask...");
         pw = new PrintWriter(socket.getOutputStream());
-        //pw.println("FEFE0401040005AABB");
-        //pw.flush();
-        //String orderString = "FEFE0401040005AABB";
-        //询问网关上设备号和采集数组下标对应关系
-        //组装查询命令
+
 
         while (sendMsgQueue.get(taskNum - 1).size() == 0) {//为空则线程休眠//modified0524
             Thread.sleep(1000);//1秒
         }
-        //String orderString = sendMsgQueue[taskNum-1].poll();//取出一条命令//modified0524
         String orderString = sendMsgQueue.get(taskNum-1).poll();//modified0524
 
         byte[] orderByte = toByteArray(orderString);
 
-        //byte[] orderByte = orderString.getBytes();
         OutputStream os = socket.getOutputStream();
         os.write(orderByte);
         os.flush();
@@ -138,6 +132,8 @@ public class SocketTask implements Runnable {
                 info = "";//将info清空
                 byteArrayList.clear();//字节列表清空
                 //orderString = "FEFE0401040005AABB";
+
+                // // //
                 while (sendMsgQueue.get(taskNum-1).isEmpty()) {//modified0524
                     Thread.sleep(1000);
                 }
@@ -151,6 +147,7 @@ public class SocketTask implements Runnable {
 
                 os.flush();
                 System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
+                // // //
             }
         }
 
@@ -428,7 +425,7 @@ public class SocketTask implements Runnable {
         for(int i = 0;i < 8 * typeLength; ++i) {
             System.out.println("typeBianryCharArray: " + typeBinaryCharArray[i]);
             if(low > byteArraySensorData.length){
-                System.out.println("[SocketTask:handleOrder3and4Response]: low > bytearraysensordata.length");
+//                System.out.println("[SocketTask:handleOrder3and4Response]: low > bytearraysensordata.length");
                 break;
             }
             if(typeBinaryCharArray[i] == '1') {
