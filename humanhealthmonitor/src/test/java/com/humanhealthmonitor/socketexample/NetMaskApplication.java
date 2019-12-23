@@ -99,6 +99,8 @@ public class NetMaskApplication implements Runnable {
                 byte[] bytes = new byte[1];
                 String info = "";
                 List<Byte> byteArrayList = new ArrayList<>();
+//                dout.write(toByteArray("FEFE0103000102AABB"));
+//                dout.flush();
 
                 //receive data
                 while (din.read(bytes) != -1) {
@@ -120,13 +122,15 @@ public class NetMaskApplication implements Runnable {
                 String sendMessage = getResponse(receiveMessage);
                 byte[] sendMessageByteArray = toByteArray(sendMessage);
                 dout.write(sendMessageByteArray);
-                dout.write(sendMessageByteArray);
                 dout.flush();
 
                 count++;
 
                 Thread.sleep(2000);
                 //rerun per 2 second
+
+                dout.write(sendMessageByteArray);
+                dout.flush();
 
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
