@@ -110,6 +110,13 @@ public class SocketTask implements Runnable {
         byte[] bytes = new byte[1]; // 一次读取一个byte
         String info = "";
         List<Byte> byteArrayList = new ArrayList<>();//字节列表
+        int netMaskId = 1;
+
+        SocketTaskSender socketTaskSender = new SocketTaskSender(); // added0524
+        socketTaskSender.setSocket(socket); // added0524
+        socketTaskSender.setTaskNum(netMaskId);
+        new Thread(socketTaskSender).start(); // added0524
+
 
         while (dis.read(bytes) != -1) {//如何实现循环接收的呢？忘了。。
             info += bytesToHexString(bytes) + " ";//转为16进制字符串
@@ -125,29 +132,11 @@ public class SocketTask implements Runnable {
                 System.out.println("SocketTask"+taskNum+": byteArrayList: " + byteArrayList);
                 socketInfoPreProcess(byteArrayList);
 
-                //线程休眠
-                //Thread thread = new Thread(this);
-                //Thread.sleep(10000);
-
                 info = "";//将info清空
                 byteArrayList.clear();//字节列表清空
                 //orderString = "FEFE0401040005AABB";
 
-                // // //
-                while (sendMsgQueue.get(taskNum-1).isEmpty()) {//modified0524
-                    Thread.sleep(1000);
-                }
-                orderString = sendMsgQueue.get(taskNum-1).poll();//modified0524
-                orderByte = toByteArray(orderString);
-                //pw.println(orderString);
-                //pw.write(orderByte);
-                //pw.println(orderByte);
-                //w.flush();
-                os.write(orderByte);
 
-                os.flush();
-                System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
-                // // //
             }
         }
 
