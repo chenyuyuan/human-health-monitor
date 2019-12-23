@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
 <head>
-    <title>用户账户-密码修改</title>
+    <title>密码服务</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
     <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
@@ -70,54 +70,34 @@
         <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
     </div>
     <div style="float: left;width: 40%;text-align: right">
-        <span style="color: darkgrey;font-size: 18px">您好！<td th:text="${user.userName}"></td></span>
-        <!--<a href="/monitorCenter/infoHallOnTime" style="text-align: right;font-size: 18px">监测中心&nbsp|</a>-->
-        <a href="/userLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
+        <span style="color: darkgrey;font-size: 18px">您好！<td th:text="${object.objectName}"></td></span>
+        <a href="/objectLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
         <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
     </div>
 </div>
 
 <!--<hr width="100%" color="#0080FF" size="2"/>-->
 
-<div id="head-nav" class="head-nav">
+<div class="head-nav">
+    <!--<div class="head-nav-con clearFloat">-->
     <div class="head-nav-con">
         <ul>
-            <li><a href="/indexUser">首&nbsp&nbsp&nbsp&nbsp页</a></li>
-            <li class="drop-down"><a href="javascript:void(0)">监测信息</a>
-                <ul class="drop-down-content">
-                    <li><a href="/infoHallOnTime">实时监测信息</a></li>
-                    <li><a href="/infoHallHistory">历史监测信息</a></li>
-                </ul>
-            </li>
-            <li class="drop-down"><a href="javascript:void(0)">监测设备</a>
-                <ul class="drop-down-content">
-                    <li><a href="/monitorCenter/equipmentAdd">添加设备</a></li>
-                    <li><a href="/monitorCenter/equipmentInfoManage">设备信息管理</a></li>
-                </ul>
-            </li>
-            <li class="drop-down"><a href="javascript:void(0)">监测对象</a>
-                <ul class="drop-down-content">
-                    <li><a href="/monitorCenter/objectAdd">添加监测对象</a></li>
-                    <li><a href="/monitorCenter/objectInfoManage">监测对象信息管理</a></li>
-                </ul>
-            </li>
-            <li class="drop-down"><a href="javascript:void(0)">用户账户</a>
-                <ul class="drop-down-content">
-                    <li><a href="/monitorCenter/accountBasicInfo">基本信息</a></li>
-                    <li><a href="/monitorCenter/accountPwdModify">密码修改</a></li>
-                </ul>
-            </li>
+            <li><a href="/indexObject">首&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li><a href="/objInfoHallOnTime">实时监测信息</a></li>
+            <li><a href="/objInfoHallHistory">历史监测信息</a></li>
+            <li><a href="/healthCenter/objAccountBasicInfo">账户信息</a></li>
+            <li><a href="/healthCenter/objAccountPwdModify">密码服务</a></li>
         </ul>
     </div>
 </div>
 
 <div style="width: 100%">
-    <h1 style="text-align: center;color: blue;">密码修改</h1>
+    <h1 style="text-align: center;color: blue;">密码服务</h1>
 </div>
 <div style="width: 100%;min-height: 80%">
     <div style="align-self: center">
         <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
-        <form id="pwdModifyForm" name="pwdModifyForm" action="/monitorCenter/accountPwdModifyResult"
+        <form id="pwdModifyForm" name="pwdModifyForm" action="/healthCenter/objAccountPwdModifyResult"
               accept-charset="utf-8" method="post"
               style="text-align:center;" onsubmit="checkPwdModify()">
             <div class="d" style="height:450px;background-color:white;width:950px;
@@ -142,17 +122,17 @@
                 </p>
                 <!--<input type="submit" id="pwdModifySubmit" name="pwdModifySubmit"-->
                 <!--style="font-size: 18px;height: 50px;width: 60%;background-color: #FFA500;border: none;color: white"-->
-                <!--value="保存修改" onmouseover="submitOnMouseUpPwdModify()" onmouseleave="submitOnMouseLeavePwdModify()"/>-->
+                <!--value="提交修改" onmouseover="submitOnMouseUpPwdModify()" onmouseleave="submitOnMouseLeavePwdModify()"/>-->
                 <nobr>
                     <!--使用button，绕过form提交检查返回上一页面-->
                     <input type="button" id="back" name="back"
                            style="font-size: 18px;height: 50px;width: 120px;background-color: #FFA500;border: none;color: white;margin-top: 30px;margin-right:120px"
-                           placeholder="取消并返回" onmouseover="submitOnMouseUpBack()" onmouseleave="submitOnMouseLeaveBack()"
+                           value="取消并返回" onmouseover="submitOnMouseUpBack()" onmouseleave="submitOnMouseLeaveBack()"
                            onclick="history.back(-1);"/>
                     <!--onclick="document.referrer"-->
                     <input type="submit" id="pwdModifySubmit" name="pwdModifySubmit"
                            style="font-size: 18px;height: 50px;width: 120px;background-color: #FFA500;border: none;color: white;margin-top: 30px;margin-left: 120px"
-                           placeholder="保存修改" onmouseover="submitOnMouseUpPwdModify()"
+                           value="保存修改" onmouseover="submitOnMouseUpPwdModify()"
                            onmouseleave="submitOnMouseLeavePwdModify()"/>
                 </nobr>
             </div>

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    
-    <title>HumanHealthMonitor - 主页</title>
-    
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
-    
-    <script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	
+	<title>HumanHealthMonitor - 主页</title>
+	
+	<!-- Custom fonts for this template-->
+	<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+	<!-- Custom styles for this template-->
+	<link href="/css/sb-admin-2.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+	
+	<script>
         var curIndex = 0;
         //时间间隔(单位毫秒)，每3秒钟显示一张
         var timeInterval = 3000;
@@ -65,7 +65,7 @@
             var more = document.getElementById("moreClass3");
             more.style.fontWeight = "normal";
         }
-    </script>
+	</script>
 
 </head>
 
@@ -73,401 +73,400 @@
 
 <!-- Page Wrapper -->
 <div id="wrapper">
-    
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-        style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">HumanHealth</div>
-        </a>
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-        <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a class="nav-link" href="/indexUser">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>首页</span></a>
-        </li>
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
-               aria-controls="collapseMonitor">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>检测信息</span></a>
-            <div id="collapseMonitor" class="collapse" aria-labelledby="headingMonitor" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/infoHallOnTime">实时数据</a>
-                    <a class="collapse-item" href="/infoHallHistory">历史数据</a>
-                </div>
-            </div>
-        </li>
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            MANAGEMENT
-        </div>
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-               aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
-                <span>检测设备</span>
-            </a>
-            <!--class: show展开-->
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/monitorCenter/equipmentAdd">添加设备</a>
-                    <a class="collapse-item" href="/monitorCenter/equipmentInfoManage">设备信息管理</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>检测对象</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/monitorCenter/objectAdd">添加检测对象</a>
-                    <a class="collapse-item" href="/monitorCenter/objectInfoManage">检测对象管理</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>网关管理</span>
-            </a>
-            <div id="collapseNetmask" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="ARCHIEVES/origin hhm template/hhm-addnetmask.html">添加网关</a>
-                    <a class="collapse-item" href="ARCHIEVES/origin hhm template/hhm-managenetmask.html">网关管理</a>
-                </div>
-            </div>
-        </li>
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            USER
-        </div>
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-               aria-expanded="true" aria-controls="collapsePages">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>账户管理</span>
-            </a>
-            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/monitorCenter/accountBasicInfo">基本信息</a>
-                    <a class="collapse-item" href="/monitorCenter/accountPwdModify">密码修改</a>
-                    <a class="collapse-item" href="/userLogout">退出登录</a>
-                </div>
-            </div>
-        </li>
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link" href="hhm-others.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>其它</span></a>
-        </li>
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-    </ul>
-    <!-- End of Sidebar -->
-    
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-        
-        <!-- Main Content -->
-        <div id="content">
-            
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                
-                <!-- Sidebar Toggle (Topbar) -->
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                    <i class="fa fa-bars"></i>
-                </button>
-                
-                <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-                    
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                        <!-- Dropdown - Messages -->
-                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                             aria-labelledby="searchDropdown">
-                            <form class="form-inline mr-auto w-100 navbar-search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small"
-                                           placeholder="Search for..." aria-label="Search"
-                                           aria-describedby="basic-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </li>
-                    
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
-                        </a>
-                        <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header">
-                                Alerts Center
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">December 12, 2019</div>
-                                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-success">
-                                        <i class="fas fa-donate text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">December 7, 2019</div>
-                                    $290.29 has been deposited into your account!
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-3">
-                                    <div class="icon-circle bg-warning">
-                                        <i class="fas fa-exclamation-triangle text-white"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">December 2, 2019</div>
-                                    Spending Alert: We've noticed unusually high spending for your account.
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                        </div>
-                    </li>
-                    
-                    
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">我的&nbsp;&nbsp;</span>
-                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/monitorCenter/accountBasicInfo">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                基本信息
-                            </a>
-                            <a class="dropdown-item" href="/monitorCenter/accountPwdModify">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                密码修改
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/userLogout" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                退出登陆
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-            <!-- End of Topbar -->
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800"></h1>
-                </div>
-<!--                https://images8.alphacoders.com/399/399829.jpg-->
-                <div id="picDiv">
-                    <form id="picForm" name="picForm" action="/monitorCenter/newsPageUserMainPic">
-                        <input type="image" id="mainPic" name="mainPic" th:src="'/'+${mainPicList.get(0).getPicUrl()}"
-                               onclick="document.picForm.submit()"
-                               style="margin-top: 0;margin-bottom: 10px;border-radius: 10px;width: 100%;height: 800px"/>
-                        <input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>
-                    </form>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div id="newest" style="width: auto;float: left;margin-left: 8%">
-                            <nobr>
-                                <span style="font-size: xx-large;font-weight: bold;margin-left: 8px">最新消息</span>
-                                <!--<a id="moreClass1" class="moreClass" href="#" style="font-size: x-large;color: blue" onmouseover="fontBold1()"  onmouseleave="fontNormal1()">更多>></a>-->
-                                <form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
-                                    <input type="hidden" name="newsType" value="最新消息"/>
-                                    <input id="moreClass1" type="submit" value="更多>>"
-                                           style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
-                                           onmouseover="fontBold1()" onmouseleave="fontNormal1()"/>
-                                </form>
-                            </nobr>
-                            <table>
-                                <tr th:each="latestNews:${latestNewsList}">
-                                    <td>
-                                        <form action="/monitorCenter/newsPageUser">
-                                            <input type="hidden" name="newsId" th:value="${latestNews.getNewsId()}"/>
-                                            <input type="submit" th:value="${latestNews.getNewsHead()}"
-                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br><br><br><br>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div id="health" style="width: auto;float: left">
-                            <nobr>
-                                <span style="font-size: xx-large;font-weight: bold;margin-left: 8px">健康阅读</span>
-                                <form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
-                                    <input type="hidden" name="newsType" value="健康阅读"/>
-                                    <input id="moreClass2" type="submit" value="更多>>"
-                                           style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
-                                           onmouseover="fontBold2()" onmouseleave="fontNormal2()"/>
-                                </form>
-                                <!--<a id="moreClass2" class="moreClass" href="#" style="font-size: x-large;color: blue" onmouseover="fontBold2()"  onmouseleave="fontNormal2()">更多>></a>-->
-                            </nobr>
-                            <table>
-                                <tr th:each="healthNews:${healthNewsList}">
-                                    <td>
-                                        <form action="/monitorCenter/newsPageUser">
-                                            <input type="hidden" name="newsId" th:value="${healthNews.getNewsId()}"/>
-                                            <input type="submit" th:value="${healthNews.getNewsHead()}"
-                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br><br><br><br>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div id="hot" style="width: auto;float: left;margin-right: 5%">
-                            <nobr>
-                                <span style="font-size: xx-large;font-weight: bold;margin-left: 8px">热点新闻</span>
-                                <form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
-                                    <input type="hidden" name="newsType" value="热点新闻"/>
-                                    <input id="moreClass3" type="submit" value="更多>>"
-                                           style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
-                                           onmouseover="fontBold3()" onmouseleave="fontNormal3()"/>
-                                </form>
-                            </nobr>
-                            <table>
-                                <tr th:each="hotPointNews:${hotPointNewsList}">
-                                    <td>
-                                        <form action="/monitorCenter/newsPageUser">
-                                            <input type="hidden" name="newsId" th:value="${hotPointNews.getNewsId()}"/>
-                                            <input type="submit" th:value="${hotPointNews.getNewsHead()}"
-                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br><br><br><br>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /.container-fluid -->
-        </div>
-        <!-- End of Main Content -->
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
-    </div>
-    <!-- End of Content Wrapper -->
+	
+	<!-- Sidebar -->
+	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+	    style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
+		<!-- Sidebar - Brand -->
+		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+			<div class="sidebar-brand-icon rotate-n-15">
+				<i class="fas fa-laugh-wink"></i>
+			</div>
+			<div class="sidebar-brand-text mx-3">HumanHealth</div>
+		</a>
+		<!-- Divider -->
+		<hr class="sidebar-divider my-0">
+		<!-- Nav Item - Charts -->
+		<li class="nav-item">
+			<a class="nav-link" href="/indexUser">
+				<i class="fas fa-fw fa-tachometer-alt"></i>
+				<span>首页</span></a>
+		</li>
+		<!-- Nav Item - Dashboard -->
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+			   aria-controls="collapseMonitor">
+				<i class="fas fa-fw fa-chart-area"></i>
+				<span>检测信息</span></a>
+			<div id="collapseMonitor" class="collapse" aria-labelledby="headingMonitor" data-parent="#accordionSidebar">
+				<div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item" href="/infoHallOnTime">实时数据</a>
+					<a class="collapse-item" href="/infoHallHistory">历史数据</a>
+				</div>
+			</div>
+		</li>
+		<!-- Divider -->
+		<hr class="sidebar-divider">
+		<!-- Heading -->
+		<div class="sidebar-heading">
+			MANAGEMENT
+		</div>
+		<!-- Nav Item - Pages Collapse Menu -->
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+			   aria-controls="collapseTwo">
+				<i class="fas fa-fw fa-cog"></i>
+				<span>检测设备</span>
+			</a>
+			<!--class: show展开-->
+			<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+				<div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item" href="/monitorCenter/equipmentAdd">添加设备</a>
+					<a class="collapse-item" href="/monitorCenter/equipmentInfoManage">设备信息管理</a>
+				</div>
+			</div>
+		</li>
+		<!-- Nav Item - Utilities Collapse Menu -->
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+			   aria-expanded="true" aria-controls="collapseUtilities">
+				<i class="fas fa-fw fa-wrench"></i>
+				<span>检测对象</span>
+			</a>
+			<div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+			     data-parent="#accordionSidebar">
+				<div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item" href="/monitorCenter/objectAdd">添加检测对象</a>
+					<a class="collapse-item" href="/monitorCenter/objectInfoManage">检测对象管理</a>
+				</div>
+			</div>
+		</li>
+		<!-- Nav Item - Utilities Collapse Menu -->
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask"
+			   aria-expanded="true" aria-controls="collapseUtilities">
+				<i class="fas fa-fw fa-wrench"></i>
+				<span>网关管理</span>
+			</a>
+			<div id="collapseNetmask" class="collapse" aria-labelledby="headingUtilities"
+			     data-parent="#accordionSidebar">
+				<div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item" href="ARCHIEVES/origin hhm template/hhm-addnetmask.html">添加网关</a>
+					<a class="collapse-item" href="ARCHIEVES/origin hhm template/hhm-managenetmask.html">网关管理</a>
+				</div>
+			</div>
+		</li>
+		<!-- Divider -->
+		<hr class="sidebar-divider">
+		<!-- Heading -->
+		<div class="sidebar-heading">
+			USER
+		</div>
+		<!-- Nav Item - Pages Collapse Menu -->
+		<li class="nav-item">
+			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+			   aria-expanded="true" aria-controls="collapsePages">
+				<i class="fas fa-fw fa-folder"></i>
+				<span>账户管理</span>
+			</a>
+			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+				<div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item" href="/monitorCenter/accountBasicInfo">基本信息</a>
+					<a class="collapse-item" href="/monitorCenter/accountPwdModify">密码修改</a>
+					<a class="collapse-item" href="/userLogout">退出登录</a>
+				</div>
+			</div>
+		</li>
+		<!-- Nav Item - Tables -->
+		<li class="nav-item">
+			<a class="nav-link" href="_blank">
+				<i class="fas fa-fw fa-table"></i>
+				<span>帮助</span></a>
+		</li>
+		<!-- Divider -->
+		<hr class="sidebar-divider d-none d-md-block">
+		<!-- Sidebar Toggler (Sidebar) -->
+		<div class="text-center d-none d-md-inline">
+			<button class="rounded-circle border-0" id="sidebarToggle"></button>
+		</div>
+	</ul>
+	<!-- End of Sidebar -->
+	
+	<!-- Content Wrapper -->
+	<div id="content-wrapper" class="d-flex flex-column">
+		
+		<!-- Main Content -->
+		<div id="content">
+			
+			<!-- Topbar -->
+			<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+				
+				<!-- Sidebar Toggle (Topbar) -->
+				<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+					<i class="fa fa-bars"></i>
+				</button>
+				
+				<!-- Topbar Search -->
+				<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+					<div class="input-group">
+						<input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+						       aria-label="Search" aria-describedby="basic-addon2">
+						<div class="input-group-append">
+							<button class="btn btn-primary" type="button">
+								<i class="fas fa-search fa-sm"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<!-- Topbar Navbar -->
+				<ul class="navbar-nav ml-auto">
+					
+					<!-- Nav Item - Search Dropdown (Visible Only XS) -->
+					<li class="nav-item dropdown no-arrow d-sm-none">
+						<a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+						   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-search fa-fw"></i>
+						</a>
+						<!-- Dropdown - Messages -->
+						<div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+						     aria-labelledby="searchDropdown">
+							<form class="form-inline mr-auto w-100 navbar-search">
+								<div class="input-group">
+									<input type="text" class="form-control bg-light border-0 small"
+									       placeholder="Search for..." aria-label="Search"
+									       aria-describedby="basic-addon2">
+									<div class="input-group-append">
+										<button class="btn btn-primary" type="button">
+											<i class="fas fa-search fa-sm"></i>
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</li>
+					
+					<!-- Nav Item - Alerts -->
+					<li class="nav-item dropdown no-arrow mx-1">
+						<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+						   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-bell fa-fw"></i>
+							<!-- Counter - Alerts -->
+							<span class="badge badge-danger badge-counter">3+</span>
+						</a>
+						<!-- Dropdown - Alerts -->
+						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+						     aria-labelledby="alertsDropdown">
+							<h6 class="dropdown-header">
+								Alerts Center
+							</h6>
+							<a class="dropdown-item d-flex align-items-center" href="#">
+								<div class="mr-3">
+									<div class="icon-circle bg-primary">
+										<i class="fas fa-file-alt text-white"></i>
+									</div>
+								</div>
+								<div>
+									<div class="small text-gray-500">December 12, 2019</div>
+									<span class="font-weight-bold">A new monthly report is ready to download!</span>
+								</div>
+							</a>
+							<a class="dropdown-item d-flex align-items-center" href="#">
+								<div class="mr-3">
+									<div class="icon-circle bg-success">
+										<i class="fas fa-donate text-white"></i>
+									</div>
+								</div>
+								<div>
+									<div class="small text-gray-500">December 7, 2019</div>
+									$290.29 has been deposited into your account!
+								</div>
+							</a>
+							<a class="dropdown-item d-flex align-items-center" href="#">
+								<div class="mr-3">
+									<div class="icon-circle bg-warning">
+										<i class="fas fa-exclamation-triangle text-white"></i>
+									</div>
+								</div>
+								<div>
+									<div class="small text-gray-500">December 2, 2019</div>
+									Spending Alert: We've noticed unusually high spending for your account.
+								</div>
+							</a>
+							<a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+						</div>
+					</li>
+					
+					
+					<div class="topbar-divider d-none d-sm-block"></div>
+					
+					<!-- Nav Item - User Information -->
+					<li class="nav-item dropdown no-arrow">
+						<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+						   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="mr-2 d-none d-lg-inline text-gray-600 small">我的&nbsp;&nbsp;</span>
+							<img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+						</a>
+						<!-- Dropdown - User Information -->
+						<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+						     aria-labelledby="userDropdown">
+							<a class="dropdown-item" href="/monitorCenter/accountBasicInfo">
+								<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+								基本信息
+							</a>
+							<a class="dropdown-item" href="/monitorCenter/accountPwdModify">
+								<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+								密码修改
+							</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+								<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+								退出登陆
+							</a>
+						</div>
+					</li>
+				</ul>
+			</nav>
+			<!-- End of Topbar -->
+			<!-- Begin Page Content -->
+			<div class="container-fluid">
+				<!-- Page Heading -->
+				<div class="d-sm-flex align-items-center justify-content-between mb-4">
+					<h1 class="h3 mb-0 text-gray-800"></h1>
+				</div>
+				<div id="picDiv">
+					<form id="picForm" name="picForm" action="/monitorCenter/newsPageUserMainPic">
+						<input type="image" id="mainPic" name="mainPic" th:src="'/'+${mainPicList.get(0).getPicUrl()}"
+						       onclick="document.picForm.submit()"
+						       style="margin-top: 0;margin-bottom: 10px;border-radius: 10px;width: 100%;height: 800px"/>
+						<input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>
+					</form>
+				</div>
+				<div class="row">
+					<div class="col-lg-4">
+						<div id="newest" style="width: auto;float: left;margin-left: 8%">
+							<nobr>
+								<span style="font-size: xx-large;font-weight: bold;margin-left: 8px">最新消息</span>
+								<!--<a id="moreClass1" class="moreClass" href="#" style="font-size: x-large;color: blue" onmouseover="fontBold1()"  onmouseleave="fontNormal1()">更多>></a>-->
+								<form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
+									<input type="hidden" name="newsType" value="最新消息"/>
+									<input id="moreClass1" type="submit" value="更多>>"
+									       style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
+									       onmouseover="fontBold1()" onmouseleave="fontNormal1()"/>
+								</form>
+							</nobr>
+							<table>
+								<tr th:each="latestNews:${latestNewsList}">
+									<td>
+										<form action="/monitorCenter/newsPageUser">
+											<input type="hidden" name="newsId" th:value="${latestNews.getNewsId()}"/>
+											<input type="submit" th:value="${latestNews.getNewsHead()}"
+											       style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
+										</form>
+									</td>
+								</tr>
+							</table>
+							<br><br><br><br>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div id="health" style="width: auto;float: left">
+							<nobr>
+								<span style="font-size: xx-large;font-weight: bold;margin-left: 8px">健康阅读</span>
+								<form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
+									<input type="hidden" name="newsType" value="健康阅读"/>
+									<input id="moreClass2" type="submit" value="更多>>"
+									       style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
+									       onmouseover="fontBold2()" onmouseleave="fontNormal2()"/>
+								</form>
+								<!--<a id="moreClass2" class="moreClass" href="#" style="font-size: x-large;color: blue" onmouseover="fontBold2()"  onmouseleave="fontNormal2()">更多>></a>-->
+							</nobr>
+							<table>
+								<tr th:each="healthNews:${healthNewsList}">
+									<td>
+										<form action="/monitorCenter/newsPageUser">
+											<input type="hidden" name="newsId" th:value="${healthNews.getNewsId()}"/>
+											<input type="submit" th:value="${healthNews.getNewsHead()}"
+											       style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
+										</form>
+									</td>
+								</tr>
+							</table>
+							<br><br><br><br>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div id="hot" style="width: auto;float: left;margin-right: 5%">
+							<nobr>
+								<span style="font-size: xx-large;font-weight: bold;margin-left: 8px">热点新闻</span>
+								<form action="/monitorCenter/newsSelectedKindUser" style="margin:0;display: inline">
+									<input type="hidden" name="newsType" value="热点新闻"/>
+									<input id="moreClass3" type="submit" value="更多>>"
+									       style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"
+									       onmouseover="fontBold3()" onmouseleave="fontNormal3()"/>
+								</form>
+							</nobr>
+							<table>
+								<tr th:each="hotPointNews:${hotPointNewsList}">
+									<td>
+										<form action="/monitorCenter/newsPageUser">
+											<input type="hidden" name="newsId" th:value="${hotPointNews.getNewsId()}"/>
+											<input type="submit" th:value="${hotPointNews.getNewsHead()}"
+											       style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: x-large"/>
+										</form>
+									</td>
+								</tr>
+							</table>
+							<br><br><br><br>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- End of Main Content -->
+		<!-- Footer -->
+		<footer class="sticky-footer bg-white">
+			<div class="container my-auto">
+				<div class="copyright text-center my-auto">
+					<span>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</span>
+				</div>
+			</div>
+		</footer>
+		<!-- End of Footer -->
+	</div>
+	<!-- End of Content Wrapper -->
 </div>
 <!-- End of Page Wrapper -->
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
+	<i class="fas fa-angle-up"></i>
 </a>
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="ARCHIEVES/origin hhm template/hhm-login.html">Logout</a>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">确定要离开吗？</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">若要退出登录，选择下面的“确定”按钮</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+				<a class="btn btn-primary" href="/userLogout">确定</a>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
+<head>
+    <title>更改绑定对象</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
+    <script>
+        function submitOnMouseUpModifyBanding() {
+            var searchSubmit = document.getElementById("modifyBandingSubmit");
+            searchSubmit.style.backgroundColor = "#EE7700";
+        }
+
+        function submitOnMouseLeaveModifyBanding() {
+            var searchSubmit = document.getElementById("modifyBandingSubmit");
+            searchSubmit.style.backgroundColor = "#FFA500";
+        }
+
+        function cancelBanding() {
+            alert("已解绑！");
+        }
+    </script>
+</head>
+
+<body>
+<div id="header">
+    <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
+    <br/>
+    <div style="float: left;width: 60%;text-align: left">
+        <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
+    </div>
+    <div style="float: left;width: 40%;text-align: right">
+        <span style="color: darkgrey;font-size: 18px">您好！<td th:text="${user.userName}"></td></span>
+        <!--<a href="/monitorCenter/infoHallOnTime" style="text-align: right;font-size: 18px">监测中心&nbsp|</a>-->
+        <a href="/userLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
+        <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
+    </div>
+</div>
+
+<!--<hr width="100%" color="#0080FF" size="2"/>-->
+
+<div id="head-nav" class="head-nav">
+    <div class="head-nav-con">
+        <ul>
+            <li><a href="/indexUser">首&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li class="drop-down"><a href="javascript:void(0)">监测信息</a>
+                <ul class="drop-down-content">
+                    <li><a href="/infoHallOnTime">实时监测信息</a></li>
+                    <li><a href="/infoHallHistory">历史监测信息</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测设备</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/equipmentAdd">添加设备</a></li>
+                    <li><a href="/monitorCenter/equipmentInfoManage">设备信息管理</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测对象</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/objectAdd">添加监测对象</a></li>
+                    <li><a href="/monitorCenter/objectInfoManage">监测对象信息管理</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">用户账户</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/accountBasicInfo">基本信息</a></li>
+                    <li><a href="/monitorCenter/accountPwdModify">密码修改</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div style="width: 100%">
+    <h1 style="text-align: center;color: blue;">设备信息管理-更改绑定对象</h1>
+    <p style="text-align: right;margin-right: 10px">
+        <a href="/monitorCenter/equipmentInfoManage"
+           style="text-align: right;font-size: 22px;text-decoration-line: underline">返回设备信息管理</a>
+    </p>
+</div>
+
+<div style="width: 100%;min-height: 80%">
+    <!--设备hitwh-ueei,您想重新绑定的是：下拉框  确认绑定  仅解绑设备  返回设备信息管理-->
+
+    <form id="modifyBandingForm" name="modifyBandingFrom" action="/monitorCenter/modifyBandingResult"
+          accept-charset="utf-8" method="post"
+          style="text-align:center;">
+        <div class="d"
+             style="height:550px;background-color:white;width:950px;border: 1px solid lightgrey;margin: auto;">
+            <br/>
+            <p style="font-size: 28px;text-align: left;text-indent: 2em;color: blue" th:text="${eqpId}">
+            </p>
+            <input type="hidden" id="eqpIdInModifyBanding" name="eqpIdInModifyBanding" th:value="${eqpId}"/>
+            <p style="text-align: left;text-indent: 4em">
+            <p style="text-align: left;font-size: 28px;text-indent: 2em">选择要重新绑定的对象:</p>
+            <select id="objectSelected" name="objectSelected"
+                    style="font-size: 26px;height: 40px;width: 60%;text-indent: 0.5em;margin-bottom: 40px">
+                <option th:each="object:${objectList}" th:value="${object.objectId}"
+                        th:text="${object.objectName}"></option>
+            </select>
+            </p>
+            <!--<p style="text-align: left;text-indent: 4em;margin-top: 15px">-->
+            <!--<span class="objectBandingReminder" style="text-align: left;font-size: 28px">选择设备:</span>-->
+            <!--<select id="equipmentSelected" name="equipmentSelected"  style="font-size: 18px;height: 36px;width: 82%;text-indent: 0.5em;">-->
+            <!--<option th:each="equipment:${equipmentList}" th:value="${equipment.eqpId}" th:text="${equipment.eqpName}" ></option>-->
+            <!--</select>-->
+            <!--</p>-->
+            <p style="text-align: right;margin-right: 20%">
+            <input type="submit" id="modifyBandingSubmit" name="modifyBandingSubmit"
+                   style="font-size: 18px;height: 50px;width: 20%;background-color: #FFA500;border: none;color: white"
+                   value="确定" onmouseover="submitOnMouseUpModifyBanding()"
+                   onmouseleave="submitOnMouseLeaveModifyBanding()"/>
+            <!--<input type="submit" formaction="/monitorCenter/equipmentInfoManage"-->
+                   <!--style="font-size: 18px;height: 50px;width: 20%;background-color: #FFA500;border: none;color: white;margin-left: 20%"-->
+                   <!--value="取消"/>-->
+            </p>
+            <p style="text-align: right;margin-right: 20%;margin-top: 50px">
+                <span style="font-size: 20px;color: black">高级选项：</span>
+                <input type="submit"  formaction="/monitorCenter/onlyUnBanding"
+                       style="font-size: 18px;height: 50px;width: 20%;background-color: #FFA500;border: none;color: white;margin-left: 10%"
+                       value="解除绑定" onclick="cancelBinding()"
+                       onmouseleave="submitOnMouseLeaveModifyBanding()"/>
+            </p>
+            <p style="text-align: right;margin-right: 20%">
+                <span style="font-size: 20px;color: blue">备注：仅解除绑定，不换绑其他对象。</span>
+            </p>
+            <p style="text-align: right;margin-right: 20%">
+                <span style="font-size: 20px;color: blue">如再次使用设备需重新添加。</span>
+            </p>
+
+        </div>
+    </form>
+</div>
+
+<iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"
+        th:src="@{/master/footer.html}"></iframe>
+</body>
+</html>

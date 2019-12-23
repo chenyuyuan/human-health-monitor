@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
+<head>
+    <title th:text="${news.newsHead}"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
+</head>
+<body>
+<div id="header">
+    <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
+    <br/>
+    <div style="float: left;width: 60%;text-align: left">
+        <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
+    </div>
+    <div style="float: left;width: 40%;text-align: right">
+        <span style="color: darkgrey;font-size: 18px">您好！<td th:text="${user.userName}"></td></span>
+        <!--<a href="/manageCenter/userInfoHallGroupData" style="text-align: right">管理中心&nbsp|</a>-->
+        <a href="/userLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
+        <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
+    </div>
+</div>
+<!--<hr width="100%" color="#0080FF" size="2"/>-->
+<div id="head-nav" class="head-nav">
+    <!--<div class="head-nav-con clearFloat">-->
+    <div class="head-nav-con">
+        <ul>
+            <li><a href="/indexUser">首&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li class="drop-down"><a href="javascript:void(0)">监测信息</a>
+                <ul class="drop-down-content">
+                    <li><a href="/infoHallOnTime">实时监测信息</a></li>
+                    <li><a href="/infoHallHistory">历史监测信息</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测设备</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/equipmentAdd">添加设备</a></li>
+                    <li><a href="/monitorCenter/equipmentInfoManage">设备信息管理</a></li>
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">监测对象</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/objectAdd">添加监测对象</a></li>
+                    <li><a href="/monitorCenter/objectInfoManage">监测对象信息管理</a></li>
+                    <!--<li><a href="/monitorCenter/banding">绑定设备</a></li>-->
+                    <!--<li><a href="/monitorCenter/unBanding">解绑设备</a></li>-->
+                </ul>
+            </li>
+            <li class="drop-down"><a href="javascript:void(0)">用户账户</a>
+                <ul class="drop-down-content">
+                    <li><a href="/monitorCenter/accountBasicInfo">基本信息</a></li>
+                    <li><a href="/monitorCenter/accountPwdModify">密码修改</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div style="width: 60%;margin-left: 20%;margin-right: 20%">
+    <h1 th:text="${news.newsHead}" style="text-align: center;color: blue;"></h1>
+    <h3 th:text="${news.publishDate}" style="text-align: right;color: blue"></h3>
+</div>
+<div style="width: 60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;text-align: left;min-height: 80%">
+    <pre style="font-size: 24px;line-height: 32px;white-space: pre-wrap" th:text="${news.newsContent}"></pre>
+</div>
+
+<iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"
+        th:src="@{/master/footer.html}"></iframe>
+</body>
+</html>
