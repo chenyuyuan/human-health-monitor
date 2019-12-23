@@ -120,12 +120,12 @@ public class SocketTask implements Runnable {
         while (dis.read(bytes) != -1) {//如何实现循环接收的呢？忘了。。
             info += bytesToHexString(bytes) + " ";//转为16进制字符串
             byteArrayList.add(bytes[0]);//字节列表
-            System.out.print("dis.available()"+dis.available());
+            System.out.print("dis.available(): "+dis.available() + "; ");
             System.out.print("sendMsgQueue： ");
             for(String s: sendMsgQueue.get(taskNum - 1)) {
                 System.out.print(s+ " ");
             }
-            System.out.println(" ");
+            System.out.println(";");
             if (dis.available() == 0) { //客户端一条信息结束
                 System.out.println("SocketTask"+taskNum+": received: " + info);
                 System.out.println("SocketTask"+taskNum+": byteArrayList: " + byteArrayList);

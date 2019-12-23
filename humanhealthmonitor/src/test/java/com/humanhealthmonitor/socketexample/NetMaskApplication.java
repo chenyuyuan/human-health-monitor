@@ -75,7 +75,7 @@ public class NetMaskApplication implements Runnable {
         //add if below
 
         if(s.equals("fefe1007040a00030401310132045d62446af2aabb")) {
-            return "0000fefe"+"01"+"03"+  "01"+"0001"  +"02"+"aabb";
+            return "0000fefe010301000102aabb00fefe010301000102aabb0000fefe010301000102aabb";
 
         }
 
