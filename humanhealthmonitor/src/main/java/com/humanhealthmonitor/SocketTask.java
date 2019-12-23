@@ -121,7 +121,7 @@ public class SocketTask implements Runnable {
             info += bytesToHexString(bytes) + " ";//转为16进制字符串
             byteArrayList.add(bytes[0]);//字节列表
             System.out.print("dis.available()"+dis.available());
-            System.out.print("现在的sendMsgQueue里有： ");
+            System.out.print("sendMsgQueue： ");
             for(String s: sendMsgQueue.get(taskNum - 1)) {
                 System.out.print(s+ " ");
             }
@@ -129,7 +129,7 @@ public class SocketTask implements Runnable {
             if (dis.available() == 0) { //客户端一条信息结束
                 System.out.println("SocketTask"+taskNum+": received: " + info);
                 System.out.println("SocketTask"+taskNum+": byteArrayList: " + byteArrayList);
-                socketInfoProcess(byteArrayList);
+                socketInfoPreProcess(byteArrayList);
 
                 //线程休眠
                 //Thread thread = new Thread(this);
@@ -148,6 +148,7 @@ public class SocketTask implements Runnable {
                 //pw.println(orderByte);
                 //w.flush();
                 os.write(orderByte);
+
                 os.flush();
                 System.out.println("SocketTask"+taskNum+": send: " + bytesToHexString(orderByte));
             }
@@ -176,6 +177,53 @@ public class SocketTask implements Runnable {
         socket.close();
     }
 
+    //处理不规范的数据
+    private void socketInfoPreProcess(List<Byte> byteArrayListPre) {
+
+        System.out.println("<SocketTask:socketinfopreprocess>");
+
+        if(byteArrayListPre.size() < 8) return;
+        System.out.println("size(): " + byteArrayListPre.size());
+        int low = 0;
+        int high = 0;
+
+        while (low < byteArrayListPre.size()) {
+            //System.out.println("1 low/high: " + low + " " + high);
+            if (byteArrayListPre.get(low) == (byte) 0xFE) {
+                if(low + 1 < byteArrayListPre.size() && byteArrayListPre.get(low + 1) == (byte) 0xFE) {
+                    high = low + 2;
+                    while (high < byteArrayListPre.size()) {
+                        //System.out.println("2 low/high: " + low + " " + high);
+                        if (byteArrayListPre.get(high) == (byte) 0xAA) {
+                            if(high + 1 < byteArrayListPre.size() && byteArrayListPre.get(high + 1) == (byte) 0xBB) {
+                                if(low < high) {
+                                    List<Byte> byteArrayList = new ArrayList<>();
+                                    for(int i = low; i <= high+1; ++i) {
+                                        byteArrayList.add(byteArrayListPre.get(i));
+                                    }
+                                    for(Byte b: byteArrayList) {
+                                        System.out.print(Integer.toHexString(b & 0xFF) + " ");
+                                    }
+                                    System.out.println("<SocketTask:socketinfopreprocess:>" + byteArrayList.size());
+                                    socketInfoProcess(byteArrayList);
+
+                                    low = high + 2 - 1; //后面还有个low++，所以-1
+                                    break;
+                                }
+
+                            }
+                        }
+                        high++;
+                    }
+                }
+            }
+            low++;
+        }
+
+    }
+
+
+
 
     //处理Socket收到的信息
     private void socketInfoProcess(List<Byte> byteArrayList) {
@@ -187,13 +235,10 @@ public class SocketTask implements Runnable {
         // 从网关发来的只带一个字节有效数据的帧长度就是8，比这个小的就是坏掉的或无关的
         while (byteArrayList.size() >= 8) {
             int orderType = byteToUnsignedValue(byteArrayList.get(2)); // 指令码
-            int responseLength = byteArrayList.get(3); // 回复内容长度
+            int responseLength = byteToUnsignedValue(byteArrayList.get(3)); // 回复内容长度
             System.out.println("指令:返回内容长度:" + responseLength);
             byte[] responseContent = new byte[responseLength];  // 回复信息就是不包括校验和(不用扣掉1位校验和)
             int checkSum = (byteArrayList.get(byteArrayList.size()-3) + 256) % 256; // 校验和
-
-
-
 
 
 

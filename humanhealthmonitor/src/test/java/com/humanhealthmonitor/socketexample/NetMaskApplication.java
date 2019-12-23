@@ -74,6 +74,12 @@ public class NetMaskApplication implements Runnable {
         //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb
         //add if below
 
+        if(s.equals("fefe1007040a00030401310132045d62446af2aabb")) {
+            return "0000fefe"+"01"+"03"+  "01"+"0001"  +"02"+"aabb";
+
+        }
+
+
 
         return "fefe1122334455aabb";
     }
@@ -100,8 +106,8 @@ public class NetMaskApplication implements Runnable {
                 byte[] bytes = new byte[1];
                 String info = "";
                 List<Byte> byteArrayList = new ArrayList<>();
-                dout.write(toByteArray("FEFE010301000102AABB"));
-                dout.flush();
+//                dout.write(toByteArray("FEFE010301000102AABB"));
+//                dout.flush();
 
                 //receive data
                 while (din.read(bytes) != -1) {
@@ -129,9 +135,6 @@ public class NetMaskApplication implements Runnable {
 
                 Thread.sleep(2000);
                 //rerun per 2 second
-
-                dout.write(sendMessageByteArray);
-                dout.flush();
 
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
