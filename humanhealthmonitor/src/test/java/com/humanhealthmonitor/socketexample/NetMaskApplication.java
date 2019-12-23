@@ -83,6 +83,7 @@ public class NetMaskApplication implements Runnable {
         try {
             //socket = new Socket("140.143.232.52", 14900);
             //socket = new Socket("101.132.105.38", 14900);
+//            socket = new Socket("39.98.66.7", 14900);
             socket = new Socket("127.0.0.1", 14900);
             System.out.println("Connected!");
             din = socket.getInputStream();
@@ -99,8 +100,8 @@ public class NetMaskApplication implements Runnable {
                 byte[] bytes = new byte[1];
                 String info = "";
                 List<Byte> byteArrayList = new ArrayList<>();
-//                dout.write(toByteArray("FEFE0103000102AABB"));
-//                dout.flush();
+                dout.write(toByteArray("FEFE010301000102AABB"));
+                dout.flush();
 
                 //receive data
                 while (din.read(bytes) != -1) {
