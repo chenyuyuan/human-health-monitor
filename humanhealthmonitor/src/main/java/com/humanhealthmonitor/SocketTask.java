@@ -412,6 +412,8 @@ public class SocketTask implements Runnable {
 
         int low = 0;
         for(int i = 0;i < 8 * typeLength; ++i) {
+            if(low+1 >= byteArraySensorData.length) break;
+
             System.out.println("typeBianryCharArray: " + typeBinaryCharArray[i]);
             if(low > byteArraySensorData.length){
 //                System.out.println("[SocketTask:handleOrder3and4Response]: low > bytearraysensordata.length");
@@ -423,8 +425,8 @@ public class SocketTask implements Runnable {
                 System.out.println("传感器数据"+ i +":"+ low);
                 System.out.println("传感器数据"+ i +":"+ byteArraySensorData[low]);
                 System.out.println("传感器数据"+ i +":"+ sensorDataArray[i]);
+                low = low + 2;
             }
-            low = low + 2;
         }
         System.out.print("[SocketTask:指令3&4]: byteArraySensorData: ");
         for(byte sd:byteArraySensorData) {

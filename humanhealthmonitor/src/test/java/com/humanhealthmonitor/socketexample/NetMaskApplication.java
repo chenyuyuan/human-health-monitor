@@ -69,7 +69,8 @@ public class NetMaskApplication implements Runnable {
             String returnOrder = "fefe"+"04"+"11"+"040a000801"+ "04"+timestamp+"0103"+"0400140027" +checkSumStr+"aabb"; // ✔
             returnOrder = "fefe0411040a000304045dd3b833010304091f08f763aabb";
             System.out.println("指令3&4返回："+returnOrder);
-            return returnOrder;
+            //return returnOrder;
+            return "fefe0413040a000202045e01f756011c0600ff00ff00ffe2aabb";
         }
         //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb
         //add if below
