@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
 <head>
@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
     <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
-    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
     <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
     <!--<script type="text/javascript" th:src="@{/javascript/tablePage.js}"></script>-->
 
@@ -308,104 +308,3 @@
         th:src="@{/master/footer.html}"></iframe>
 </body>
 </html>
-
-<!--<style>-->
-<!--table-->
-<!--{-->
-<!--border: 1px solid black;-->
-<!--width: 60%;-->
-<!--margin-left: 20%;-->
-<!--margin-right: 20%;-->
-<!--line-height: 50px;-->
-<!--text-align: center;-->
-<!--border-collapse: collapse;//边框合成单一的边框-->
-<!--}-->
-<!--table tr th-->
-<!--{-->
-<!--border: 1px solid black;-->
-<!--font-size: 22px;-->
-<!--}-->
-<!--table tr td-->
-<!--{-->
-<!--border: 1px solid black;-->
-<!--font-size: 22px;-->
-<!--}-->
-<!--</style>-->
-<!--<script>-->
-<!--//全局变量-->
-<!--var numCount;       //数据总数量-->
-<!--var columnsCounts;  //数据列数量-->
-<!--var pageCount;      //每页显示的数量-->
-<!--var pageNum;        //总页数-->
-<!--var currPageNum;   //当前页数-->
-
-<!--//页面标签变量-->
-<!--var blockTable;-->
-<!--var preSpan;-->
-<!--var firstSpan;-->
-<!--var nextSpan;-->
-<!--var lastSpan;-->
-<!--var pageNumSpan;-->
-<!--var currPageSpan;-->
-
-<!--window.onload=function(){-->
-<!--//页面标签变量-->
-<!--blockTable = document.getElementById("blocks");-->
-<!--preSpan = document.getElementById("spanPre");-->
-<!--firstSpan = document.getElementById("spanFirst");-->
-<!--nextSpan = document.getElementById("spanNext");-->
-<!--lastSpan = document.getElementById("spanLast");-->
-<!--pageNumSpan = document.getElementById("spanTotalPage");-->
-<!--currPageSpan = document.getElementById("spanPageNum");-->
-
-<!--numCount = document.getElementById("blocks").rows.length - 1;       //取table的行数作为数据总数量（减去标题行1）-->
-<!--// alert(numCount);-->
-<!--columnsCounts = blockTable.rows[0].cells.length;-->
-<!--pageCount = 10;-->
-<!--pageNum = parseInt(numCount/pageCount);-->
-<!--if(0 != numCount%pageCount){-->
-<!--pageNum += 1;-->
-<!--}-->
-
-<!--firstPage();-->
-<!--};-->
-<!--</script>-->
-
-
-<!--<div style="width: 100%;">-->
-<!---->
-<!--<table id="blocks">-->
-<!--<tr>-->
-<!--<th >账号</th>-->
-<!--<th >对象名</th>-->
-<!--<th >性别</th>-->
-<!--</tr>-->
-<!--<tr th:each="object:${objectList}">-->
-<!--<td th:text="${object.objectId}"></td>-->
-<!--<td th:text="${object.objectName}"></td>-->
-<!--&lt;!&ndash;<td>&ndash;&gt;-->
-<!--&lt;!&ndash;<form action="/manageCenter/userInfoHallSingleData" target="_blank">&ndash;&gt;-->
-<!--&lt;!&ndash;<input type="hidden" name="userId" th:value="${user.userId}" />&ndash;&gt;-->
-<!--&lt;!&ndash;<input type="submit" value="查看" style="border: 0;background-color: white;color: blue;font-size: 18px"/>&ndash;&gt;-->
-<!--&lt;!&ndash;</form>&ndash;&gt;-->
-<!--&lt;!&ndash;</td>&ndash;&gt;-->
-<!--<td th:text="${object.sex}"></td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--<div id="pagiDiv" style="text-align: center">-->
-<!--&lt;!&ndash;width:60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;&ndash;&gt;-->
-<!--<span id="spanFirst" style="font-size: 24px">首页</span>&nbsp;&nbsp;-->
-<!--<span id="spanPre" style="font-size: 24px">上一页</span>&nbsp;&nbsp;-->
-<!--<span id="spanNext" style="font-size: 24px">下一页</span>&nbsp;&nbsp;-->
-<!--<span id="spanLast" style="font-size: 24px">尾页</span>&nbsp;&nbsp;-->
-<!--第&nbsp;<span id="spanPageNum" style="font-size: 24px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage" style="font-size: 24px"></span>&nbsp;页-->
-<!--</div>-->
-<!--</div>-->
-
-
-<!--<form id="picForm" name="picForm" action="#">-->
-<!--<input type="image" id="mainPic" name="mainPic" th:src="${pic1}" alt="月度短信警报量"-->
-<!--style="width: 100%;height: 100%"/>-->
-<!--&lt;!&ndash;<input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>&ndash;&gt;-->
-<!--</form>-->
-<!--&lt;!&ndash;<img src="images/月度短信警报量.png" alt="月度短信警报量" />&ndash;&gt;-->

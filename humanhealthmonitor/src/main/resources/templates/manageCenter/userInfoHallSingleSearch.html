@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>HumanHealthMonitor - 主页</title>
+    <title>HumanHealthMonitor - 主页（管理员）</title>
     
     <!-- Custom fonts for this template-->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,9 +24,6 @@
     <style>
         table {
             border: 1px solid black;
-            width: 60%;
-            margin-left: 20%;
-            margin-right: 20%;
             line-height: 50px;
             text-align: center;
             border-collapse: collapse;
@@ -183,6 +180,12 @@
                 </div>
             </div>
         </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        
+        <div class="sidebar-heading">
+            ADMIN
+        </div>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNetmask"
@@ -194,11 +197,11 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="/manageCenter/mngAccountPwdModify">密码修改</a>
+                    <a class="collapse-item" href="/adminLogout">退出登录</a>
+                
                 </div>
             </div>
         </li>
-        <!-- Divider -->
-        <hr class="sidebar-divider">
         
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -314,75 +317,6 @@
                         </div>
                     </li>
                     
-                    <!-- Nav Item - Messages -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-envelope fa-fw"></i>
-                            <!-- Counter - Messages -->
-                            <span class="badge badge-danger badge-counter">7</span>
-                        </a>
-                        <!-- Dropdown - Messages -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="messagesDropdown">
-                            <h6 class="dropdown-header">
-                                Message Center
-                            </h6>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60"
-                                         alt="">
-                                    <div class="status-indicator bg-success"></div>
-                                </div>
-                                <div class="font-weight-bold">
-                                    <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                        problem I've been having.
-                                    </div>
-                                    <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60"
-                                         alt="">
-                                    <div class="status-indicator"></div>
-                                </div>
-                                <div>
-                                    <div class="text-truncate">I have the photos that you ordered last month, how would
-                                        you like them sent to you?
-                                    </div>
-                                    <div class="small text-gray-500">Jae Chun · 1d</div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/CS2uCrpNzJY/60x60"
-                                         alt="">
-                                    <div class="status-indicator bg-warning"></div>
-                                </div>
-                                <div>
-                                    <div class="text-truncate">Last month's report looks great, I am very happy with the
-                                        progress so far, keep up the good work!
-                                    </div>
-                                    <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                         alt="">
-                                    <div class="status-indicator bg-success"></div>
-                                </div>
-                                <div>
-                                    <div class="text-truncate">Am I a good boy? The reason I ask is because someone told
-                                        me that people say this to all dogs, even if they aren't good...
-                                    </div>
-                                    <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                        </div>
-                    </li>
                     
                     <div class="topbar-divider d-none d-sm-block"></div>
                     
@@ -390,28 +324,20 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">我的</span>
                             <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
-                            </a>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/manageCenter/mngAccountPwdModify">
                                 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
+                                修改密码
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <a class="dropdown-item" href="/adminLogout" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
+                                退出登陆
                             </a>
                         </div>
                     </li>
@@ -427,25 +353,22 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800"></h1>
                 </div>
-                <div class="row">
-                    <div class="col-lg-2">
+                <div class="row" style="font-family:'Microsoft JhengHei UI'">
+                    <div class="col-lg-3">
                     
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-lg-6">
                         <div style="width:100%;margin-top: 20px;margin-bottom: 30px">
-                            <form id="searchForm" name="searchFrom" action="/manageCenter/userInfoHallSingleSearchResult" accept-charset="utf-8"
-                                  method="post"
-                                  style="text-align:left;margin-left: 20%" onsubmit="checkSearchKey()">
-                                <input id="searchKey" name="searchKey" type="text" placeholder="在此输入要搜索的账号或用户名关键词"
-                                       style="font-size: 22px;height: 42px;width: 20%;"/>&nbsp&nbsp&nbsp&nbsp
+                            <form id="searchForm" class="form-inline" name="searchFrom" action="/manageCenter/userInfoHallSingleSearchResult" accept-charset="utf-8"
+                                  method="post" style="text-align:center;" onsubmit="checkSearchKey()">
+                                <input id="searchKey" class="form-control bg-light border-0 small" name="searchKey" type="text" placeholder="在此输入要搜索的账号或用户名关键词"
+                                       style="font-size: 18px;height: 42px;width: 80%;"/>&nbsp&nbsp&nbsp&nbsp
                                 <input id="searchSubmit" name="searchSubmit" type="submit" value="开始搜索"
-                                       style="font-size: 22px;height:44px;background-color: #FFA500;border: none;color: white"
-                                       onmouseover="submitOnMouseUpSearch()" onmouseleave="submitOnMouseLeaveLSearch()"/>
+                                       style="font-size: 18px;height:44px;background-color: #007BFF;border-radius: 4px;border: 1px;color: white"/>
                             </form>
                         </div>
-    
                         <div style="width: 100%;min-height: 80%;">
-                            <table id="blocks">
+                            <table id="blocks" style="margin: 0; width: 100%">
                                 <tr>
                                     <th>账号</th>
                                     <th>用户名</th>
@@ -458,23 +381,21 @@
                                         <form action="/manageCenter/userInfoHallSingleData" target="_blank">
                                             <input type="hidden" name="userId" th:value="${user.userId}"/>
                                             <input type="submit" value="查看"
-                                                   style="border: 0;background-color: white;color: blue;font-size: 18px"/>
+                                                   style="border: 0;background-color: #F8F9FC;color: #007BFF;font-size: 18px"/>
                                         </form>
                                     </td>
                                 </tr>
                             </table>
                             <div id="pagiDiv" style="text-align: center">
-                                <!--width:60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;-->
-                                <span id="spanFirst" style="font-size: 24px">首页</span>&nbsp;&nbsp;
-                                <span id="spanPre" style="font-size: 24px">上一页</span>&nbsp;&nbsp;
-                                <span id="spanNext" style="font-size: 24px">下一页</span>&nbsp;&nbsp;
-                                <span id="spanLast" style="font-size: 24px">尾页</span>&nbsp;&nbsp;
-                                第&nbsp;<span id="spanPageNum" style="font-size: 24px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage"
-                                                                                                                  style="font-size: 24px"></span>&nbsp;页
+                                <span id="spanFirst" style="font-size: 18px">首页</span>&nbsp;&nbsp;
+                                <span id="spanPre" style="font-size: 18px">上一页</span>&nbsp;&nbsp;
+                                <span id="spanNext" style="font-size: 18px">下一页</span>&nbsp;&nbsp;
+                                <span id="spanLast" style="font-size: 18px">尾页</span>&nbsp;&nbsp;
+                                第&nbsp;<span id="spanPageNum" style="font-size: 18px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage" style="font-size: 24px"></span>&nbsp;页
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                     
                     </div>
                 </div>
@@ -483,6 +404,8 @@
         
         </div>
         <!-- End of Main Content -->
+        <br/>
+        
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -499,6 +422,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
+
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
@@ -510,21 +434,19 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">确定要离开吗？</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-body">若要退出登录，选择下面的“确定”按钮</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="ARCHIEVES/origin hhm template/hhm-login.html">Logout</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <a class="btn btn-primary" href="/userLogout">确定</a>
             </div>
         </div>
     </div>
 </div>
-
-
 <!-- Bootstrap core JavaScript-->
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
