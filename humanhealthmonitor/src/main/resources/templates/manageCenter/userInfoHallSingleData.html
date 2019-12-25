@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<!--<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">-->
-<head>
-    <title th:text="${user.userName}"></title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/navigationBar.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
-    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
-    <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
-    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-    <!--<script type="text/javascript" th:src="@{/javascript/tablePage.js}"></script>-->
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
+<head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>HumanHealthMonitor - 主页（管理员）</title>
+    
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    
+    
     <script>
         var alarmMessageChart;
         var onlineTimeCountChart;
@@ -22,390 +33,562 @@
         });
         // 使用
         require(
-            [
-                'echarts',
-                'echarts/chart/line', //加载line模块，折线图
-                'echarts/chart/bar' // 加载bar模块，柱状图
-            ],
-            function (ec) {
-                // 基于准备好的dom，初始化echarts图表
-                // var myChart = ec.init(document.getElementById('alarmMessage'));
-                alarmMessageChart = ec.init(document.getElementById('alarmMessage'));
-                var option = {
-                    title : {
-                        text: '用户所关联监测对象警报短信月度总用量'
-                        // subtext: '次标题'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['警报短信条数']
-                        // data:['最高气温','最低气温']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {show: true, type: ['bar','line']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            name : '月份',
-                            boundaryGap : false,
-                            data : [[${yearMonthList}]]
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value} 条'
+                [
+                    'echarts',
+                    'echarts/chart/line', //加载line模块，折线图
+                    'echarts/chart/bar' // 加载bar模块，柱状图
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    // var myChart = ec.init(document.getElementById('alarmMessage'));
+                    alarmMessageChart = ec.init(document.getElementById('alarmMessage'));
+                    var option = {
+                        title : {
+                            text: '用户所关联监测对象警报短信月度总用量'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['警报短信条数']
+                            // data:['最高气温','最低气温']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
                             }
-                        }
-                    ],
-                    series : [
-                        {
-                            name:'警报短信条数',
-                            type:'line',
-                            // type:'bar',
-                            data:[[${alarmMessageCountList}]],
-                            markPoint : {
-                                data : [
-                                    {type : 'max', name: '最大值'},
-                                    {type : 'min', name: '最小值'}
-                                ]
-                            },
-                            markLine : {
-                                data : [
-                                    {type : 'average', name: '平均值'}
-                                ]
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '月份',
+                                boundaryGap : false,
+                                data : [[${yearMonthList}]]
                             }
-                        }
-                    ]
-                };
-                // 为echarts对象加载数据
-                alarmMessageChart.setOption(option);
-
-                onlineTimeCountChart = ec.init(document.getElementById('onlineTimeCount'));
-                var option2 = {
-                    title : {
-                        text: '用户所关联监测对象月度在线总时长'
-                        // subtext: '次标题'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['在线时长']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {show: true, type: ['bar','line']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            name : '月份',
-                            boundaryGap : false,
-                            data : [[${yearMonthList}]]
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value}分钟'
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value} 条'
+                                }
                             }
-                        }
-                    ],
-                    series : [
-                        {
-                            name:'在线时长',
-                            type:'line',
-                            // type:'bar',
-                            data:[[${onlineTimeCountList}]],
-                            markPoint : {
-                                data : [
-                                    {type : 'max', name: '最大值'},
-                                    {type : 'min', name: '最小值'}
-                                ]
-                            },
-                            markLine : {
-                                data : [
-                                    {type : 'average', name: '平均值'}
-                                ]
+                        ],
+                        series : [
+                            {
+                                name:'警报短信条数',
+                                type:'line',
+                                // type:'bar',
+                                data:[[${alarmMessageCountList}]],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
                             }
-                        }
-                    ]
-                };
-                // 为echarts对象加载数据
-                onlineTimeCountChart.setOption(option2);
-
-
-                influxCountChart = ec.init(document.getElementById('influxCount'));
-                var option3 = {
-                    title : {
-                        text: '用户所关联监测对象时序数据月度总用量'
-                        // subtext: '次标题'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['时序数据条数']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {show: true, type: ['bar','line']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            name : '月份',
-                            boundaryGap : false,
-                            data : [[${yearMonthList}]]
-                            // data: ["2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04"]
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            axisLabel : {
-                                formatter: '{value} 条'
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    alarmMessageChart.setOption(option);
+                    
+                    onlineTimeCountChart = ec.init(document.getElementById('onlineTimeCount'));
+                    var option2 = {
+                        title : {
+                            text: '用户所关联监测对象月度在线总时长'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['在线时长']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
                             }
-                        }
-                    ],
-                    series : [
-                        {
-                            name:'时序数据条数',
-                            type:'line',
-                            // type:'bar',
-                            data:[[${influxCountList}]],
-                            markPoint : {
-                                data : [
-                                    {type : 'max', name: '最大值'},
-                                    {type : 'min', name: '最小值'}
-                                ]
-                            },
-                            markLine : {
-                                data : [
-                                    {type : 'average', name: '平均值'}
-                                ]
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '月份',
+                                boundaryGap : false,
+                                data : [[${yearMonthList}]]
                             }
-                        }
-                    ]
-                };
-                // 为echarts对象加载数据
-                influxCountChart.setOption(option3);
-            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}分钟'
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'在线时长',
+                                type:'line',
+                                // type:'bar',
+                                data:[[${onlineTimeCountList}]],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    onlineTimeCountChart.setOption(option2);
+                    
+                    
+                    influxCountChart = ec.init(document.getElementById('influxCount'));
+                    var option3 = {
+                        title : {
+                            text: '用户所关联监测对象时序数据月度总用量'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['时序数据条数']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '月份',
+                                boundaryGap : false,
+                                data : [[${yearMonthList}]]
+                                // data: ["2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04"]
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value} 条'
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'时序数据条数',
+                                type:'line',
+                                // type:'bar',
+                                data:[[${influxCountList}]],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    influxCountChart.setOption(option3);
+                }
         );//require end
     </script>
 </head>
-<body>
-<div id="header">
-    <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
-    <br/>
-    <div style="float: left;width: 60%;text-align: left">
-        <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
-    </div>
-    <div style="float: left;width: 40%;text-align: right">
-        <span style="color: darkgrey;font-size: 18px">您好！管理员<td th:text="${admin.adminId}"></td></span>
-        <!--<a href="/manageCenter/userInfoHallGroupData" style="text-align: right">管理中心&nbsp|</a>-->
-        <a href="/adminLogout" style="text-align: right;font-size: 18px">退出登录&nbsp|</a>
-        <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
-    </div>
-</div>
-<!--<hr width="100%" color="#0080FF" size="2"/>-->
-<div class="head-nav">
-    <!--<div class="head-nav-con">-->
-    <div class="head-nav-con clearFloat">
-        <ul>
-            <li><a href="/indexAdmin">首&nbsp&nbsp&nbsp&nbsp页</a></li>
-            <li class="drop-down"><a href="#">数据中心</a>
-                <ul class="drop-down-content">
-                    <li><a href="/userInfoHallGroupData">群体数据统计</a></li>
-                    <li><a href="/manageCenter/userInfoHallSingleSearch">用户详细数据</a></li>
-                </ul>
-            </li>
-            <li class="drop-down"><a href="#">新闻中心</a>
-                <ul class="drop-down-content">
-                    <li><a href="/manageCenter/newsMngPublish" target="_blank">发布新闻</a></li>
-                    <li><a href="/manageCenter/newsMngInfoManage">新闻信息管理</a></li>
-                    <li><a href="/manageCenter/newsMainPictureManage">主页图片管理</a></li>
-                </ul>
-            </li>
-            <li class="drop-down"><a href="#">设置中心</a>
-                <ul class="drop-down-content">
-                    <!--<li><a href="/manageCenter/setNetMaskOverview">网关设置</a></li>-->
-                    <li><a href="/manageCenter/setEquipmentOverview">设备与默认警报值</a></li>
-                </ul>
-            </li>
-            <li class="drop-down"><a href="#">管理员账户</a>
-                <ul class="drop-down-content">
-                    <!--<li><a href="#">基本信息</a></li>-->
-                    <li><a href="/manageCenter/mngAccountPwdModify">密码修改</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
 
-<div style="width: 100%">
-    <h1 style="text-align: center;color: blue;">用户统计数据展示</h1>
-</div>
+<body id="page-top">
 
-<div style="width: 100%;min-height: 80%">
-    <table id="equipmentTable" style="width: 100%">
-        <tr>
-            <td>
-                <div id="alarmMessage" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
-                    <!--<p style="font-size: 20px;text-align: left;color: blue">警报短信量</p>-->
-                    <!--在此绘制实时监测折线图-->
+<!-- Page Wrapper -->
+<div id="wrapper">
+    
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+        style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-laugh-wink"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">HumanHealth</div>
+        </a>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="/indexAdmin">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>首页</span></a>
+        </li>
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link collapsed show-below-div" href="#" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
+               aria-controls="collapseMonitor">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>统计数据展示</span></a>
+            <div id="collapseMonitor" class="collapse" aria-labelledby="headingMonitor" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/userInfoHallGroupData">平台统计数据</a>
+                    <a class="collapse-item" href="/manageCenter/userInfoHallSingleSearch">用户统计数据</a>
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="onlineTimeCount" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
-                    <!--<p style="font-size: 20px;text-align: left;color: blue">在线总时长</p>-->
-                    <!--在此绘制实时监测折线图-->
+            </div>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            MANAGEMENT
+        </div>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed show-below-div" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+               aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>新闻管理</span>
+            </a>
+            <!--class: show展开-->
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/manageCenter/newsMngPublish">发布新闻</a>
+                    <a class="collapse-item" href="/manageCenter/newsMngInfoManage">已发布新闻管理</a>
+                    <a class="collapse-item" href="/manageCenter/newsMainPictureManage">主页宣传区管理</a>
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="influxCount" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
-                    <!--<p style="font-size: 20px;text-align: left;color: blue">时序数据传输量</p>-->
-                    <!--在此绘制实时监测折线图-->
+            </div>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed show-below-div" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+               aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-fw fa-wrench"></i>
+                <span>设置</span>
+            </a>
+            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/manageCenter/setEquipmentOverview">默认警报值设置</a>
+                    <a class="collapse-item" href="/manageCenter/setNetMaskOverview">通信协议设置</a>
                 </div>
-            </td>
-        </tr>
-    </table>
-</div>
+            </div>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        
+        <div class="sidebar-heading">
+            ADMIN
+        </div>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed show-below-div" href="#" data-toggle="collapse" data-target="#collapseNetmask"
+               aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-fw fa-wrench"></i>
+                <span>管理员账户</span>
+            </a>
+            <div id="collapseNetmask" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/manageCenter/mngAccountPwdModify">密码修改</a>
+                    <a class="collapse-item" href="/adminLogout">退出登录</a>
+                
+                </div>
+            </div>
+        </li>
+        
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+    
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        
+        <!-- Main Content -->
+        <div id="content">
+            
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                
+                <!-- Topbar Search -->
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                             aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                           placeholder="Search for..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    
+                    <!-- Nav Item - Alerts -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="badge badge-danger badge-counter">3+</span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="alertsDropdown">
+                            <h6 class="dropdown-header">
+                                Alerts Center
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">December 12, 2019</div>
+                                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-success">
+                                        <i class="fas fa-donate text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">December 7, 2019</div>
+                                    $290.29 has been deposited into your account!
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-warning">
+                                        <i class="fas fa-exclamation-triangle text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">December 2, 2019</div>
+                                    Spending Alert: We've noticed unusually high spending for your account.
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                        </div>
+                    </li>
+                    
+                    
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle show-below-div" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">我的</span>
+                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="/manageCenter/mngAccountPwdModify">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                修改密码
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/adminLogout" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                退出登陆
+                            </a>
+                        </div>
+                    </li>
+                
+                </ul>
+            
+            </nav>
+            <!-- End of Topbar -->
+            
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800"></h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-0">
+                    
+                    </div>
+                    <div class="col-lg-12">
+                        <div style="width: 100%;min-height: 80%">
+                            <table id="equipmentTable" style="width: 100%">
+                                <tr>
+                                    <td>
+                                        <div id="alarmMessage" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
+                                            <!--<p style="font-size: 20px;text-align: left;color: blue">警报短信量</p>-->
+                                            <!--在此绘制实时监测折线图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div id="onlineTimeCount" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
+                                            <!--<p style="font-size: 20px;text-align: left;color: blue">在线总时长</p>-->
+                                            <!--在此绘制实时监测折线图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div id="influxCount" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
+                                            <!--<p style="font-size: 20px;text-align: left;color: blue">时序数据传输量</p>-->
+                                            <!--在此绘制实时监测折线图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-0">
+                    
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        
+        </div>
+        <!-- End of Main Content -->
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+    
+    </div>
+    <!-- End of Content Wrapper -->
 
-<iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"
-        th:src="@{/master/footer.html}"></iframe>
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">确定要离开吗？</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">若要退出登录，选择下面的“确定”按钮</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <a class="btn btn-primary" href="/userLogout">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<script type = "text/javascript">
+    
+    
+    $(document).ready(function () {
+        console.log('the documnt is ready!')
+        
+        $(".show-below-div").click(function () {
+            console.log('<display>: ' + $(this).next().css('display'));
+            console.log($(this).next().css('display') === 'none')
+            if ($(this).next().css('display') === 'none') {
+                $(this).next().css('display', 'block')
+            }
+            else {
+                $(this).next().css('display', 'none')
+            }
+        })
+    })
+</script>
+
 </body>
 </html>
-
-<!--<style>-->
-<!--table-->
-<!--{-->
-<!--border: 1px solid black;-->
-<!--width: 60%;-->
-<!--margin-left: 20%;-->
-<!--margin-right: 20%;-->
-<!--line-height: 50px;-->
-<!--text-align: center;-->
-<!--border-collapse: collapse;//边框合成单一的边框-->
-<!--}-->
-<!--table tr th-->
-<!--{-->
-<!--border: 1px solid black;-->
-<!--font-size: 22px;-->
-<!--}-->
-<!--table tr td-->
-<!--{-->
-<!--border: 1px solid black;-->
-<!--font-size: 22px;-->
-<!--}-->
-<!--</style>-->
-<!--<script>-->
-<!--//全局变量-->
-<!--var numCount;       //数据总数量-->
-<!--var columnsCounts;  //数据列数量-->
-<!--var pageCount;      //每页显示的数量-->
-<!--var pageNum;        //总页数-->
-<!--var currPageNum;   //当前页数-->
-
-<!--//页面标签变量-->
-<!--var blockTable;-->
-<!--var preSpan;-->
-<!--var firstSpan;-->
-<!--var nextSpan;-->
-<!--var lastSpan;-->
-<!--var pageNumSpan;-->
-<!--var currPageSpan;-->
-
-<!--window.onload=function(){-->
-<!--//页面标签变量-->
-<!--blockTable = document.getElementById("blocks");-->
-<!--preSpan = document.getElementById("spanPre");-->
-<!--firstSpan = document.getElementById("spanFirst");-->
-<!--nextSpan = document.getElementById("spanNext");-->
-<!--lastSpan = document.getElementById("spanLast");-->
-<!--pageNumSpan = document.getElementById("spanTotalPage");-->
-<!--currPageSpan = document.getElementById("spanPageNum");-->
-
-<!--numCount = document.getElementById("blocks").rows.length - 1;       //取table的行数作为数据总数量（减去标题行1）-->
-<!--// alert(numCount);-->
-<!--columnsCounts = blockTable.rows[0].cells.length;-->
-<!--pageCount = 10;-->
-<!--pageNum = parseInt(numCount/pageCount);-->
-<!--if(0 != numCount%pageCount){-->
-<!--pageNum += 1;-->
-<!--}-->
-
-<!--firstPage();-->
-<!--};-->
-<!--</script>-->
-
-
-<!--<div style="width: 100%;">-->
-<!---->
-<!--<table id="blocks">-->
-<!--<tr>-->
-<!--<th >账号</th>-->
-<!--<th >对象名</th>-->
-<!--<th >性别</th>-->
-<!--</tr>-->
-<!--<tr th:each="object:${objectList}">-->
-<!--<td th:text="${object.objectId}"></td>-->
-<!--<td th:text="${object.objectName}"></td>-->
-<!--&lt;!&ndash;<td>&ndash;&gt;-->
-<!--&lt;!&ndash;<form action="/manageCenter/userInfoHallSingleData" target="_blank">&ndash;&gt;-->
-<!--&lt;!&ndash;<input type="hidden" name="userId" th:value="${user.userId}" />&ndash;&gt;-->
-<!--&lt;!&ndash;<input type="submit" value="查看" style="border: 0;background-color: white;color: blue;font-size: 18px"/>&ndash;&gt;-->
-<!--&lt;!&ndash;</form>&ndash;&gt;-->
-<!--&lt;!&ndash;</td>&ndash;&gt;-->
-<!--<td th:text="${object.sex}"></td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--<div id="pagiDiv" style="text-align: center">-->
-<!--&lt;!&ndash;width:60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;&ndash;&gt;-->
-<!--<span id="spanFirst" style="font-size: 24px">首页</span>&nbsp;&nbsp;-->
-<!--<span id="spanPre" style="font-size: 24px">上一页</span>&nbsp;&nbsp;-->
-<!--<span id="spanNext" style="font-size: 24px">下一页</span>&nbsp;&nbsp;-->
-<!--<span id="spanLast" style="font-size: 24px">尾页</span>&nbsp;&nbsp;-->
-<!--第&nbsp;<span id="spanPageNum" style="font-size: 24px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage" style="font-size: 24px"></span>&nbsp;页-->
-<!--</div>-->
-<!--</div>-->
-
-
-<!--<form id="picForm" name="picForm" action="#">-->
-<!--<input type="image" id="mainPic" name="mainPic" th:src="${pic1}" alt="月度短信警报量"-->
-<!--style="width: 100%;height: 100%"/>-->
-<!--&lt;!&ndash;<input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>&ndash;&gt;-->
-<!--</form>-->
-<!--&lt;!&ndash;<img src="images/月度短信警报量.png" alt="月度短信警报量" />&ndash;&gt;-->
