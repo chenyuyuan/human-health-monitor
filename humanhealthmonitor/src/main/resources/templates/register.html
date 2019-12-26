@@ -1,92 +1,114 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!--<meta charset="UTF-8">-->
-    <title>人体健康监测平台-注册</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
-    <script type="text/javascript" th:src="@{/javascript/elementView.js}"></script>
-    <script type="text/javascript" th:src="@{/javascript/checkInput.js}"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="http://localhost:8081/img/favicon.ico">
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <title>Hello, world!</title>
     <style>
-        .registerReminder {
-            font-size: 18px;
-            text-indent: 3em;
-            text-align: left;
+        button:focus{
+            outline:0;
+        }
+        .btn:focus,.btn:active:focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn.active.focus {
+            outline: none;
+            border-color: transparent;
+            box-shadow:none;
+        }
+
+        body{
+            background-color: #fafafa;
+            padding: 0px
+        }
+        .logo{
+            font-family: Catull;
+            font-size: 50px;
+            padding:0 auto;
         }
     </style>
 </head>
-
 <body>
-<div id="header">
-    <a href="/login" style="color: blueviolet;font-size: 30px">人&nbsp体&nbsp健&nbsp康&nbsp监&nbsp测&nbsp平&nbsp台</a>
-    <br/>
-    <div style="float: left;width: 80%;text-align: left">
-        <a href="/login" style="color: blueviolet;font-size: 18px">Human Health Monitoring Platform</a>
-    </div>
-    <div style="float: left;width: 20%;text-align: right">
-        <a href="/login" style="text-align: right;font-size: 18px">登录&nbsp|</a>
-        <a href="/help" target="_blank" style="text-align: right;font-size: 18px">帮助</a>
-    </div>
-</div>
-<hr width="100%" color="#0080FF" size="2"/>
-<!--<br/>-->
-
-<div style="margin-top: 80px;margin-bottom: 80px">
-    <form id="loginForm" name="loginFrom" action="/registerSubmit" accept-charset="utf-8" method="post"
-          style="text-align:center;" onsubmit="checkForm()">
-        <!--margin:auto;margin-top:15%-->
-        <div class="d" style="height:950px;background-color:white;width:600px;
-        border: 1px solid lightgrey;margin: auto;">
-            <br/>
-            <p style="font-size: 28px;text-align: left;text-indent: 2em">注册新的账户
-            </p>
-            <p>
-            <p class="registerReminder">账号</p>
-            <input type="text" id="userId" name="userId" value="" placeholder="账号只能由字母、数字和下划线组成" class="inputStyle1"/>
-            </p>
-            <p>
-            <p class="registerReminder">用户昵称</p>
-            <input type="text" id="userName" name="userName" value="" placeholder="用户昵称只能由汉字、字母、数字和下划线组成"
-                   class="inputStyle1"/>
-            </p>
-            <p>
-            <p class="registerReminder">密码</p>
-            <input type="password" id="password1" name="password1" value="" placeholder="密码只能由字母、数字和下划线组成，至少8个字符"
-                   class="inputStyle1"/>
-            </p>
-            <p>
-                <!--<label for="password" style="font-size: 26px">密码:</label>-->
-            <p class="registerReminder">再次输入密码</p>
-            <input type="password" id="password2" name="password2" value="" placeholder="再次输入密码以确认"
-                   class="inputStyle1"/>
-            </p>
-            <p>
-            <p class="registerReminder">手机号码</p>
-            <input type="text" id="telephone" name="telephone" value="" placeholder="请输入有效的手机号码" class="inputStyle1"/>
-            </p>
-            <p>
-            <p class="registerReminder">出生日期</p>
-            <input type="date" id="birthday" name="birthday" value="" class="inputStyle1"/>
-            </p>
-            <p>
-            <p class="registerReminder">性别</p>
-            <select id="sex" name="sex" style="font-size: 18px;height: 36px;width: 83%;text-indent: 0.5em;">
-                <option value="男" selected="selected">男</option>
-                <option value="女">女</option>
-            </select>
-            </p>
-
-            <input type="submit" id="registerSubmit" name="registerSubmit"
-                   style="font-size: 18px;height: 50px;width: 83%;background-color: #FFA500;border: none;color: white"
-                   value="注    册" onmouseover="submitOnMouseUpR()" onmouseleave="submitOnMouseLeaveR()"/>
-            <p style="text-align: right">
-                已有账号-><a href="/login">立即登录&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</a>
-            </p>
+<div class="container" style="font-size: 15px;">
+    
+    <div>
+        <div style="margin-top: 40px;">&nbsp;</div>
+    
+        <div style="width: 50%;margin-bottom: 80px;margin-left: 25%;margin-right: 25%">
+            <form id="loginForm" name="loginFrom" action="/registerSubmit" accept-charset="utf-8" method="post"
+                  style="text-align:center;padding: 0 10% 10% 10%" onsubmit="checkForm()">
+                <p style="font-size: 24px;text-align: center">注册</p>
+                <div class="form-inline">
+                    <p style="width: 20%;text-align: right;align-self: center">账号：</p>
+                    <input type="text" id="userId" name="userId" value="" placeholder="账号" style="width: 60%" class="form-control"/>
+                </div>
+                <div class="form-inline">
+                    <p style="width: 20%;text-align: right">用户昵称：</p>
+                    <input type="text" id="userName" name="userName" value="" placeholder="用户昵称" style="width: 60%" class="form-control"/>
+                </div>
+                <div class="form-inline">
+                    <p style="width: 20%;text-align: right">密码：</p>
+                    <input type="password" id="password1" name="password1" value="" placeholder="密码" style="width: 60%" class="form-control"/>
+                </div>
+                <div class="form-inline">
+                    <p style="width: 20%;text-align: right">再次输入密码：</p>
+                    <input type="password" id="password2" name="password2" value="" placeholder="再次输入密码" style="width: 60%" class="form-control"/>
+                </div>
+                <div class="form-inline">
+                    <p style="width: 20%;text-align: right">手机号码：</p>
+                    <input type="text" id="telephone" name="telephone" value="" placeholder="手机号码" style="width: 60%" class="form-control"/>
+                </div>
+                <div class="form-inline">
+                    <p style="width: 20%;text-align: right">性别：</p>
+                    <select id="sex" name="sex" class="form-control" style="font-size: 18px;height: 36px;width: 20%">
+                        <option value="男" selected="selected">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+                <br/>
+                
+                <input type="submit" id="registerSubmit" name="registerSubmit" class="form-control"
+                       style="text-align: center;font-size: 18px;height: 50px;width: 60%;margin-left: 20%;background-color: #007BFF;border: none;color: white"
+                       value="注    册"/>
+                <p style="text-align: right">
+                    已有账号-><a href="/login">立即登录</a>
+                </p>
+            </form>
         </div>
-    </form>
+    </div>
+    <div style="margin:250px "></div>
+    <hr class="divider">
+    <footer style="padding-left:20%;padding-right: 20%;">
+        <p style="font-family: Microsoft Yahei;">Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</p>
+        <p style="font-family: Microsoft Yahei;">关于</p>
+        <p style="float: left;"><a href="#top">回到顶部</a></p>
+        <a style="float: right;" href="http://localhost:8080/loginadmin">管理员登录</a>
+    </footer>
 </div>
-
-<iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%"
-        th:src="@{/master/footer.html}"></iframe>
-
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#account").click(function () {
+            $("#tips").html("")
+        })
+        $("#password").click(function () {
+            if($("#account").val()==""){
+                $("#tips").html("账号不能为空")
+            }
+            else{
+                $("#tips").html("")
+            }
+        })
+    })
+</script>
 </html>
