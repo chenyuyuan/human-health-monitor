@@ -12,10 +12,10 @@
     <title>HumanHealthMonitor - 主页</title>
     
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
     
     <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
     
@@ -91,36 +91,31 @@
         
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/indexObject" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
-               aria-controls="collapseMonitor">
+            <a class="nav-link collapsed" href="/indexObject">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>首&nbsp&nbsp&nbsp&nbsp页</span></a>
         </li>
     
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/objInfoHallOnTime" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
-               aria-controls="collapseMonitor">
+            <a class="nav-link collapsed" href="/objInfoHallOnTime">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>实时监测信息</span></a>
         </li>
     
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/objInfoHallHistory" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
-               aria-controls="collapseMonitor">
+            <a class="nav-link collapsed" href="/objInfoHallHistory">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>历史监测信息</span></a>
         </li>
     
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/healthCenter/objAccountBasicInfo" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
-               aria-controls="collapseMonitor">
+            <a class="nav-link collapsed" href="/healthCenter/objAccountBasicInfo">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>基本信息管理</span></a>
         </li>
     
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/healthCenter/objAccountPwdModify" data-toggle="collapse" data-target="#collapseMonitor" aria-expanded="true"
-               aria-controls="collapseMonitor">
+            <a class="nav-link collapsed" href="/healthCenter/objAccountPwdModify">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>密码服务</span></a>
         </li>
@@ -246,28 +241,24 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">我的</span>
                             <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/healthCenter/objAccountBasicInfo">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
+                                基本信息
                             </a>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/healthCenter/objAccountPwdModify">
                                 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
+                                修改密码
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <a class="dropdown-item" href="/objectLogout" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
+                                退出登陆
                             </a>
                         </div>
                     </li>
@@ -287,7 +278,7 @@
                     <form id="picForm" name="picForm" action="/healthCenter/newsPageObjectMainPic">
                         <input type="image" id="mainPic" name="mainPic" th:src="${mainPicList.get(0).getPicUrl()}"
                                onclick="document.picForm.submit()"
-                               style="margin-top: 0;margin-bottom: 10px;width: 100%;height: 800px"/>
+                               style="border-radius: 10px;margin-top: 0;margin-bottom: 10px;width: 100%;height: 800px"/>
                         <input type="hidden" id="mainPicNewsId" name="mainPicNewsId" th:value="${mainPicList.get(0).getNewsId()}"/>
                     </form>
                 </div>
@@ -403,26 +394,26 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">确定要离开吗？</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-body">若要退出登录，选择下面的“确定”按钮</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="ARCHIEVES/origin hhm template/hhm-login.html">Logout</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <a class="btn btn-primary" href="/userLogout">确定</a>
             </div>
         </div>
     </div>
 </div>
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 
 </body>
 </html>
