@@ -83,4 +83,12 @@ public class EquipmentService {
         return equipmentMapper.queryEquipmentByNetSerial(netmaskId,deviceSerial);
     }
 
+
+
+
+    //查询绑定用户名
+    public String queryBindUserNameByObjectId(String objectId) {
+        return equipmentMapper.queryBindUserNameByObjectId(objectId);
+    }
+
 }

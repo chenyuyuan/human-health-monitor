@@ -18,6 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
+import static com.humanhealthmonitor.util.ByteUtils.stringToByteArray;
+
 @RestController
 @RequestMapping("/rest")
 public class UserEquipmentRestController {
@@ -49,6 +52,8 @@ public class UserEquipmentRestController {
         String eqpId = params.getString("eqpId");
         String eqpName = params.getString("eqpName");
         String objectId = params.getString("objectSelected");
+
+        int timeNow = (int)(System.currentTimeMillis()/1000) - 8*3600;
 
         System.out.print(eqpType + " " + eqpId + " " + eqpName + " " + objectId + "\n");
 
@@ -144,6 +149,72 @@ public class UserEquipmentRestController {
                     response.setContentType("text/html;charset=utf-8");
                     System.out.println("数据库Equipment更新成功！");
                     res.put("msg", "binded success");
+
+                    //发送7号指令，将设备名称，绑定用户名，和绑定时间发给网关
+
+                    String deviceName = eqpName;
+                    String bindObject = equipmentService.queryBindUserNameByObjectId(objectId);
+                    String deviceID = eqpId;
+
+                    byte[] deviceIDByteArray = stringToByteArray(deviceID);
+
+                    deviceID = deviceID.length() % 2 == 1? "0" + deviceID : deviceID;
+
+
+                    int timestamp = timeNow;
+                    byte[] timestampByteArray = new byte[4];
+                    timestampByteArray[3] = (byte)(timestamp%256);
+                    timestamp = timestamp/256;
+                    timestampByteArray[2] = (byte)(timestamp%256);
+                    timestamp = timestamp/256;
+                    timestampByteArray[1] = (byte)(timestamp%256);
+                    timestamp = timestamp/256;
+                    timestampByteArray[0] = (byte)(timestamp%256);
+                    String timestampHex = byteArrayToString(timestampByteArray,16);
+                    timestampHex = timestampHex.length() % 2 == 1? "0" + timestampHex : timestampHex;
+
+                    System.out.print(deviceName + " " + bindObject + "\n");
+
+                    byte[] deviceNameByteArray = deviceName.getBytes("utf-8");
+                    byte[] bindObjectByteArray = bindObject.getBytes("utf-8");
+                    String deviceNameHex = byteArrayToString(deviceNameByteArray,16);
+                    deviceNameHex = deviceNameHex.length() % 2 == 1? "0" + deviceNameHex : deviceNameHex;
+                    String deviceNameHexLength = deviceNameHex.length()/2 < 16?"0"+Integer.toHexString(deviceNameHex.length()/2): Integer.toHexString(deviceNameHex.length()/2);
+                    String bindObjectHex = byteArrayToString(bindObjectByteArray,16);
+                    bindObjectHex = bindObjectHex.length() % 2 == 1? "0" + bindObjectHex : bindObjectHex;
+                    String bindObjectHexLength = bindObjectHex.length()/2 < 16?"0"+Integer.toHexString(bindObjectHex.length()/2): Integer.toHexString(bindObjectHex.length()/2);
+
+                    System.out.println("deviceNameHexLength:" + deviceNameHexLength + "; bindObjectHexLength: " + bindObjectHexLength);
+                    System.out.println("deviceNameHex:" + deviceNameHex + "; bindObject: " + bindObjectHex);
+
+                    String orderLength = Integer.toHexString(6+1+deviceNameHex.length()/2+1+bindObjectHex.length()/2 +5+1);
+
+                    int check = 7+  4 + deviceNameHex.length()/2 + bindObjectHex.length()/2 + 4;
+
+                    for (byte b: deviceNameByteArray) {
+                        check = check + b;
+                    }
+                    for (byte b: bindObjectByteArray) {
+                        check = check + b;
+                    }
+                    for (byte b: timestampByteArray) {
+                        check = check + b;
+                    }
+                    for (byte b: deviceIDByteArray) {
+                        check = check + b;
+                    }
+                    check = (check% 256 + 256)%256;
+
+                    String checkStr = Integer.toHexString(check);
+                    checkStr = checkStr.length() % 2 == 1? "0" + checkStr : checkStr;
+
+
+                    String order = "FEFE"+orderLength+"07"+"04"+deviceID+deviceNameHexLength+deviceNameHex+bindObjectHexLength+bindObjectHex+"04"+timestampHex+checkStr+"AABB";
+
+                    order = order.toUpperCase();
+                    System.out.println("发送的指令：" + order);
+                    sendMessage(1, order);
+
                 }
                 else {
                     System.out.print("查数据库失败 Return message: \"failed!\"1");
