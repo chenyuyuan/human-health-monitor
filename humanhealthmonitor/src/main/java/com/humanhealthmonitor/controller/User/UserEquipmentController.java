@@ -371,9 +371,6 @@ public class UserEquipmentController {
 
 
 
-
-
-
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out = response.getWriter();
         out.print("<script language=\"javascript\">alert('解除绑定成功！');</script>");
@@ -382,8 +379,7 @@ public class UserEquipmentController {
         // 取出用户关联的监测对象的所有设备信息
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByUserId(user.getUserId());
 
-        if (equipmentList.size() == 0)//如果没有设备，提示先添加设备
-        {
+        if (equipmentList.size() == 0) {//如果没有设备，提示先添加设备
             response.setContentType("text/html;charset=utf-8");
 //            PrintWriter out = response.getWriter();
             out.print("<script language=\"javascript\">alert('没有设备可管理，请先添加设备！');</script>");
