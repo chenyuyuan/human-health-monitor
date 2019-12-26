@@ -28,7 +28,7 @@ import static com.humanhealthmonitor.util.ByteUtils.*;
 public class SocketTask implements Runnable {
 
     @Autowired
-    private EquipmentService equipmentService;/////////added0521
+    private EquipmentService equipmentService;
     @Autowired
     private AlarmNormalValueService alarmNormalValueService;
     @Autowired
