@@ -50,6 +50,8 @@ public class IndexUserController {
             List<News> healthNewsList = newsService.queryNewsByNewsTypeTop5("健康阅读");
             List<News> latestNewsList = newsService.queryNewsByNewsTypeTop5("最新消息");
             List<News> hotPointNewsList = newsService.queryNewsByNewsTypeTop5("热点新闻");
+
+
             request.setAttribute("healthNewsList", healthNewsList);
             request.setAttribute("latestNewsList", latestNewsList);
             request.setAttribute("hotPointNewsList", hotPointNewsList);

@@ -301,8 +301,8 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-3">
-                        <div style="width: 20%;margin-left: 10%;margin-top: 5px;min-height: 80%;float: left;text-align: right;margin-right: 10px">
-                            <h2 style="text-align: left;text-indent: 4em;color:blue">分类</h2>
+                        <div style="width: 100%;;margin-top: 5px;min-height: 80%;float: left;text-align: right;">
+                            <h4 style="text-align: center;color:#007BFF">分类</h4>
                             <ul id="newsNav">
                                 <!--<li><a class="active" href="#home">最新消息</a></li>-->
                                 <li>
@@ -323,24 +323,23 @@
                                     <form action="/monitorCenter/newsSelectedKindUser">
                                         <input type="hidden" name="newsType" value="热点新闻"/>
                                         <input class="inputStyle4" id="input3" type="submit" value="热点新闻"/>
-                                        <!--onmouseover="input3OnMouseOver()" onmouseleave="input3OnMouseLeave()"-->
                                     </form>
                                 </li>
                             </ul>
                             <form id="searchForm" style="margin-left: 40px" action="/monitorCenter/newsSearchKindUser"
                                   onsubmit="checkSearchKey()">
-                                <h2 style="text-align: left;font-size: 18px;text-indent: 3.2em;color: blue">资讯搜索</h2>
+                                <h4 style="text-align: center;font-size: 18px;color: #007BFF">资讯搜索</h4>
                                 <input type="text" id="newsType" name="newsType" placeholder="输入资讯标题关键词"
-                                       onfocus="this.ready()" onmouseout="this.blur()" class="inputStyle1"/>
+                                       onfocus="this.ready()" onmouseout="this.blur()" class="form-control"/>
                                 <input type="submit" id="newsSearch" name="newsSearch"
-                                       style="font-size: 18px;height: 40px;width: 40%;background-color: #FFA500;border: none;color: white;margin-top: 10px"
-                                       value="搜 索" onmouseover="submitOnMouseUpNewsSearch()" onmouseleave="submitOnMouseLeaveNewsSearch()"/>
+                                       style="font-size: 18px;height: 40px;width: 40%;background-color: #007BFF;border-radius: 4px;border: none;color: white;margin-top: 10px"
+                                       value="搜 索"/>
                             </form>
                         </div>
                     </div>
                     <div class="col-lg-9">
-                        <div style="width: 55%;margin-top: 20px;text-align: left;height: 800px;border: 1px solid lightgrey;float: left">
-                            <h1 th:text="${newsType}" style="text-align: center;color: blue;"></h1>
+                        <div style="width: 100%;margin-top: 20px;text-align: left;height: 800px;background-color: white;border-radius: 8px;border: 1px solid lightgrey;float: left;padding: 5%">
+                            <h4 th:text="${newsType}" style="text-align: center;color: #007BFF;"></h4>
                             <table id="blocks" style="margin-left: 5%;width: 90%">
                                 <th>
             
@@ -350,8 +349,8 @@
                                         <form action="/monitorCenter/newsPageUser">
                                             <input type="hidden" name="newsId" th:value="${news.getNewsId()}"/>
                                             <input type="submit" th:value="${news.getNewsHead()}"
-                                                   style="border: 0;background-color: white;color: blue;font-size: x-large"/>
-                                            <span style="font-size: large;color: blue" th:text="${news.getPublishDate()}"></span>
+                                                   style="border: 0;background-color: white;color: #007BFF;font-size: x-large"/>
+                                            <span style="font-size: large;color: #007BFF" th:text="${news.getPublishDate()}"></span>
                                         </form>
                                     </td>
                                     <td style="text-align: right;width: 20%">
@@ -361,11 +360,11 @@
                             </table>
                             <div id="pagiDiv" style="text-align: center">
                                 <!--width:60%;margin-left: 20%;margin-right: 20%;margin-top: 20px;-->
-                                <span id="spanFirst" style="font-size: 24px">首页</span>&nbsp;&nbsp;
-                                <span id="spanPre" style="font-size: 24px">上一页</span>&nbsp;&nbsp;
-                                <span id="spanNext" style="font-size: 24px">下一页</span>&nbsp;&nbsp;
-                                <span id="spanLast" style="font-size: 24px">尾页</span>&nbsp;&nbsp;
-                                第&nbsp;<span id="spanPageNum" style="font-size: 24px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage"
+                                <span id="spanFirst" style="font-size: 18px">首页</span>&nbsp;&nbsp;
+                                <span id="spanPre" style="font-size: 18px">上一页</span>&nbsp;&nbsp;
+                                <span id="spanNext" style="font-size: 18px">下一页</span>&nbsp;&nbsp;
+                                <span id="spanLast" style="font-size: 18px">尾页</span>&nbsp;&nbsp;
+                                第&nbsp;<span id="spanPageNum" style="font-size: 18px"></span>&nbsp;页/共&nbsp;<span id="spanTotalPage"
                                                                                                                   style="font-size: 24px"></span>&nbsp;页
                             </div>
                         </div>
@@ -378,6 +377,9 @@
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->
+        
+        <br/>
+        
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
