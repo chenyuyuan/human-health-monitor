@@ -81,6 +81,7 @@ public class NewLinkProcessor implements Runnable{
             int checkSum = byteToUnsignedValue(byteArrayList.get(byteArrayList.size()-3)); // 校验和
 
 
+
             if (byteArrayList.get(0) != (byte) 0xFE || byteArrayList.get(1) != (byte) 0xFE) {
                 System.out.println("NewLinkProcessor(socketInfoProcess): The byte head is not FEFE");
                 byteArrayList.remove(0);
@@ -130,6 +131,8 @@ public class NewLinkProcessor implements Runnable{
             String StringNetMaskId = byteArrayToString(byteArrayNetMaskId, RadixNetMaskId);
 
             int netMaskId = Integer.parseInt(StringNetMaskId, RadixNetMaskId);
+
+
             System.out.println("NewLinkProcessor(socketInfoProcess): netMaskId: "+netMaskId);
             //检查如果socketTasks数组中对应于netmask编号的这是否正在运行，如果正在运行则本线程结束，提示已经有网关号为netmask的，冲突。。
             MsgQueue.socketTasks[netMaskId-1] = new SocketTask();//这里新建的一定是走else路线////////还需想想如果冲突的来了怎么办，如何不予处理
