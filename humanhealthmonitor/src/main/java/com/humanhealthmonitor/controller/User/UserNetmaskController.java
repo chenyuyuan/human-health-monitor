@@ -43,6 +43,7 @@ public class UserNetmaskController {
             }
         }
 
+
         for (Netmask nm: netmaskArrayListOnline) {
             System.out.println("nm.get..."+nm.getNetmask_name()+nm.getRelated_user_id());
             if(user.getUserId().equals(nm.getRelated_user_id())) {
@@ -51,13 +52,20 @@ public class UserNetmaskController {
             }
         }
 
+        for(int i=netmaskArrayListOnline.size()-1;i>=0;i--){
+            if(netmaskArrayListOnline.get(i)!=null&&(netmaskArrayListOnline.get(i).getRelated_user_id()!=null)) {
+                netmaskArrayListOnline.remove(i);
+                System.out.println("remove" + i);
+            }
+        }
+
 
         boolean netmaskConnectedIsNull = true;
-        if(netmaskConnected == null) {
+        if(netmaskConnected.getId() == 0) {
             netmaskConnectedIsNull =false;
         }
 
-        System.out.println("netmaskConnected"+netmaskConnected.getNetmask_name() + (netmaskConnectedIsNull));
+        System.out.println("netmaskConnected"+netmaskConnected.getId()+netmaskConnected.getNetmask_name() + (netmaskConnectedIsNull));
 
         request.setAttribute("netmaskListOnline", netmaskArrayListOnline);
         request.setAttribute("netmaskConnected", netmaskConnected);

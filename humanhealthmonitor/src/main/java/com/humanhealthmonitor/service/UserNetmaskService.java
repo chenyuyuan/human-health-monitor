@@ -25,6 +25,10 @@ public class UserNetmaskService {
 
     }
 
+    public void deleteUserRelateNetmask(String user_id){
+        userNetmaskMapper.clearUserRelatedNetmask(user_id);
+    }
+
 
     public String queryUserRelatedNetmask(String user_id) {
 
@@ -34,6 +38,10 @@ public class UserNetmaskService {
     public String queryNetmaskRelatedUser(int netmask_id) {
 
         return userNetmaskMapper.queryNetmaskRelatedUser(netmask_id);
+    }
+
+    public void updateNetmaskIpPort(String ip, int port, int netmask_id) {
+        userNetmaskMapper.updateNetmaskIpPort(ip, port, netmask_id);
     }
 
 }

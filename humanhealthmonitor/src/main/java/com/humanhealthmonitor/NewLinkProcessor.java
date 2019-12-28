@@ -1,5 +1,10 @@
 package com.humanhealthmonitor;
 
+import com.humanhealthmonitor.service.UserNetmaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.OutputStream;
@@ -13,7 +18,23 @@ import static com.humanhealthmonitor.MsgQueue.ipNetmaskIDTable;
 import static com.humanhealthmonitor.MsgQueue.sendMsgQueue;
 import static com.humanhealthmonitor.util.ByteUtils.*;
 
+@Component
 public class NewLinkProcessor implements Runnable{
+
+    @Autowired
+    private UserNetmaskService userNetmaskService;
+
+    public static NewLinkProcessor newLinkProcessor;
+    public NewLinkProcessor(){
+
+    }
+
+    @PostConstruct
+    public void init() {
+        newLinkProcessor = this;
+        newLinkProcessor.userNetmaskService = this.userNetmaskService;
+    }
+
 
     private Socket socket;
     public void setSocket(Socket socket){ //added0521
@@ -158,6 +179,8 @@ public class NewLinkProcessor implements Runnable{
                 //System.out.println("<getSocket():>2" + (MsgQueue.socketTasks[netMaskId - 1].getSocket()==null));
 
                 new Thread(MsgQueue.socketTasks[netMaskId-1]).start();
+                System.out.println(socketIp+socketPort+netMaskId);
+                newLinkProcessor.userNetmaskService.updateNetmaskIpPort(socketIp,socketPort,netMaskId);
 
             }
 

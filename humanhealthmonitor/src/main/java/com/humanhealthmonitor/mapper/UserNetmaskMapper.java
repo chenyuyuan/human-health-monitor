@@ -27,4 +27,8 @@ public interface UserNetmaskMapper {
     @Select("SELECT related_user_id from netmask WHERE id = #{netmask_id}")
     String queryNetmaskRelatedUser(@Param("netmask_id") int netmask_id);
 
+
+    @Update("update netmask set ip = #{ip}, port= #{port} WHERE id = #{netmask_id}")
+    void updateNetmaskIpPort(@Param("ip") String ip,@Param("port") int port,@Param("netmask_id") int netmask_id);
+
 }
