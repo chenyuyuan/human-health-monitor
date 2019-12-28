@@ -57,6 +57,9 @@ public class SocketTask implements Runnable {
     public void setSocket(Socket socket){
         this.socket = socket;
     }
+    public Socket getSocket() {
+        return this.socket;
+    }
     @PostConstruct
     public void init() {//added0521
         socketTask= this;

@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.humanhealthmonitor.MsgQueue.ipNetmaskIDTable;
 
+import static com.humanhealthmonitor.MsgQueue.sendMsgQueue;
 import static com.humanhealthmonitor.util.ByteUtils.*;
 
 public class NewLinkProcessor implements Runnable{
@@ -149,9 +150,15 @@ public class NewLinkProcessor implements Runnable{
                 System.out.println("NewLinkProcessor(socketInfoProcess): ip address is " + socketAddress);
                 ipNetmaskIDTable.put(socketAddress, netMaskId);
 
+                //System.out.println("<getSocket():>1" + (MsgQueue.socketTasks[netMaskId - 1].getSocket() == null));
+
                 MsgQueue.socketTasks[netMaskId-1].setSocket(socket);
                 MsgQueue.socketTasks[netMaskId-1].setTaskNum(netMaskId);
+
+                //System.out.println("<getSocket():>2" + (MsgQueue.socketTasks[netMaskId - 1].getSocket()==null));
+
                 new Thread(MsgQueue.socketTasks[netMaskId-1]).start();
+
             }
 
             //内圈while处理完之后
