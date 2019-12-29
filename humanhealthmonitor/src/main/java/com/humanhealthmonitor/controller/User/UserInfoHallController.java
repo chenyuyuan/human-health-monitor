@@ -41,6 +41,10 @@ UserInfoHallController {
     private EquipmentTypeService equipmentTypeService;
     @Autowired
     private AlarmLogService alarmLogService;
+    @Autowired
+    private UserNetmaskService userNetmaskService;
+
+
 
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -69,8 +73,11 @@ UserInfoHallController {
         request.setAttribute("equipmentList", equipmentList);
         request.setAttribute("objectNameSelected", objectList.get(0).getObjectName());
 
+        String netmaskIdStr=userNetmaskService.queryUserRelatedNetmask(user.getUserId());
+        int netmask=Integer.parseInt(netmaskIdStr);
+
         String order = "FEFE020404AABB";
-        sendMessage(1, order);
+        sendMessage(netmask, order);
 
         //判断监测对象有没有设备
         if (equipmentList.size() != 0) { //如果有设备
@@ -263,11 +270,17 @@ UserInfoHallController {
     //监测中心-监测设备数据刷新//映射地址为要刷新的地址//AutoRefresh
     @RequestMapping("/infoHallOnTimeGetInfo/AutoRefresh")
     @ResponseBody
-    public Map<String,ArrayList<Double>> monitorCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array) {
+    public Map<String,ArrayList<Double>> monitorCenterAjaxTest(HttpServletRequest request,@RequestBody ArrayList<ArrayList<Double>> array) {
 
         System.out.println("<<<<<<<<<<AutoRefresh>>>>>>>>>>");
+        User user = (User) request.getSession().getAttribute("user");
+        request.setAttribute("user", user);
+
+        String netmaskIdStr=userNetmaskService.queryUserRelatedNetmask(user.getUserId());
+        int netmask=Integer.parseInt(netmaskIdStr);
+
         String order = "FEFE020404AABB";
-        sendMessage(1, order);
+        sendMessage(netmask, order);
         System.out.println("sendMessage Have Sended Order FEFE020404AABB");
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectSelectedIdS);
 
@@ -440,8 +453,13 @@ UserInfoHallController {
         request.setAttribute("objectNameSelected", objectNameSelected);
 //        return "monitorCenter/infoHallOnTime::objectTable";
 
+
+        String netmaskIdStr=userNetmaskService.queryUserRelatedNetmask(user.getUserId());
+        int netmask=Integer.parseInt(netmaskIdStr);
+
+
         String order = "FEFE020404AABB";
-        sendMessage(1, order);
+        sendMessage(netmask, order);
 
         //判断监测对象有没有设备
         if (equipmentList.size() != 0) {//如果有设备

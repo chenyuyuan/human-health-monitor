@@ -5,6 +5,7 @@ import com.humanhealthmonitor.pojo.Equipment;
 import com.humanhealthmonitor.pojo.Object;
 import com.humanhealthmonitor.service.EquipmentService;
 import com.humanhealthmonitor.service.ObjectService;
+import com.humanhealthmonitor.service.UserNetmaskService;
 import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,8 @@ public class ObjInfoHallController {
     private ObjectService objectService;
     @Autowired
     private EquipmentService equipmentService;
+    @Autowired
+    private UserNetmaskService userNetmaskService;
 
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private InfluxDBConnector influxDBConnector;//创建influxDB连接实例
@@ -56,8 +59,13 @@ public class ObjInfoHallController {
         List<Equipment> objEquipmentList = equipmentService.queryAllEquipmentByObjectId(object.getObjectId());
         request.setAttribute("equipmentList", objEquipmentList);
 
+        String userId = userNetmaskService.queryUserIdByObjectId(object.getObjectId());
+        String netmaskStr = userNetmaskService.queryUserRelatedNetmask(userId);
+        int netmask = Integer.parseInt(netmaskStr);
+
+
         String order = "FEFE020404AABB";
-        sendMessage(1, order);
+        sendMessage(netmask, order);
         //判断监测对象有没有设备
         if (objEquipmentList.size() != 0) {//如果有设备
 //            sendMsgQueue.offer("FEFE0401040005AABB");
@@ -310,8 +318,13 @@ public class ObjInfoHallController {
         int deviceSerialTemp;
         int checkCal;
 
+
+        String userId = userNetmaskService.queryUserIdByObjectId(object.getObjectId());
+        String netmaskStr = userNetmaskService.queryUserRelatedNetmask(userId);
+        int netmask = Integer.parseInt(netmaskStr);
+
         String order = "FEFE020404AABB";
-        sendMessage(1, order);
+        sendMessage(netmask, order);
 
         for (int i = 0;i < objEquipmentList.size();i++) {
             if(objEquipmentList.get(i).getEqpType().equals("BloodOxygen01")) {

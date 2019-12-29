@@ -22,7 +22,7 @@ public class NetMaskApplication implements Runnable {
         // order 1
         if(s.equals("fefe"+"02"+"01"+"01aabb")) { //✔
             System.out.println("order type 1 return");
-            return "fefe"+"01"+"03"+  "01"+"000a"  +"0b"+"aabb"; //✔ // 通讯类型，网关号，校验和
+            return "fefe"+"01"+"03"+  "01"+"0001"  +"02"+"aabb"; //✔ // 通讯类型，网关号，校验和
             //**************************************************//
         }
         // order 2 FEFE07020A0006010921AABB
@@ -69,8 +69,8 @@ public class NetMaskApplication implements Runnable {
             String returnOrder = "fefe"+"04"+"11"+"040a000801"+ "04"+timestamp+"0103"+"0400140027" +checkSumStr+"aabb"; // ✔
             returnOrder = "fefe0411040a000304045dd3b833010304091f08f763aabb";
             System.out.println("指令3&4返回："+returnOrder);
-            //return returnOrder;
-            return "fefe0413040a000202045e01f756011c0600ff00ff00ffe2aabb";
+            return returnOrder;
+            //return "fefe0413040a000202045e01f756011c0600ff00ff00ffe2aabb";
         }
         //fefe 04 11 040a000801 045dcbc2ab 0103 04 00140027 f3 aa bb
         //add if below

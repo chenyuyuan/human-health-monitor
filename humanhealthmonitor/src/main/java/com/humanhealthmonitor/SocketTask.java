@@ -42,6 +42,9 @@ public class SocketTask implements Runnable {
     @Autowired
     private AlarmLogService alarmLogService;
 
+    @Autowired
+    private UserNetmaskService userNetmaskService;
+
     private static SocketTask socketTask;////////added0521//静态私有化变量，所有类共享一份
     private int taskNum = 0;//任务号初始化为0//added0523
     private InfluxDBConnector influxDBConnector;//创建influxDB连接实例
@@ -71,6 +74,8 @@ public class SocketTask implements Runnable {
         socketTask.userService=this.userService;
         socketTask.objectResouceUseService = this.objectResouceUseService;
         socketTask.alarmLogService=this.alarmLogService;
+
+        socketTask.userNetmaskService=this.userNetmaskService;
     }
     public void run() {
         try {
@@ -402,6 +407,15 @@ public class SocketTask implements Runnable {
         Map<String, String> tags = new HashMap<>();
         Map<String, java.lang.Object> fields = new HashMap<>();
 
+        String userId = "hitwh001";
+        userId=socketTask.userNetmaskService.queryNetmaskRelatedUser(this.getTaskNum());
+        String objectId = socketTask.userNetmaskService.queryObjectIdByUserId(userId,deviceID);
+        System.out.println(userId+deviceID);
+
+
+
+
+
         int count1InType = 0;
         for(char c : typeBinaryString.toCharArray()) {
             if(c == '1') {
@@ -448,9 +462,9 @@ public class SocketTask implements Runnable {
         else if(sensorType.equals("02")) {
             tags.clear();
             fields.clear();
-            tags.put("netmaskId", "1");
+            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
             tags.put("eqpId", deviceID);
-            tags.put("objectId", "hitwhob001");
+            tags.put("objectId", objectId);
             tags.put("sendTime",timestamp);
             fields.put("heartRate", sensorDataArray[2]);
             fields.put("highPressure", sensorDataArray[3]);
@@ -462,9 +476,9 @@ public class SocketTask implements Runnable {
         else if(sensorType.equals("03")) {
             tags.clear();
             fields.clear();
-            tags.put("netmaskId", "1");
+            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
             tags.put("eqpId", deviceID);
-            tags.put("objectId", "hitwhob001");
+            tags.put("objectId", objectId);
             tags.put("sendTime",timestamp);
             fields.put("spo2", sensorDataArray[5]);
             influxDBConnector.insertData("bloodOxygen", tags, fields);
@@ -474,9 +488,9 @@ public class SocketTask implements Runnable {
         else if(sensorType.equals("04")) {
             tags.clear();
             fields.clear();
-            tags.put("netmaskId", "1");
+            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
             tags.put("eqpId", deviceID);
-            tags.put("objectId", "hitwhob001");
+            tags.put("objectId", objectId);
             tags.put("sendTime", timeinformat);
             fields.put("bodyTemp", sensorDataArray[1]/100);
             fields.put("envTemp", sensorDataArray[0]/100);

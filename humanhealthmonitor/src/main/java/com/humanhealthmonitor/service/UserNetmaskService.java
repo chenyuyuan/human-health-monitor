@@ -39,9 +39,21 @@ public class UserNetmaskService {
 
         return userNetmaskMapper.queryNetmaskRelatedUser(netmask_id);
     }
+    public String queryObjectIdByUserId(String userId, String eqpId) {
+
+        return userNetmaskMapper.queryObjectIdByUserId(userId, eqpId);
+    }
+
+    public String queryUserIdByObjectId(String objectId) {
+
+        return userNetmaskMapper.queryUserIdByObjectId(objectId);
+    }
+
+
 
     public void updateNetmaskIpPort(String ip, int port, int netmask_id) {
         userNetmaskMapper.updateNetmaskIpPort(ip, port, netmask_id);
     }
+
 
 }

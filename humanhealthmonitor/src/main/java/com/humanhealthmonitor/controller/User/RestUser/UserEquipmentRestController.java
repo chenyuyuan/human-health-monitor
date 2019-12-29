@@ -34,6 +34,8 @@ public class UserEquipmentRestController {
     private AlarmSpecialValueService alarmSpecialValueService;
     @Autowired
     private ObjectService objectService;
+    @Autowired
+    private UserNetmaskService userNetmaskService;
 
     @CrossOrigin
     @RequestMapping(value = "/monitorCenter/equipmentAddResult", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
@@ -46,6 +48,10 @@ public class UserEquipmentRestController {
 
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
+
+
+        String netmaskIdStr=userNetmaskService.queryUserRelatedNetmask(user.getUserId());
+        int netmask=Integer.parseInt(netmaskIdStr);
 
 
         String eqpType = params.getString("eqpTypeSelected");
@@ -101,7 +107,7 @@ public class UserEquipmentRestController {
                     System.out.println("The Order is " + deviceRegisterOrder);
 
                     // 根据该网关使用的协议发送查询命令
-                    sendMessage(1, deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
+                    sendMessage(netmask, deviceRegisterOrder);//网关验证注册时使用此语句，否则注释掉
                     System.out.println("UserEquipmentController: deviceRegisterOrder"+(1)+": "+deviceRegisterOrder);
                 }
                 else {
@@ -213,7 +219,7 @@ public class UserEquipmentRestController {
 
                     order = order.toUpperCase();
                     System.out.println("发送的指令：" + order);
-                    sendMessage(1, order);
+                    sendMessage(netmask, order);
 
                 }
                 else {
