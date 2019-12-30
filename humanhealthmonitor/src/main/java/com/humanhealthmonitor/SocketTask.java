@@ -44,6 +44,8 @@ public class SocketTask implements Runnable {
 
     @Autowired
     private UserNetmaskService userNetmaskService;
+    @Autowired
+    private DataService dataService;
 
     private static SocketTask socketTask;////////added0521//静态私有化变量，所有类共享一份
     private int taskNum = 0;//任务号初始化为0//added0523
@@ -76,6 +78,8 @@ public class SocketTask implements Runnable {
         socketTask.alarmLogService=this.alarmLogService;
 
         socketTask.userNetmaskService=this.userNetmaskService;
+        socketTask.dataService=this.dataService;
+
     }
     public void run() {
         try {
@@ -129,11 +133,11 @@ public class SocketTask implements Runnable {
         while (dis.read(bytes) != -1) {//如何实现循环接收的呢？忘了。。
             info += bytesToHexString(bytes) + " ";//转为16进制字符串
             byteArrayList.add(bytes[0]);//字节列表
-            System.out.print("dis.available(): "+dis.available() + "; ");
-            System.out.print("sendMsgQueue： ");
-            for(String s: sendMsgQueue.get(taskNum - 1)) {
-                System.out.print(s+ " ");
-            }
+            //System.out.print("dis.available(): "+dis.available() + "; ");
+            //System.out.print("sendMsgQueue： ");
+            //for(String s: sendMsgQueue.get(taskNum - 1)) {
+            //    System.out.print(s+ " ");
+            //}
             System.out.println(";");
             if (dis.available() == 0) { //客户端一条信息结束
                 System.out.println("SocketTask"+taskNum+": received: " + info);
@@ -455,8 +459,16 @@ public class SocketTask implements Runnable {
         }
         System.out.println(" ");
         //床垫
-        if(sensorType.equals("00")) {
-            System.out.println("床垫先跳过");
+        if(sensorType.equals("01")) {
+            //System.out.println("床垫先跳过");
+
+
+            ArrayList<Double> dataToInsert = new ArrayList<>();
+            dataToInsert.add((double)sensorDataArray[6]/100);
+            dataToInsert.add((double)sensorDataArray[7]/100);
+            socketTask.dataService.insertData("Mattress", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
+            System.out.println("SocketTask: 床垫数据已插入数据库, 数据采集时间" + timestamp);
+
         }
         //血压
         else if(sensorType.equals("02")) {
@@ -470,6 +482,13 @@ public class SocketTask implements Runnable {
             fields.put("highPressure", sensorDataArray[3]);
             fields.put("lowPressure", sensorDataArray[4]);
             influxDBConnector.insertData("bloodPressure", tags, fields);
+
+            ArrayList<Double> dataToInsert = new ArrayList<>();
+            dataToInsert.add((double)sensorDataArray[2]/100);
+            dataToInsert.add((double)sensorDataArray[3]/100);
+            dataToInsert.add((double)sensorDataArray[4]/100);
+            socketTask.dataService.insertData("BloodPressure", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
+
             System.out.println("SocketTask: 血压数据已插入数据库, 数据采集时间" + timestamp);
         }
         //血氧
@@ -482,6 +501,12 @@ public class SocketTask implements Runnable {
             tags.put("sendTime",timestamp);
             fields.put("spo2", sensorDataArray[5]);
             influxDBConnector.insertData("bloodOxygen", tags, fields);
+
+            ArrayList<Double> dataToInsert = new ArrayList<>();
+            dataToInsert.add((double)sensorDataArray[5]/100);
+            socketTask.dataService.insertData("BloodOxygen", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
+
+
             System.out.println("SocketTask: 血氧数据已插入数据库, 数据采集时间" + timestamp);
         }
         //温度
@@ -495,6 +520,11 @@ public class SocketTask implements Runnable {
             fields.put("bodyTemp", sensorDataArray[1]/100);
             fields.put("envTemp", sensorDataArray[0]/100);
             influxDBConnector.insertData("temperature", tags, fields);
+
+            ArrayList<Double> dataToInsert = new ArrayList<>();
+            dataToInsert.add((double)sensorDataArray[1]/100);
+            dataToInsert.add((double)sensorDataArray[0]/100);
+            socketTask.dataService.insertData("Temperature", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
             System.out.println("SocketTask: 温度数据已插入数据库, 数据采集时间" + timestamp);
         }
         System.out.println("指令0304返回数据处理完成");
