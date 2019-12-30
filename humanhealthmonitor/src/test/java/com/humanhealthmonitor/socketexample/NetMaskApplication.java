@@ -60,14 +60,14 @@ public class NetMaskApplication implements Runnable {
                 checkSum=checkSum + timeByteArray[3-i];
                 timestampCurrent = timestampCurrent/256;
             }
-            checkSum = (checkSum + 4+10+8+1 + 4 + 1+3 + 4+16+4+32+7)%256;
+            checkSum = (checkSum + 4+10+4+4 + 4 + 1+3 + 4+9+14+5+6)%256;
             String checkSumStr = Integer.toHexString(checkSum).toUpperCase();
             if(checkSumStr.length() == 1) {
                 checkSumStr = "0" + checkSumStr;
             }
             String timestamp = byteArrayToString(timeByteArray, 16);
-            String returnOrder = "fefe"+"04"+"11"+"040a000801"+ "04"+timestamp+"0103"+"0400140027" +checkSumStr+"aabb"; // ✔
-            returnOrder = "fefe0411040a000304045dd3b833010304091f08f763aabb";
+            String returnOrder = "fefe"+"04"+"11"+"040a000404"+ "04"+timestamp+"0103"+"0409050e06" +checkSumStr+"aabb"; // ✔
+            //returnOrder = "fefe0411040a000304045dd3b833010304091f08f763aabb";
             System.out.println("指令3&4返回："+returnOrder);
             return returnOrder;
             //return "fefe0413040a000202045e01f756011c0600ff00ff00ffe2aabb";

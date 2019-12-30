@@ -1,6 +1,8 @@
 package com.humanhealthmonitor.service;
 
 import com.humanhealthmonitor.mapper.DataMapper;
+import com.humanhealthmonitor.pojo.*;
+import com.humanhealthmonitor.pojo.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,22 +34,17 @@ public class DataService {
         }
     }
 
-    public ArrayList<String> queryData(String dataType, int dataCount) {
-        if(dataType.equals("Mattress")) {
-
-        }
-        else if(dataType.equals("Temperature")) {
-
-        }
-        else if(dataType.equals("BloodOxygen")) {
-
-        }
-        else if(dataType.equals("BloodPressure")) {
-
-        }
-
-
-        return new ArrayList<>();
+    public ArrayList<Temperature> queryTemperature(String objectId, int dataCount, String limitTime) {
+        return dataMapper.queryLastSeveralTemperature(objectId,limitTime,dataCount);
+    }
+    public ArrayList<Mattress> queryMattress(String objectId, int dataCount, String limitTime) {
+        return dataMapper.queryLastSeveralMattress(objectId,limitTime,dataCount);
+    }
+    public ArrayList<BloodOxygen> queryBloodOxygen(String objectId, int dataCount, String limitTime) {
+        return dataMapper.queryLastSeveralBloodOxygen(objectId,limitTime,dataCount);
+    }
+    public ArrayList<BloodPressure> queryBloodPressure(String objectId, int dataCount, String limitTime) {
+        return dataMapper.queryLastSeveralBloodPressure(objectId,limitTime,dataCount);
     }
 
 }

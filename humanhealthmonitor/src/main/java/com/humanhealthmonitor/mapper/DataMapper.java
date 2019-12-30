@@ -1,9 +1,15 @@
 package com.humanhealthmonitor.mapper;
 
+import com.humanhealthmonitor.pojo.BloodOxygen;
+import com.humanhealthmonitor.pojo.BloodPressure;
+import com.humanhealthmonitor.pojo.Mattress;
+import com.humanhealthmonitor.pojo.Temperature;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
 
 @Repository
 
@@ -25,7 +31,18 @@ public interface DataMapper {
 
 
     //query data
-    @Select("select * from netmask")
-    void queryAllNetmask();
+    @Select("SELECT * FROM temperature WHERE objectId=#{objectId} and sendTime>#{limitTime} ORDER BY time DESC LIMIT #{dataCount} ")
+    ArrayList<Temperature> queryLastSeveralTemperature(@Param("objectId") String objectId, @Param("limitTime") String limitTime,@Param("dataCount") int dataCount);
+
+    @Select("SELECT * FROM mattress WHERE objectId=#{objectId} and sendTime>#{limitTime} ORDER BY time DESC LIMIT #{dataCount} ")
+    ArrayList<Mattress> queryLastSeveralMattress(@Param("objectId") String objectId,@Param("limitTime") String limitTime, @Param("dataCount") int dataCount);
+
+    @Select("SELECT * FROM bloodOxygen WHERE objectId=#{objectId} and sendTime>#{limitTime} ORDER BY time DESC LIMIT #{dataCount} ")
+    ArrayList<BloodOxygen> queryLastSeveralBloodOxygen(@Param("objectId") String objectId,@Param("limitTime") String limitTime, @Param("dataCount") int dataCount);
+
+    @Select("SELECT * FROM bloodPressure WHERE objectId=#{objectId} and sendTime>#{limitTime} ORDER BY time DESC LIMIT #{dataCount} ")
+    ArrayList<BloodPressure> queryLastSeveralBloodPressure(@Param("objectId") String objectId,@Param("limitTime") String limitTime, @Param("dataCount") int dataCount);
+
+
 
 }

@@ -138,7 +138,7 @@ public class SocketTask implements Runnable {
             //for(String s: sendMsgQueue.get(taskNum - 1)) {
             //    System.out.print(s+ " ");
             //}
-            System.out.println(";");
+            //System.out.println(";");
             if (dis.available() == 0) { //客户端一条信息结束
                 System.out.println("SocketTask"+taskNum+": received: " + info);
                 System.out.println("SocketTask"+taskNum+": byteArrayList: " + byteArrayList);
@@ -484,9 +484,9 @@ public class SocketTask implements Runnable {
             influxDBConnector.insertData("bloodPressure", tags, fields);
 
             ArrayList<Double> dataToInsert = new ArrayList<>();
-            dataToInsert.add((double)sensorDataArray[2]/100);
-            dataToInsert.add((double)sensorDataArray[3]/100);
-            dataToInsert.add((double)sensorDataArray[4]/100);
+            dataToInsert.add((double)sensorDataArray[2]);
+            dataToInsert.add((double)sensorDataArray[3]);
+            dataToInsert.add((double)sensorDataArray[4]);
             socketTask.dataService.insertData("BloodPressure", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
 
             System.out.println("SocketTask: 血压数据已插入数据库, 数据采集时间" + timestamp);
