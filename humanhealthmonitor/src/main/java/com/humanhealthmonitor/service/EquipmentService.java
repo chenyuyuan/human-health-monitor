@@ -91,4 +91,13 @@ public class EquipmentService {
         return equipmentMapper.queryBindUserNameByObjectId(objectId);
     }
 
+
+
+
+
+
+    public int querySpecialValueByEqpId(String eqpId) {
+        return equipmentMapper.querySpecialValueByEqpId(eqpId);
+    }
+
 }

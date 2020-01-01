@@ -1,5 +1,6 @@
 package com.humanhealthmonitor;
 
+import com.github.qcloudsms.httpclient.HTTPException;
 import com.humanhealthmonitor.pojo.*;
 import com.humanhealthmonitor.service.*;
 import com.humanhealthmonitor.pojo.Equipment;
@@ -469,6 +470,16 @@ public class SocketTask implements Runnable {
             socketTask.dataService.insertData("Mattress", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
             System.out.println("SocketTask: 床垫数据已插入数据库, 数据采集时间" + timestamp);
 
+
+            int special = socketTask.equipmentService.querySpecialValueByEqpId(deviceID);
+            if (special == 0) {
+                makePhoneMessageNormal("Mattress01",objectId,deviceID,dataToInsert);
+            }
+            else if(special == 1){
+                makePhoneMessageSpecial("Mattress01",objectId,deviceID,dataToInsert);
+            }
+
+
         }
         //血压
         else if(sensorType.equals("02")) {
@@ -490,6 +501,16 @@ public class SocketTask implements Runnable {
             socketTask.dataService.insertData("BloodPressure", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
 
             System.out.println("SocketTask: 血压数据已插入数据库, 数据采集时间" + timestamp);
+
+
+            int special = socketTask.equipmentService.querySpecialValueByEqpId(deviceID);
+            if (special == 0) {
+                makePhoneMessageNormal("BloodPressure01",objectId,deviceID,dataToInsert);
+            }
+            else if(special == 1){
+                makePhoneMessageSpecial("BloodPressure01",objectId,deviceID,dataToInsert);
+            }
+
         }
         //血氧
         else if(sensorType.equals("03")) {
@@ -505,9 +526,16 @@ public class SocketTask implements Runnable {
             ArrayList<Double> dataToInsert = new ArrayList<>();
             dataToInsert.add((double)sensorDataArray[5]/100);
             socketTask.dataService.insertData("BloodOxygen", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
-
-
             System.out.println("SocketTask: 血氧数据已插入数据库, 数据采集时间" + timestamp);
+
+            int special = socketTask.equipmentService.querySpecialValueByEqpId(deviceID);
+            if (special == 0) {
+                makePhoneMessageNormal("BloodOxygen01",objectId,deviceID,dataToInsert);
+            }
+            else if(special == 1){
+                makePhoneMessageSpecial("BloodOxygen01",objectId,deviceID,dataToInsert);
+            }
+
         }
         //温度
         else if(sensorType.equals("04")) {
@@ -526,9 +554,21 @@ public class SocketTask implements Runnable {
             dataToInsert.add((double)sensorDataArray[0]/100);
             socketTask.dataService.insertData("Temperature", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
             System.out.println("SocketTask: 温度数据已插入数据库, 数据采集时间" + timestamp);
+
+            int special = socketTask.equipmentService.querySpecialValueByEqpId(deviceID);
+            if (special == 0) {
+                makePhoneMessageNormal("Temperature01",objectId,deviceID,dataToInsert);
+            }
+            else if(special == 1){
+                makePhoneMessageSpecial("Temperature01",objectId,deviceID,dataToInsert);
+            }
+
+            System.out.println("<SocketTask:> Temperature processure end!!!");
+
         }
         System.out.println("指令0304返回数据处理完成");
     }
+    //暂时没用了
     private void handleOrder5Response(byte[] responseContent) {
         if(responseContent.length == 0) return;
         int flag = byteToUnsignedValue(responseContent[0]);
@@ -569,12 +609,170 @@ public class SocketTask implements Runnable {
         System.out.println("<SocketTask: handleOrder7Response>: deviceID/flag: " + deviceID + "/ " + flag);
         if(flag == 0) {
             //不存在
-
+            System.out.println("<SocketTask: handleOrder7Response>"+deviceID+"不存在");
         }
         else if(flag == 1) {
             //成功
+            System.out.println("<SocketTask: handleOrder7Response>"+deviceID+"成功");
+        }
+    }
+
+
+
+
+    private void makePhoneMessageNormal(String dataType,String objectId,String eqpId,ArrayList<Double> data) {
+        System.out.println("<<SocketTask:makePhoneMessageNormal>>");
+
+        List<AlarmNormalValue> alarmNormalValueList = socketTask.alarmNormalValueService.queryAlarmNormalValueByEqpType(dataType);
+
+        if (dataType.equals("BloodPressure01")) {
+            if (data.size() != 3) return;
+            if(data.get(0) != 255 && data.get(0) > alarmNormalValueList.get(4).getValue()) {
+                String message = "心率"+String.valueOf(data.get(0))+"高于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"心率",Float.parseFloat(data.get(0).toString()),"心率超出最高警戒值");
+            }
+            else if(data.get(0) != 0 && data.get(0) < alarmNormalValueList.get(5).getValue()){
+                String message = "心率"+String.valueOf(data.get(0))+"低于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"心率",Float.parseFloat(data.get(0).toString()),"心率低于最低警戒值");
+            }
+            else if(data.get(1) != 255 && data.get(1) > alarmNormalValueList.get(0).getValue()) {
+                String message = "高压"+String.valueOf(data.get(1))+"高于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压高压",Float.parseFloat(data.get(0).toString()),"血压高压超出最高警戒值");
+            }
+            else if(data.get(1) != 0 && data.get(1) < alarmNormalValueList.get(1).getValue()) {
+                String message = "高压"+String.valueOf(data.get(1))+"低于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压高压",Float.parseFloat(data.get(0).toString()),"血压高压低于最高警戒值");
+            }
+            else if(data.get(2) != 255 && data.get(2) > alarmNormalValueList.get(2).getValue()) {
+                String message = "低压"+String.valueOf(data.get(2))+"高于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压低压",Float.parseFloat(data.get(0).toString()),"血压低压超出最高警戒值");
+            }
+            else if(data.get(2) != 0 && data.get(2) < alarmNormalValueList.get(3).getValue()) {
+                String message = "低压"+String.valueOf(data.get(2))+"低于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压低压",Float.parseFloat(data.get(0).toString()),"血压低压低于最高警戒值");
+            }
+        } else if (dataType.equals("BloodOxygen01")) {
+            if(data.size()!=1) return;
+            if(data.get(0) < alarmNormalValueList.get(0).getValue()) {
+                String message = "血氧" + String.valueOf(data.get(0)) + "低于正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"血氧",Float.parseFloat(data.get(0).toString()),"血氧低于正常范围");
+            }
+        } else if (dataType.equals("Temperature01")) {
+            if(data.size()!=2) return;
+            if(data.get(0) < 41.6 && data.get(0) > alarmNormalValueList.get(0).getValue()) {
+                String message = "体温" + String.valueOf(data.get(0)) + "超出正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"体温",Float.parseFloat(data.get(0).toString()),"体温超出正常范围");
+            }
+            else if(data.get(0) > 30.0 && data.get(0) < alarmNormalValueList.get(1).getValue()) {
+                String message = "体温" + String.valueOf(data.get(0)) + "低于正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"体温",Float.parseFloat(data.get(0).toString()),"体温低于正常范围");
+            }
+            else if(data.get(1) < 60 && data.get(1) > alarmNormalValueList.get(2).getValue()) {
+                String message = "环境温度" + String.valueOf(data.get(0)) + "超出正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"环境温度",Float.parseFloat(data.get(1).toString()),"环境温度超出正常范围");
+            }
+            else if(data.get(1) > -50 && data.get(1) < alarmNormalValueList.get(3).getValue()) {
+                String message = "环境温度" + String.valueOf(data.get(0)) + "低于正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"环境温度",Float.parseFloat(data.get(1).toString()),"环境温度低于正常范围");
+            }
+        } else if (dataType.equals("Mattress01")) {
+
+        }
+    }
+    private void makePhoneMessageSpecial(String dataType,String objectId,String eqpId,ArrayList<Double> data) {
+        System.out.println("<<SocketTask:makePhoneMessageSpecial>>");
+
+        List<AlarmSpecialValue> alarmSpecialValueList = socketTask.alarmSpecialValueService.queryAlarmSpecialValueByEqpId(eqpId);
+
+        if (dataType.equals("BloodPressure01")) {
+            if (data.size() != 3) return;
+            if(data.get(0) != 255 && data.get(0) > alarmSpecialValueList.get(4).getValue()) {
+                String message = "心率"+String.valueOf(data.get(0))+"高于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"心率",Float.parseFloat(data.get(0).toString()),"心率超出最高警戒值");
+            }
+            else if(data.get(0) != 0 && data.get(0) < alarmSpecialValueList.get(5).getValue()){
+                String message = "心率"+String.valueOf(data.get(0))+"低于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"心率",Float.parseFloat(data.get(0).toString()),"心率低于最低警戒值");
+            }
+            else if(data.get(1) != 255 && data.get(1) > alarmSpecialValueList.get(0).getValue()) {
+                String message = "高压"+String.valueOf(data.get(1))+"高于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压高压",Float.parseFloat(data.get(0).toString()),"血压高压超出最高警戒值");
+            }
+            else if(data.get(1) != 0 && data.get(1) < alarmSpecialValueList.get(1).getValue()) {
+                String message = "高压"+String.valueOf(data.get(1))+"低于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压高压",Float.parseFloat(data.get(0).toString()),"血压高压低于最高警戒值");
+            }
+            else if(data.get(2) != 255 && data.get(2) > alarmSpecialValueList.get(2).getValue()) {
+                String message = "低压"+String.valueOf(data.get(2))+"高于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压低压",Float.parseFloat(data.get(0).toString()),"血压低压超出最高警戒值");
+            }
+            else if(data.get(2) != 0 && data.get(2) < alarmSpecialValueList.get(3).getValue()) {
+                String message = "低压"+String.valueOf(data.get(2))+"低于设定范围";
+                sendPhoneMessage(objectId,eqpId,message,"血压低压",Float.parseFloat(data.get(0).toString()),"血压低压低于最高警戒值");
+            }
+        } else if (dataType.equals("BloodOxygen01")) {
+            if(data.size()!=1) return;
+            if(data.get(0) < alarmSpecialValueList.get(0).getValue()) {
+                String message = "血氧" + String.valueOf(data.get(0)) + "低于正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"血氧",Float.parseFloat(data.get(0).toString()),"血氧低于正常范围");
+            }
+        } else if (dataType.equals("Temperature01")) {
+            if(data.size()!=2) return;
+            if(data.get(0) < 41.6 && data.get(0) > alarmSpecialValueList.get(0).getValue()) {
+                String message = "体温" + String.valueOf(data.get(0)) + "超出正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"体温",Float.parseFloat(data.get(0).toString()),"体温超出正常范围");
+            }
+            else if(data.get(0) > 30.0 && data.get(0) < alarmSpecialValueList.get(1).getValue()) {
+                String message = "体温" + String.valueOf(data.get(0)) + "低于正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"体温",Float.parseFloat(data.get(0).toString()),"体温低于正常范围");
+            }
+            else if(data.get(1) < 60 && data.get(1) > alarmSpecialValueList.get(2).getValue()) {
+                String message = "环境温度" + String.valueOf(data.get(0)) + "超出正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"环境温度",Float.parseFloat(data.get(1).toString()),"环境温度超出正常范围");
+            }
+            else if(data.get(1) > -50 && data.get(1) < alarmSpecialValueList.get(3).getValue()) {
+                String message = "环境温度" + String.valueOf(data.get(0)) + "低于正常范围";
+                sendPhoneMessage(objectId,eqpId,message,"环境温度",Float.parseFloat(data.get(1).toString()),"环境温度低于正常范围");
+            }
+        } else if (dataType.equals("Mattress01")) {
 
         }
     }
 
+
+    private void sendPhoneMessage(String objectId,String eqpId,String message,String alarmType,float alarmValue,String detail) {
+        String date = dateformat.format(System.currentTimeMillis());
+        String yearMonth = date.substring(0,7);//如2019-03
+        AlarmLog alarmLog = new AlarmLog();
+
+        int sendMessageCount = 1;
+
+        com.humanhealthmonitor.pojo.Object object = socketTask.objectService.queryObjectByObjectId(objectId);
+        String objectPhoneNumber = object.getObjectTel();
+        System.out.println("SocketTask:sendPhoneMessage" + taskNum + ": objectPhoneNumber: " + objectPhoneNumber);
+        String userId = object.getUserId();
+        try {
+            cloudMsgUtil.sendSingleCloudMsg(objectPhoneNumber,eqpId,message);
+            if(!userId.equals(objectId)){
+                String userPhoneNumber = socketTask.userService.queryUserByUserId(userId).getUserTel();
+                cloudMsgUtil.sendSingleCloudMsg(userPhoneNumber,eqpId,message);
+                sendMessageCount++; //说明发了两条短信
+            }
+        } catch (HTTPException | IOException e) {
+            e.printStackTrace();
+        }
+        ObjectResourceUse objectResourceUse2 = socketTask.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(objectId,yearMonth);
+        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+sendMessageCount);
+        socketTask.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
+
+        //插入一条AlarmLog
+        alarmLog.setObjectId(objectId);
+        alarmLog.setEqpId(eqpId);
+        alarmLog.setAlarmType(alarmType);
+        alarmLog.setAlarmValue(alarmValue);
+        String writeTime = dateformat.format(System.currentTimeMillis());
+        alarmLog.setWriteTime(java.sql.Timestamp.valueOf(writeTime));
+        alarmLog.setDetail(detail);
+        socketTask.alarmLogService.insertAlarmLog(alarmLog);
+    }
 }

@@ -71,8 +71,11 @@ public interface EquipmentMapper {
     @Select("select * from equipment where netmaskId=#{netmaskId} and deviceSerial=#{deviceSerial}")
     Equipment queryEquipmentByNetSerial(@Param("netmaskId") int netmaskId, @Param("deviceSerial") int deviceSerial);
 
-
-
     @Select("SELECT objectName FROM object where objectId = #{objectId}")
-    String queryBindUserNameByObjectId(@Param("objectID") String objectId);
+    String queryBindUserNameByObjectId(@Param("objectId") String objectId);
+
+
+    @Select("SELECT special FROM equipment where eqpId = #{eqpId}")
+    int querySpecialValueByEqpId(@Param("eqpId") String eqpId);
+
 }

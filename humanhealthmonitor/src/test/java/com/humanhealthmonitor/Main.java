@@ -12,13 +12,10 @@ import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
 
 public class Main{
     public static void main(String[] args) throws HTTPException, IOException {
-        int time = (int)(System.currentTimeMillis()/1000) - 8*3600;
 
-        CloudMsgUtil cloudMsgUtil = new CloudMsgUtil();
-        cloudMsgUtil.sendSingleCloudMsg("17852227655", "yuan", "Hello, yuan!");
+        Double d= 2.45;
 
-        System.out.println(time);
-
+        System.out.println(Float.parseFloat(d.toString()));
 
     }
 }
