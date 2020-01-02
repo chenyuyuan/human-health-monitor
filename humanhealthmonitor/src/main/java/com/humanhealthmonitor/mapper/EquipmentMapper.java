@@ -76,6 +76,6 @@ public interface EquipmentMapper {
 
 
     @Select("SELECT special FROM equipment where eqpId = #{eqpId}")
-    int querySpecialValueByEqpId(@Param("eqpId") String eqpId);
+    Equipment querySpecialValueByEqpId(@Param("eqpId") String eqpId);
 
 }

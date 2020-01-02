@@ -271,6 +271,7 @@ public class SocketTask implements Runnable {
                 }
             }
             check = (check + 256) % 256;
+            check = (check + 256) % 256;
             if (check != checkSum) {
                 System.out.println("[SocketTask]: {check/checkSum: "+check+" "+checkSum+"} data check error... ");
                 byteArrayList.remove(0);
@@ -483,16 +484,16 @@ public class SocketTask implements Runnable {
         }
         //血压
         else if(sensorType.equals("02")) {
-            tags.clear();
-            fields.clear();
-            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
-            tags.put("eqpId", deviceID);
-            tags.put("objectId", objectId);
-            tags.put("sendTime",timestamp);
-            fields.put("heartRate", sensorDataArray[2]);
-            fields.put("highPressure", sensorDataArray[3]);
-            fields.put("lowPressure", sensorDataArray[4]);
-            influxDBConnector.insertData("bloodPressure", tags, fields);
+//            tags.clear();
+//            fields.clear();
+//            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
+//            tags.put("eqpId", deviceID);
+//            tags.put("objectId", objectId);
+//            tags.put("sendTime",timestamp);
+//            fields.put("heartRate", sensorDataArray[2]);
+//            fields.put("highPressure", sensorDataArray[3]);
+//            fields.put("lowPressure", sensorDataArray[4]);
+//            influxDBConnector.insertData("bloodPressure", tags, fields);
 
             ArrayList<Double> dataToInsert = new ArrayList<>();
             dataToInsert.add((double)sensorDataArray[2]);
@@ -514,14 +515,14 @@ public class SocketTask implements Runnable {
         }
         //血氧
         else if(sensorType.equals("03")) {
-            tags.clear();
-            fields.clear();
-            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
-            tags.put("eqpId", deviceID);
-            tags.put("objectId", objectId);
-            tags.put("sendTime",timestamp);
-            fields.put("spo2", sensorDataArray[5]);
-            influxDBConnector.insertData("bloodOxygen", tags, fields);
+//            tags.clear();
+//            fields.clear();
+//            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
+//            tags.put("eqpId", deviceID);
+//            tags.put("objectId", objectId);
+//            tags.put("sendTime",timestamp);
+//            fields.put("spo2", sensorDataArray[5]);
+//            influxDBConnector.insertData("bloodOxygen", tags, fields);
 
             ArrayList<Double> dataToInsert = new ArrayList<>();
             dataToInsert.add((double)sensorDataArray[5]/100);
@@ -539,15 +540,15 @@ public class SocketTask implements Runnable {
         }
         //温度
         else if(sensorType.equals("04")) {
-            tags.clear();
-            fields.clear();
-            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
-            tags.put("eqpId", deviceID);
-            tags.put("objectId", objectId);
-            tags.put("sendTime", timeinformat);
-            fields.put("bodyTemp", sensorDataArray[1]/100);
-            fields.put("envTemp", sensorDataArray[0]/100);
-            influxDBConnector.insertData("temperature", tags, fields);
+//            tags.clear();
+//            fields.clear();
+//            tags.put("netmaskId", String.valueOf(this.getTaskNum()));
+//            tags.put("eqpId", deviceID);
+//            tags.put("objectId", objectId);
+//            tags.put("sendTime", timeinformat);
+//            fields.put("bodyTemp", sensorDataArray[1]/100);
+//            fields.put("envTemp", sensorDataArray[0]/100);
+//            influxDBConnector.insertData("temperature", tags, fields);
 
             ArrayList<Double> dataToInsert = new ArrayList<>();
             dataToInsert.add((double)sensorDataArray[1]/100);
@@ -762,8 +763,11 @@ public class SocketTask implements Runnable {
             e.printStackTrace();
         }
         ObjectResourceUse objectResourceUse2 = socketTask.objectResouceUseService.queryObjectResourceUseByObjectIdYearMonth(objectId,yearMonth);
-        objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+sendMessageCount);
-        socketTask.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
+        if(objectResourceUse2!=null) {
+            objectResourceUse2.setMsgCount(objectResourceUse2.getMsgCount()+sendMessageCount);
+            socketTask.objectResouceUseService.updateObjectResourceUseOnlyMsgCount(objectResourceUse2);
+        }
+
 
         //插入一条AlarmLog
         alarmLog.setObjectId(objectId);

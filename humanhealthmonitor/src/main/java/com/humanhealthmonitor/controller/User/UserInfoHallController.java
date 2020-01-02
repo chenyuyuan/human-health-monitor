@@ -572,6 +572,7 @@ UserInfoHallController {
         objectSelectedIdS = objectIdSelected;
 //        request.setAttribute("objectIdSelected",objectIdSelected);
         List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectIdSelected);
+        System.out.println("objIdSelected"+objectIdSelected);
         request.setAttribute("equipmentList", equipmentList);
         String objectNameSelected = request.getParameter("objectName");
 //        System.out.println(objectNameSelected);
@@ -614,6 +615,7 @@ UserInfoHallController {
 
 
             for (int i = 0;i < equipmentList.size();i++) {
+                System.out.println(i);
                 if (equipmentList.get(i).getEqpType().equals("Temperature01")) {
                     flagTemperature01 = 1;
                     netMaskIdTemp = equipmentList.get(i).getNetmaskId();
@@ -687,8 +689,6 @@ UserInfoHallController {
                     System.out.println("<体温和环境温度UserInfoHallController>" + bodyTemp + " " +envTemp);
 
                 }
-
-
 
 
 

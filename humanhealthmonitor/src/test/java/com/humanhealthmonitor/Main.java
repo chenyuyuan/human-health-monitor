@@ -13,9 +13,9 @@ import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
 public class Main{
     public static void main(String[] args) throws HTTPException, IOException {
 
-        Double d= 2.45;
-
-        System.out.println(Float.parseFloat(d.toString()));
+        int a = 230;
+        a=(a+256)%256;
+        System.out.println(a);
 
     }
 }

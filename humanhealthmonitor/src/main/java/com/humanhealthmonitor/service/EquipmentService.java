@@ -97,7 +97,18 @@ public class EquipmentService {
 
 
     public int querySpecialValueByEqpId(String eqpId) {
-        return equipmentMapper.querySpecialValueByEqpId(eqpId);
+        Equipment equipment = equipmentMapper.querySpecialValueByEqpId(eqpId);
+        if(equipment==null) {
+            return -1;
+        }
+        else {
+            if(equipment.getSpecial()) //special是boolean
+                return 1;
+            else {
+                return 0;
+            }
+        }
+
     }
 
 }
