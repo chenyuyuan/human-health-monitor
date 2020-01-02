@@ -93,6 +93,7 @@
         var temperatureChart;
         var bloodPressureChart;
         var bloodOxygenChart;
+        var mattressChart;
         // 路径配置
         require.config({
             paths: {
@@ -336,6 +337,89 @@
                     };
                     // 为echarts对象加载数据
                     bloodOxygenChart.setOption(option3);
+    
+    
+                    mattressChart = ec.init(document.getElementById('Mattress01'));
+                    var option4 = {
+                        title : {
+                            text: '床垫设备实时监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['呼吸','是否在床',]
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [{
+                            type : 'category',
+                            name : '时间',
+                            boundaryGap : false,
+                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}次/分'
+                                }
+                            },
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}1-在/0-不在'
+                                }
+                            }
+                        ],
+                        series : [{
+                            name:'呼吸',
+                            type:'line',
+                            data:[[${highPressureList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }, {
+                            name:'是否在床',
+                            type:'line',
+                            data:[[${lowPressureList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    mattressChart.setOption(option4);
+                    
                 }
         );//require end
         
@@ -352,6 +436,8 @@
             array[3] = [0,0,0,0,0,0,0,0,0,0,0];
             array[4] = [0,0,0,0,0,0,0,0,0,0,0];
             array[5] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[6] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[7] = [0,0,0,0,0,0,0,0,0,0,0];
     
             if(document.getElementById('Temperature01')!==null && temperatureChart!==undefined) {
                 var option = temperatureChart.getOption();
@@ -379,6 +465,13 @@
                 var spo2List = option3.series[0].data;
                 array[5] = spo2List;
             }
+            if(document.getElementById('Mattress01')!==null && mattressChart!==undefined) {
+                var option4 = bloodPressureChart.getOption();
+                var breathList = option4.series[0].data;//////////////////////////////????????????
+                var actList = option4.series[1].data;
+                array[6] = highPressureList;
+                array[7] = lowPressureList;
+            }
 	        
             console.log("<start ajax request>")
             $.ajax({
@@ -402,6 +495,10 @@
                     var lowPressureList = data.lowPressureList;
                     var heartRateList = data.heartRateList;
                     var spo2List = data.spo2List;
+                    //
+                    var breathList = data.breathList;
+                    var actList = data.actList;
+                    
                     // var timeArrayList = data.timeArrayList;
                     option.series[0].data = bodyTempList;
                     option.series[1].data = envTempList;
@@ -413,7 +510,10 @@
                     // option3.xAxis[0].data = timeArrayList;
                     option3.series[0].data = spo2List;
                     bloodOxygenChart.setOption(option3);
-                    
+                    //
+                    option4.series[0].data = breathList;
+                    option4.series[1].data = actList;
+                    mattressChart.setOption(option4);
                     
                     
                 },
