@@ -46,6 +46,9 @@ public class IndexUserController {
             //设置主页图片
             List<MainPic> mainPicList = mainPicService.queryAllMainPic();
             request.setAttribute("mainPicList", mainPicList);
+
+
+
             //设置主页分类新闻列表
             List<News> healthNewsList = newsService.queryNewsByNewsTypeTop5("健康阅读");
             List<News> latestNewsList = newsService.queryNewsByNewsTypeTop5("最新消息");
