@@ -223,7 +223,7 @@
                             <div style="width: auto">
                                 <p class="equipmentModifyReminder" style="display: inline;width: 20%;margin:0;text-align: center;font-size: 18px;text-indent: 3em">设备类型</p>
                                 <select class="form-control bg-light border-0 small" id="eqpTypeSelected" name="eqpTypeSelected" style="display:inline;margin-left:0;margin-right:0;font-size: 18px;height: 36px;width: 70%;text-indent: 0.5em;">
-                                    <option th:each="eqpType:${eqpTypeList}" th:value="${eqpType.eqpType}" th:text="${eqpType.eqpType}"></option>
+                                    <option th:each="eqpType:${eqpTypeList}" th:value="${eqpType.eqpType}" th:text="${eqpType.eqpTypeCHName}"></option>
                                 </select>
                             </div>
                             <br/>
