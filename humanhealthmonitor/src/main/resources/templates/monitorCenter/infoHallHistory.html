@@ -19,8 +19,421 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     
-    <script src="static/js/echarts.js"></script>
-
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    
+    <script>
+        // window.onload = function () {
+        //     ajaxGetData();
+        // };
+        function submitOnMouseUpH() {
+            var searchSubmit = document.getElementById("searchHistorySubmit");
+            searchSubmit.style.backgroundColor = "#EE7700";
+        }
+        
+        function submitOnMouseLeaveH() {
+            var searchSubmit = document.getElementById("searchHistorySubmit");
+            searchSubmit.style.backgroundColor = "#FFA500";
+        }
+        //起始时间与截止时间的合法性检验
+        function checkTimeRange() {
+            var form = document.getElementById("searchHistoryForm");
+            if (form.startTime.value == "" || form.endTime.value == "") {
+                alert("请先填写查询起止时间");
+                window.event.returnValue = false;//验证失败不提交action
+                // return false;
+            }
+            else if (new Date(form.startTime.value).getTime() >= new Date(form.endTime.value).getTime() )
+            {
+                alert("起始时间必须小于截止时间，请修改后再查询");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+            else if (new Date(form.endTime.value).getTime() > (new Date().getTime())) {
+                alert("截止时间不能大于系统时间，请修改后再查询");
+                window.event.returnValue = false;//验证失败不提交action
+            }
+        }
+    </script>
+    
+    <script>
+        var xBloodOxygen =['100秒前','90秒前','80秒前','70秒前','60秒前','50秒前','40秒前','30秒前','20秒前','10秒前','现在'];
+        
+        // var timeTemperature = new Array();
+        // var timeValue = new Array();
+        // timeValue = document.getElementById("timeTemperature").value;
+        // for(var i = 0;i < timeValue.length;i++)
+        // {
+        //     timeTemperature.push(timeValue[i].toString());
+        // }
+        
+        // var xBloodOxygenList = new Array();
+        // var str = [[${strrr}]].toString();
+        // xBloodOxygenList.push(str);
+        // var key;
+        // for(key in [[${strArray}]])
+        // {
+        //     xBloodOxygenList.push(key);
+        // }
+        // xBloodOxygenList.push("100秒前");
+        // xBloodOxygenList.push("90秒前");
+        // xBloodOxygenList.push("80秒前");
+        // xBloodOxygenList.push("70秒前");
+        // xBloodOxygenList.push("60秒前");
+        // xBloodOxygenList.push("50秒前");
+        // xBloodOxygenList.push("40秒前");
+        // xBloodOxygenList.push("30秒前");
+        // xBloodOxygenList.push("20秒前");
+        // xBloodOxygenList.push("10秒前");
+        // xBloodOxygenList.push("现在");
+        
+        var temperatureChart;
+        var bloodPressureChart;
+        var bloodOxygenChart;
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/line', //加载line模块，折线图
+                    'echarts/chart/bar' // 加载bar模块，柱状图
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    temperatureChart = ec.init(document.getElementById('Temperature01'));
+                    var option = {
+                        title : {
+                            text: '体温、环境温度历史监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['体温','环境温度']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '时间',
+                                boundaryGap : false,
+                                data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                    '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                                // data: [[${temperature01TimeStampList}]]
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value} ℃'
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'体温',
+                                type:'line',
+                                data:[[${bodyTempList}]],
+                                // data:[11,12,23,44,12,34,21,45,12,34,11],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name:'环境温度',
+                                type:'line',
+                                data:[[${envTempList}]],
+                                // data:[11,12,23,44,12,34,21,45,12,34,11],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    temperatureChart.setOption(option);
+                    
+                    bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
+                    var option2 = {
+                        title : {
+                            text: '血压、心率历史监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['血压高压','血压低压','心率']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '时间',
+                                boundaryGap : false,
+                                data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                    '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                                // data: [[${bloodPressure01TimeStampList}]]
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}mmHg'
+                                }
+                            },
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}次/分'
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'血压高压',
+                                type:'line',
+                                data:[[${highPressureList}]],
+                                // data:[11,12,23,44,12,34,21,45,12,34,11],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name:'血压低压',
+                                type:'line',
+                                data:[[${lowPressureList}]],
+                                // data:[11,12,23,44,12,34,21,45,12,34,11],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name:'心率',
+                                type:'line',
+                                yAxisIndex: 1,
+                                data:[[${heartRateList}]],
+                                // data:[11,12,23,44,12,34,21,45,12,34,11],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    bloodPressureChart.setOption(option2);
+                    
+                    
+                    bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
+                    var option3 = {
+                        title : {
+                            text: '血氧历史监测曲线'
+                            // subtext: '次标题'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['血氧饱和度(spo2)']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['bar','line']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                // type : 'time',
+                                // splitLine: {
+                                //     show: false
+                                // }
+                                // splitNumber: 100
+                                type : 'category',
+                                name : '时间',
+                                boundaryGap : false,
+                                data: xBloodOxygen
+                                // data: timeTemperature
+                                // data: xBloodOxygenList
+                                // type: 'value',
+                                // data:[1,2,3,4,5,6,7,8,9,10,11]
+                                // data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                //     '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                                // data: [[${bloodOxygen01TimeStampList}]]
+                                // data: [${strArray}]
+                                // data: xZuZhuangBO
+                                // data: ['hhh0', 'hhh1', 'hhh2', 'hhh3', 'hhh4', 'hhh5', 'hhh6', 'hhh7', 'hhh8', 'hhh9', 'hhh10']
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLabel : {
+                                    formatter: '{value}%'
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'血氧饱和度',
+                                type:'line',
+                                data:[[${spo2List}]],
+                                // data:times,
+                                // data:[11,12,23,44,12,34,21,45,12,34,11],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 为echarts对象加载数据
+                    bloodOxygenChart.setOption(option3);
+                    
+                }
+        );//require end
+        
+        function ajaxGetData() {
+            var url = "/infoHallHistorySearchResult/AutoRefresh";
+            var option = temperatureChart.getOption();
+            var option2 = bloodPressureChart.getOption();
+            var option3 = bloodOxygenChart.getOption();
+            // var bodyTempList = option.series[0].data;
+            // var envTempList = option.series[1].data;
+            // var highPressureList = option2.series[0].data;
+            // var lowPressureList = option2.series[1].data;
+            // var heartRateList = option2.series[2].data;
+            // var spo2List = option3.series[0].data;
+            var array = new Array();
+            // array[0] = bodyTempList;
+            // array[1] = envTempList;
+            // array[2] = highPressureList;
+            // array[3] = lowPressureList;
+            // array[4] = heartRateList;
+            // array[5] = spo2List;
+            $.ajax({
+                url: url,
+                type: 'POST',
+                cache: 'false',
+                data: JSON.stringify(array),
+                dataType: 'json',
+                headers : {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/json;charset=utf-8'
+                    // contentType : 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                success: function (data) {
+                    // console.log(result);
+                    // var bodyTempList = data.bodyTempList;
+                    // var envTempList = data.envTempList;
+                    // var highPressureList = data.highPressureList;
+                    // var lowPressureList = data.lowPressureList;
+                    // var heartRateList = data.heartRateList;
+                    // var spo2List = data.spo2List;
+                    var timeListTemperature01 = data.timeListTemperature01;
+                    var timeListBloodPressure01 = data.timeListBloodPressure01;
+                    var timeListBloodOxygen01 = data.timeListBloodOxygen01;
+                    // option.series[0].data = bodyTempList;
+                    // option.series[1].data = envTempList;
+                    option.xAxis[0].data = timeListTemperature01;
+                    temperatureChart.setOption(option);
+                    // option2.series[0].data = highPressureList;
+                    // option2.series[1].data = lowPressureList;
+                    // option2.series[2].data = heartRateList;
+                    option2.xAxis[0].data = timeListBloodPressure01;
+                    bloodPressureChart.setOption(option2);
+                    // option3.series[0].data = spo2List;
+                    option3.xAxis[0].data = timeListBloodOxygen01;
+                    bloodOxygenChart.setOption(option3);
+                    
+                },
+                error: function(data){
+                    //alert("操作异常");
+                }
+            });
+        }//end function
+        // setInterval('ajaxGetData()',10000);//向后台请求最新数据
+    
+    
+    </script>
 </head>
 
 <body id="page-top">
