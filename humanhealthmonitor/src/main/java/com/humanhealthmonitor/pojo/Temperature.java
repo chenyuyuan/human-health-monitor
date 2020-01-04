@@ -11,6 +11,11 @@ public class Temperature {
     private float bodyTemp;//体温
     private float envTemp;//环境温度
 
+    private String time;
+
+    public void setTime(String time) { this.time=time;}
+    public String getTime() {return this.time;}
+
     public String getSendTime()
     {
         return this.sendTime;

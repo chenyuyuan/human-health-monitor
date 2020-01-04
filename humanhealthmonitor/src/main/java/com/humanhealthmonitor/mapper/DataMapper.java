@@ -45,4 +45,13 @@ public interface DataMapper {
 
 
 
+    @Select("SELECT * FROM temperature WHERE objectId=#{objectId} and time>#{startTime} and time<#{endTime}")
+    ArrayList<Temperature> queryTemperatureLimitTime(@Param("objectId") String objectId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+    @Select("SELECT * FROM bloodOxygen WHERE objectId=#{objectId} and time>#{startTime} and time<#{endTime}")
+    ArrayList<BloodOxygen> queryBloodOxygenLimitTime(@Param("objectId") String objectId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+    @Select("SELECT * FROM bloodPressure WHERE objectId=#{objectId} and time>#{startTime} and time<#{endTime}")
+    ArrayList<BloodPressure> queryBloodPressureLimitTime(@Param("objectId") String objectId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+    @Select("SELECT * FROM mattress WHERE objectId=#{objectId} and time>#{startTime} and time<#{endTime}")
+    ArrayList<Mattress> queryMattressLimitTime(@Param("objectId") String objectId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
 }

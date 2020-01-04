@@ -12,6 +12,10 @@ public class BloodPressure {
     private int lowPressure;//血压低压
     private int heartRate;//心率
 
+    private String time;
+
+    public void setTime(String time) { this.time=time;}
+    public String getTime() {return this.time;}
 
     public String getSendTime()
     {

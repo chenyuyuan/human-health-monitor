@@ -9,6 +9,10 @@ public class BloodOxygen {
     private String sendTime;//网关传送该数据的时刻,精确到秒
 
     private int spo2;//血氧饱和度
+    private String time;
+
+    public void setTime(String time) { this.time=time;}
+    public String getTime() {return this.time;}
 
     public String getSendTime()
     {

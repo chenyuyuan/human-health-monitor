@@ -47,4 +47,22 @@ public class DataService {
         return dataMapper.queryLastSeveralBloodPressure(objectId,limitTime,dataCount);
     }
 
+
+
+    public ArrayList<Temperature> queryTemperatureLimitTime(String objectId, String startTime, String endTime) {
+        return dataMapper.queryTemperatureLimitTime(objectId,startTime,endTime);
+    }
+    public ArrayList<Mattress> queryMattressLimitTime(String objectId, String startTime, String endTime) {
+        return dataMapper.queryMattressLimitTime(objectId,startTime,endTime);
+    }
+    public ArrayList<BloodOxygen> queryBloodOxygenLimitTime(String objectId, String startTime, String endTime) {
+        return dataMapper.queryBloodOxygenLimitTime(objectId,startTime,endTime);
+    }
+    public ArrayList<BloodPressure> queryBloodPressureLimitTime(String objectId, String startTime, String endTime) {
+        return dataMapper.queryBloodPressureLimitTime(objectId,startTime,endTime);
+    }
+
+
+
+
 }

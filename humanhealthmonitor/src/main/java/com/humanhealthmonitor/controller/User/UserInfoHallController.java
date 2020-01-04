@@ -18,10 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class
@@ -905,6 +902,9 @@ UserInfoHallController {
         endTime = endTime.replace(" ","T");
         request.setAttribute("startTime",startTime);
         request.setAttribute("endTime",endTime);
+        List<EquipmentType> eqpTypeList = equipmentTypeService.queryAllEquipmentType();
+        Collections.reverse(eqpTypeList);
+        request.setAttribute("eqpTypeList", eqpTypeList);
 
         return "monitorCenter/infoHallHistory";
     }

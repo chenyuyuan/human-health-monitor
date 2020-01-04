@@ -3,7 +3,7 @@ package com.humanhealthmonitor.pojo;
 public class Mattress {
     private int id;
     private String time;
-    private int eqpId;
+    private String eqpId;
     private String objectId;
     private int netmaskId;
     private String sendTime;
@@ -26,11 +26,11 @@ public class Mattress {
         this.time = time;
     }
 
-    public int getEqpId() {
+    public String getEqpId() {
         return eqpId;
     }
 
-    public void setEqpId(int eqpId) {
+    public void setEqpId(String eqpId) {
         this.eqpId = eqpId;
     }
 
