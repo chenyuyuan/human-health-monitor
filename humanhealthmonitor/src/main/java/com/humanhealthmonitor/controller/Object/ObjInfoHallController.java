@@ -80,6 +80,9 @@ public class ObjInfoHallController {
             ArrayList<Double> spo2List = new ArrayList<>();
             ArrayList<Double> bodyTempList = new ArrayList<>();
             ArrayList<Double> envTempList = new ArrayList<>();
+            //
+            ArrayList<Double> breathList = new ArrayList<>();
+            ArrayList<Double> actList = new ArrayList<>();
 
             int flagTemperature01 = 0;
             String temperature01Order="";
@@ -90,6 +93,11 @@ public class ObjInfoHallController {
             int flagBloodOxygen01 = 0;
             String bloodOxygen01Order="";
             int netMaskIdBloodOxygen01=0;
+            //
+            int flagMattress01 = 0;
+            String mattress01Order="";
+            int netMaskIdMattress01=0;
+
 
             int netMaskIdTemp;
             int deviceSerialTemp;
@@ -134,12 +142,17 @@ public class ObjInfoHallController {
                     netMaskIdBloodPressure01 = netMaskIdTemp;
                     System.out.println("ObjInfoHallController: bloodPressure01Order: "+bloodPressure01Order);
                 }
+                else if(objEquipmentList.get(i).getEqpType().equals("Mattress01")){
+                    flagMattress01 = 1;
+                }
             }
             System.out.println("ObjInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
 
 
 
             List<Equipment> noEquipmentList = new ArrayList<>();
+            Equipment noNewEquipment = new Equipment();//zy
+
             //连接InfluxDB
             influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
             influxDBConnector.connectToDatabase();
@@ -193,7 +206,6 @@ public class ObjInfoHallController {
                 System.out.println("ObjInfoHallController: bodyTempList"+bodyTempList);
                 System.out.println("ObjInfoHallController: envTempList"+envTempList);
             } else {
-                Equipment noNewEquipment = new Equipment();//zy
 
 
                 noNewEquipment.setEqpType("Temperature01");
@@ -256,7 +268,6 @@ public class ObjInfoHallController {
                 System.out.println("ObjInfoHallController: lowPressureList"+lowPressureList);
                 System.out.println("ObjInfoHallController: heartRateList"+heartRateList);
             } else {
-                Equipment noNewEquipment = new Equipment();//zy
 
                 noNewEquipment.setEqpType("BloodPressure01");
                 for (int i = 0;i < 11;i++) {
@@ -304,7 +315,6 @@ public class ObjInfoHallController {
 //                }
                 System.out.println("ObjInfoHallController: spo2List: "+spo2List);
             }else {
-                Equipment noNewEquipment = new Equipment();//zy
 
                 noNewEquipment.setEqpType("BloodOxygen01");
                 for (int i = 0;i < 11;i++) {
@@ -312,6 +322,43 @@ public class ObjInfoHallController {
                 }
                 noEquipmentList.add(noNewEquipment);
             }
+            if (flagMattress01 == 1) {
+
+                for (int i = 0;i < 10;i++) {
+                    breathList.add(0.0);
+                    actList.add(0.0);
+                }
+                long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
+                long timestamp = System.currentTimeMillis() / 1000 - 10;
+                SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+                String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
+
+
+                ArrayList<Mattress> mattressArrayList = dataService.queryMattress(object.getObjectId(),1,limitTimeinformat);
+
+                if(mattressArrayList == null || mattressArrayList.size()==0){//如果值为空,赋0
+                    spo2List.add(0.0);
+                }else {
+                    double breath = mattressArrayList.get(0).getBreath();
+                    breathList.add(breath);
+                    double act = mattressArrayList.get(0).getAct();
+                    actList.add(act);
+                }
+
+                System.out.println("UserInfoHallController: breathList: "+breathList);
+                System.out.println("UserInfoHallController: actList: "+actList);
+            }else {
+                noNewEquipment.setEqpType("Mattress01");
+                for (int i = 0;i < 11;i++) {
+                    breathList.add(0.0);
+                    actList.add(0.0);
+                }
+                noEquipmentList.add(noNewEquipment);
+            }
+
+
+
+
 //            if (flagBloodOxygen01 == 0)/////////////////////
 //            {
 //                for (int i = 0;i < 11;i++)
@@ -337,6 +384,8 @@ public class ObjInfoHallController {
             request.setAttribute("lowPressureList",lowPressureList);
             request.setAttribute("heartRateList",heartRateList);
             request.setAttribute("spo2List",spo2List);
+            request.setAttribute("breathList", breathList);
+            request.setAttribute("actList", actList);
             request.setAttribute("noEquipmentList",noEquipmentList);
         }
 
@@ -348,7 +397,7 @@ public class ObjInfoHallController {
     @ResponseBody
     public Map<String,ArrayList<Double>> healthCenterAjaxTest(@RequestBody ArrayList<ArrayList<Double>> array,HttpServletRequest request) {
 //        System.out.println("array: "+array);
-        System.out.println("objInfoHallOnTimeAutoRefresh");
+        System.out.println("<<<<<<<objInfoHallOnTimeAutoRefresh>>>>>>>");
 //        System.out.println("objectSelectedIdS"+objectSelectedIdS);
 
         Object object = (Object) request.getSession().getAttribute("object");
@@ -364,6 +413,9 @@ public class ObjInfoHallController {
         ArrayList<Double> lowPressureList = array.get(3);
         ArrayList<Double> heartRateList = array.get(4);
         ArrayList<Double> spo2List = array.get(5);
+        //
+        ArrayList<Double> breathList = array.get(6);
+        ArrayList<Double> actList = array.get(7);
 //        System.out.println("ObjInfoHallController: bodyTempList"+bodyTempList);
 //        System.out.println("envTempList"+envTempList);
 //        System.out.println("highPressureList"+highPressureList);
@@ -382,6 +434,10 @@ public class ObjInfoHallController {
         int flagBloodOxygen01 = 0;
         String bloodOxygen01Order="";
         int netMaskIdBloodOxygen01=0;
+        //
+        int flagMattress01 = 0;
+        String mattress01Order="";
+        int netMaskIdMattress01=0;
 
         int netMaskIdTemp;
         int deviceSerialTemp;
@@ -435,6 +491,9 @@ public class ObjInfoHallController {
                 netMaskIdTemperature01 = netMaskIdTemp;
                 System.out.println("ObjInfoHallController: temperature01Order: "+temperature01Order);////
             }
+            else if(objEquipmentList.get(i).getEqpType().equals("Mattress01")){
+                flagMattress01 = 1;
+            }
         }
         System.out.println("ObjInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
         //连接InfluxDB
@@ -442,74 +501,167 @@ public class ObjInfoHallController {
         influxDBConnector.connectToDatabase();
         if (flagTemperature01 == 1) {
 //            sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////
-            sendMessage(netMaskIdTemperature01,temperature01Order);//added0526
+            sendMessage(netmask,order);//added0526
 
             bodyTempList.remove(0);//去掉开头
             envTempList.remove(0);
             long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
-            QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "
-                    +"'"+object.getObjectId()+"'"+" and time > "+timestamp10);
-//            System.out.println("ObjInfoHallController: temperatureResults: "+temperatureResults);
-            if(temperatureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                System.out.println("ObjInfoHallController: temperatureResults null 254");
+
+
+            long timestamp = System.currentTimeMillis() / 1000 - 10;
+            SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+            String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
+
+
+            ArrayList<Temperature> temperatureArrayList = dataService.queryTemperature(object.getObjectId(),1,limitTimeinformat);
+
+            if(temperatureArrayList == null || temperatureArrayList.size()==0){
                 bodyTempList.add(0.0);
                 envTempList.add(0.0);
-            }else {
-                double bodyTemp = (double)temperatureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取体温，Object转为两位小数
-                bodyTempList.add(Double.valueOf(String.format("%.2f",bodyTemp)));
-                double envTemp = (double)temperatureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(2);//获取环境温度，Object转为两位小数
-                envTempList.add(Double.valueOf(String.format("%.2f",envTemp)));
             }
+            else {
+                double bodyTemp = temperatureArrayList.get(0).getBodyTemp();
+                bodyTempList.add(Double.valueOf(String.format("%.2f",bodyTemp)));
+                double envTemp = temperatureArrayList.get(0).getEnvTemp();
+                envTempList.add(Double.valueOf(String.format("%.2f",envTemp)));
+                System.out.println("<体温和环境温度UserInfoHallController>" + bodyTemp + " " +envTemp);
+
+            }
+
+
+
+//            QueryResult temperatureResults =  influxDBConnector.queryData("select last(bodyTemp),(envTemp) from temperature where objectId = "
+//                    +"'"+object.getObjectId()+"'"+" and time > "+timestamp10);
+////            System.out.println("ObjInfoHallController: temperatureResults: "+temperatureResults);
+//            if(temperatureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
+////                System.out.println("ObjInfoHallController: temperatureResults null 254");
+//                bodyTempList.add(0.0);
+//                envTempList.add(0.0);
+//            }else {
+//                double bodyTemp = (double)temperatureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取体温，Object转为两位小数
+//                bodyTempList.add(Double.valueOf(String.format("%.2f",bodyTemp)));
+//                double envTemp = (double)temperatureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(2);//获取环境温度，Object转为两位小数
+//                envTempList.add(Double.valueOf(String.format("%.2f",envTemp)));
+//            }
             System.out.println("ObjInfoHallController: bodyTempList"+bodyTempList);
             System.out.println("ObjInfoHallController: envTempList"+envTempList);
         }
         if (flagBloodPressure01 == 1) {
 //            sendMsgQueue.get(netMaskIdBloodPressure01-1).offer(bloodPressure01Order);////
-            sendMessage(netMaskIdBloodPressure01,bloodPressure01Order);//added0526
+            sendMessage(netmask,order);//added0526
 
             highPressureList.remove(0);
             lowPressureList.remove(0);
             heartRateList.remove(0);
             long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
-            QueryResult bloodPressureResults =  influxDBConnector.queryData("select last(highPressure),(lowPressure),(heartRate) from bloodPressure where objectId = "+"'"
-                    +object.getObjectId()+"'"+" and time > "+timestamp10);
-//            System.out.println("ObjInfoHallController: bloodPressureResults: "+bloodPressureResults);
-            if(bloodPressureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
-//                System.out.println("ObjInfoHallController: bloodPressureResults null 277");
+            long timestamp = System.currentTimeMillis() / 1000 - 10;
+            SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+            String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
+
+            ArrayList<BloodPressure> bloodPressureArrayList = dataService.queryBloodPressure(object.getObjectId(),1,limitTimeinformat);
+
+            if(bloodPressureArrayList == null||bloodPressureArrayList.size()==0){//如果值为空,全部赋0
                 highPressureList.add(0.0);
                 lowPressureList.add(0.0);
                 heartRateList.add(0.0);
             }else {
-                double lowPressure = (double)bloodPressureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(2);//获取低压
+                double lowPressure = bloodPressureArrayList.get(0).getLowPressure();
                 lowPressureList.add(lowPressure);
-                double heartRate = (double)bloodPressureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(3);//获取心率
+                double heartRate = bloodPressureArrayList.get(0).getHeartRate();
                 heartRateList.add(heartRate);
-                double highPressure = (double)bloodPressureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取高压
+                double highPressure = bloodPressureArrayList.get(0).getHighPressure();
                 highPressureList.add(highPressure);
-//                System.out.println("ObjInfoHallController: get new pressure");
             }
+
+
+
+
+//            QueryResult bloodPressureResults =  influxDBConnector.queryData("select last(highPressure),(lowPressure),(heartRate) from bloodPressure where objectId = "+"'"
+//                    +object.getObjectId()+"'"+" and time > "+timestamp10);
+////            System.out.println("ObjInfoHallController: bloodPressureResults: "+bloodPressureResults);
+//            if(bloodPressureResults.getResults().get(0).getSeries() == null){//如果值为空,全部赋0
+////                System.out.println("ObjInfoHallController: bloodPressureResults null 277");
+//                highPressureList.add(0.0);
+//                lowPressureList.add(0.0);
+//                heartRateList.add(0.0);
+//            }else {
+//                double lowPressure = (double)bloodPressureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(2);//获取低压
+//                lowPressureList.add(lowPressure);
+//                double heartRate = (double)bloodPressureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(3);//获取心率
+//                heartRateList.add(heartRate);
+//                double highPressure = (double)bloodPressureResults.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取高压
+//                highPressureList.add(highPressure);
+////                System.out.println("ObjInfoHallController: get new pressure");
+//            }
             System.out.println("ObjInfoHallController: highPressureList"+highPressureList);
             System.out.println("ObjInfoHallController: lowPressureList"+lowPressureList);
             System.out.println("ObjInfoHallController: heartRateList"+heartRateList);
         }
         if (flagBloodOxygen01 == 1) {
 //            sendMsgQueue.get(netMaskIdBloodOxygen01-1).offer(bloodOxygen01Order);////
-            sendMessage(netMaskIdBloodOxygen01,bloodOxygen01Order);//added0526
+            sendMessage(netmask,order);//added0526
             spo2List.remove(0);
             long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
-            QueryResult spo2Results =  influxDBConnector.queryData("select last(spo2) from bloodOxygen where objectId = "
-                    +"'"+object.getObjectId()+"'"+" and time > "+timestamp10);
-//            System.out.println("ObjInfoHallController: spo2Results: "+spo2Results);
-            if(spo2Results.getResults().get(0).getSeries() == null){//如果值为空,赋0
-//                System.out.println("ObjInfoHallController: spo2Results null 301");
+
+            long timestamp = System.currentTimeMillis() / 1000 - 10;
+            SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+            String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
+
+            ArrayList<BloodOxygen> bloodOxygenArrayList = dataService.queryBloodOxygen(object.getObjectId(),1,limitTimeinformat);
+
+            if(bloodOxygenArrayList == null || bloodOxygenArrayList.size()==0){//如果值为空,赋0
                 spo2List.add(0.0);
-            }else
-            {
-                double spo2 = (double)spo2Results.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取血氧饱和度,get(0)是时间戳
+            }else {
+                double spo2 = bloodOxygenArrayList.get(0).getSpo2();
                 spo2List.add(spo2);
             }
+
+
+
+//            QueryResult spo2Results =  influxDBConnector.queryData("select last(spo2) from bloodOxygen where objectId = "
+//                    +"'"+object.getObjectId()+"'"+" and time > "+timestamp10);
+////            System.out.println("ObjInfoHallController: spo2Results: "+spo2Results);
+//            if(spo2Results.getResults().get(0).getSeries() == null){//如果值为空,赋0
+////                System.out.println("ObjInfoHallController: spo2Results null 301");
+//                spo2List.add(0.0);
+//            }else {
+//                double spo2 = (double)spo2Results.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);//获取血氧饱和度,get(0)是时间戳
+//                spo2List.add(spo2);
+//            }
             System.out.println("ObjInfoHallController: spo2List: "+spo2List);
         }
+
+        if (flagMattress01 == 1) {
+
+            for (int i = 0;i < 10;i++) {
+                breathList.add(0.0);
+                actList.add(0.0);
+            }
+            long timestamp10 = (System.currentTimeMillis()-10000)*1000000;
+            long timestamp = System.currentTimeMillis() / 1000 - 10;
+            SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+            String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
+
+
+            ArrayList<Mattress> mattressArrayList = dataService.queryMattress(object.getObjectId(),1,limitTimeinformat);
+
+            if(mattressArrayList == null || mattressArrayList.size()==0){//如果值为空,赋0
+                spo2List.add(0.0);
+            }else {
+                double breath = mattressArrayList.get(0).getBreath();
+                breathList.add(breath);
+                double act = mattressArrayList.get(0).getAct();
+                actList.add(act);
+            }
+
+            System.out.println("UserInfoHallController: breathList: "+breathList);
+            System.out.println("UserInfoHallController: actList: "+actList);
+        }
+
+
+
+
+
 //        else///////////////////
 //        {
 //            spo2List.remove(0);
@@ -524,6 +676,8 @@ public class ObjInfoHallController {
         map.put("lowPressureList",lowPressureList);
         map.put("heartRateList",heartRateList);
         map.put("spo2List",spo2List);
+        map.put("breathList", breathList);
+        map.put("actList", actList);
 
         return map;
     }
