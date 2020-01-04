@@ -261,22 +261,22 @@
 								<li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
 							</ol>
 							<div class="carousel-inner" style="border-radius: 10px">
-								<div class="carousel-item active">
-									<img  th:src="'/'+${mainPicList.get(0).getPicUrl()}" class="d-block w-100" onclick="document.picForm.submit()" alt="...">
+								<div class="carousel-item active relocate-news">
+									<img th:src="'/'+${mainPicList.get(0).getPicUrl()}" class="d-block w-100" th:onclick="'javascript:relocateNews(\''+${mainPicList.get(0).getNewsId()}+'\')'" alt="...">
 									<div class="carousel-caption d-none d-md-block">
 										<h5 th:text="${mainPicList.get(0).getNewsHead()}">First slide label</h5>
 <!--										<p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>-->
 									</div>
 								</div>
-								<div class="carousel-item">
-									<img th:src="'/'+${mainPicList.get(1).getPicUrl()}" class="d-block w-100" onclick="document.picForm.submit()" alt="...">
+								<div class="carousel-item relocate-news">
+									<img th:src="'/'+${mainPicList.get(1).getPicUrl()}" class="d-block w-100" th:onclick="'javascript:relocateNews(\''+${mainPicList.get(1).getNewsId()}+'\')'" alt="...">
 									<div class="carousel-caption d-none d-md-block">
 										<h5 th:text="${mainPicList.get(1).getNewsHead()}">Second slide label</h5>
 <!--										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>-->
 									</div>
 								</div>
-								<div class="carousel-item">
-									<img th:src="'/'+${mainPicList.get(2).getPicUrl()}" class="d-block w-100" onclick="document.picForm.submit()" alt="...">
+								<div class="carousel-item relocate-news">
+									<img th:src="'/'+${mainPicList.get(2).getPicUrl()}" class="d-block w-100" th:onclick="'javascript:relocateNews(\''+${mainPicList.get(2).getNewsId()}+'\')'" alt="...">
 									<div class="carousel-caption d-none d-md-block">
 										<h5 th:text="${mainPicList.get(2).getNewsHead()}">Third slide label</h5>
 <!--										<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>-->
@@ -424,5 +424,14 @@
 <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="/js/sb-admin-2.min.js"></script>
+
+
+<script type = "text/javascript">
+    $(document).ready(function () {
+        relocateNews=function(newsId) {
+            window.location.href="/monitorCenter/newsPageUser?newsId="+newsId
+        }
+    })
+</script>
 </body>
 </html>
