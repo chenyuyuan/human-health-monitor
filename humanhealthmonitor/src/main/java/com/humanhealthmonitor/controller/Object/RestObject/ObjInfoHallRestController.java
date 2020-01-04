@@ -1,4 +1,4 @@
-package com.humanhealthmonitor.controller.User.RestUser;
+package com.humanhealthmonitor.controller.Object.RestObject;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -12,21 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
-import static com.humanhealthmonitor.util.ByteUtils.stringToByteArray;
 
 @RestController
 @RequestMapping("/rest")
-public class UserInfoHallRestController {
+public class ObjInfoHallRestController {
     @Autowired
     private EquipmentService equipmentService;
     @Autowired
@@ -48,21 +43,23 @@ public class UserInfoHallRestController {
 
 
     @CrossOrigin
-    @RequestMapping(value = "/monitorCenter/searchHistoryData", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @RequestMapping(value = "/monitorCenter/objsearchHistoryData", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public HashMap searchHistoryData(@RequestBody JSONObject params, HttpServletRequest request, HttpServletResponse response)
+    public HashMap objsearchHistoryData(@RequestBody JSONObject params, HttpServletRequest request, HttpServletResponse response)
             throws IOException, NullPointerException, InterruptedException {
-        System.out.print("[UserEquipmentRestController]:");
+        System.out.println("[UserEquipmentRestController]:");
         //String content = params.getString("content");
         HashMap res = new HashMap();
 
-        User user = (User) request.getSession().getAttribute("user");
-        request.setAttribute("user", user);
+        Object object = (Object) request.getSession().getAttribute("object");
+        request.setAttribute("object", object);
 
 
 
+        String objectId = object.getObjectId();
 
-        String objectId = params.getString("objectSelected");
+
+
         String startTimeParam = params.getString("startTime");
         String endTimeParam = params.getString("endTime");
 

@@ -493,29 +493,24 @@
                 <div class="row">
                     <div class="col-lg-3">
                         <div style="width: 100%;float: left;padding-left: 3%">
-                            <form id="searchHistoryForm" name="searchHistoryForm"  onsubmit="checkTimeRange()" action="/objInfoHallHistoryResult"
-                                  accept-charset="utf-8" method="post" style="text-align:left;">
-                                <p style="font-size: 18px;text-align: left">查询选项</p>
-                                <p id="startTime" style="font-size: 18px">起始时间：</p>
-                                <input type="datetime-local" id="startTime" name="startTime"  th:value="${startTime}" class="form-control"/>
-                                <p id="startTime" style="font-size: 18px">截止时间：</p>
-                                <input type="datetime-local" id="endTime" name="endTime" th:value="${endTime}" class="form-control"/>
-                                <p></p>
-            
-                                <input type="submit" id="searchHistorySubmit" name="searchHistorySubmit"
-                                       style="font-size: 18px;height: 50px;width: 100%;border-radius: 4px;background-color: #007BFF;border: none;color: white"
-                                       value="查   询"/>
-                            </form>
+                            <p style="font-size: 18px;text-align: left">查询选项</p>
+                            <p id="startTimeLabel" style="font-size: 18px">起始时间：</p>
+                            <input type="datetime-local" id="startTime" name="startTime"  th:value="${startTime}" class="form-control"/>
+                            <p id="endTimeLabel" style="font-size: 18px">截止时间：</p>
+                            <input type="datetime-local" id="endTime" name="endTime" th:value="${endTime}" class="form-control"/>
+                            <p></p>
+                            <button type="submit" id="searchHistorySubmit" name="searchHistorySubmit" class="form-control"
+                                    style="font-size: 18px;height: 50px;width: 100%;border-radius: 4px;background-color: #007BFF;border: none;color: white">查询</button>
                         </div>
                     </div>
                     <div class="col-lg-9">
                         <div style="width: 100%;float: left;">
                             <!--<p align="center" th:text="${objectNameSelected}" style="color: black;font-size: 20px;border: 0px;text-align: center"></p>-->
                             <table id="equipmentTable" style="width: 100%">
-                                <tr th:each="equipment:${equipmentList}">
+                                <tr th:each="equipment:${eqpTypeList}">
                                     <td>
                                         <div th:id="${equipment.eqpType}"  style="height:400px;background-color:white;width:100%;border: 1px solid lightgrey;margin: auto;">
-                                            <p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>
+                                            <p style="font-size: 20px;text-align: left" th:text="${equipment.eqpType}"></p>
                                             <!--在此绘制实时监测折线图-->
                                         </div>
                                     </td>
@@ -582,10 +577,392 @@
 <script src="/js/sb-admin-2.min.js"></script>
 
 <script type = "text/javascript">
-    
+    ipAddressServer = "101.132.105.38";
+    ipAddressLocal = "localhost";
     
     $(document).ready(function () {
         console.log('the documnt is ready!')
+        $("#searchHistorySubmit").click(function () {
+            startTime = $("#startTime").val()
+            endTime = $("#endTime").val()
+        
+        
+            if (startTime === "" || endTime === "") {
+                alert("请先填写选择时间");
+            }
+            else if (new Date(startTime).getTime() >= new Date(endTime).getTime() )
+            {
+                alert("起始时间必须小于截止时间，请修改后再查询");
+            }
+            else if (new Date(endTime).getTime() > (new Date().getTime())) {
+                endTime=new Date().getTime()
+            }
+        
+            if(startTime>endTime) {
+                alert()
+            }
+        
+            tosenddata={
+                "startTime": startTime,
+                "endTime": endTime
+            };
+            console.log("send start");
+            console.log(tosenddata.startTime+" "+tosenddata.endTime);
+            $.ajax({
+                url:'http://'+ipAddressLocal+':8081/rest/monitorCenter/objsearchHistoryData',
+                type:"POST",
+                contentType: 'application/json; charset=UTF-8',
+                data:JSON.stringify(tosenddata),
+                dataType:'json',
+                success:function (data) {
+                    console.log("[function:send:ajax]the success return message is " + data.msg);
+                
+                    if(data.msg === "success"){
+                        var temperatureChart;
+                        var bloodPressureChart;
+                        var bloodOxygenChart;
+                        var mattressChart;
+                        // 路径配置
+                        require.config({
+                            paths: {
+                                echarts: 'http://echarts.baidu.com/build/dist'
+                            }
+                        });
+                        // 使用
+                        require([
+                                'echarts',
+                                'echarts/chart/line', //加载line模块，折线图
+                                'echarts/chart/bar' // 加载bar模块，柱状图
+                            ],
+                            function (ec) {
+                                // 基于准备好的dom，初始化echarts图表
+                                temperatureChart = ec.init(document.getElementById('Temperature01'));
+                                var option = {
+                                    title : {
+                                        text: '体温、环境温度实时监测曲线'
+                                        // subtext: '次标题'
+                                    },
+                                    tooltip : {
+                                        trigger: 'axis'
+                                    },
+                                    legend: {
+                                        data:['体温','环境温度']
+                                    },
+                                    toolbox: {
+                                        show : true,
+                                        feature : {
+                                            mark : {show: true},
+                                            dataView : {show: true, readOnly: false},
+                                            magicType : {show: true, type: ['bar','line']},
+                                            restore : {show: true},
+                                            saveAsImage : {show: true}
+                                        }
+                                    },
+                                    calculable : true,
+                                    xAxis : [{
+                                        type : 'category',
+                                        name : '时间',
+                                        boundaryGap : false,
+                                        data : data.tempTimeList
+                                    }
+                                    ],
+                                    yAxis : [{
+                                        type : 'value',
+                                        axisLabel : {
+                                            formatter: '{value} ℃'
+                                        }
+                                    }
+                                    ],
+                                    series : [{
+                                        name:'体温',
+                                        type:'line',
+                                        data:data.bodyTempList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }, {
+                                        name:'环境温度',
+                                        type:'line',
+                                        data:data.envTempList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }
+                                    ]
+                                };
+                                // 为echarts对象加载数据
+                                temperatureChart.setOption(option);
+                                bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
+                                var option2 = {
+                                    title : {
+                                        text: '血压、心率实时监测曲线'
+                                        // subtext: '次标题'
+                                    },
+                                    tooltip : {
+                                        trigger: 'axis'
+                                    },
+                                    legend: {
+                                        data:['血压高压','血压低压','心率']
+                                    },
+                                    toolbox: {
+                                        show : true,
+                                        feature : {
+                                            mark : {show: true},
+                                            dataView : {show: true, readOnly: false},
+                                            magicType : {show: true, type: ['bar','line']},
+                                            restore : {show: true},
+                                            saveAsImage : {show: true}
+                                        }
+                                    },
+                                    calculable : true,
+                                    xAxis : [{
+                                        type : 'category',
+                                        name : '时间',
+                                        boundaryGap : false,
+                                        data : data.bloodPressureTimeList
+                                    }
+                                    ],
+                                    yAxis : [
+                                        {
+                                            type : 'value',
+                                            axisLabel : {
+                                                formatter: '{value}mmHg'
+                                            }
+                                        },
+                                        {
+                                            type : 'value',
+                                            axisLabel : {
+                                                formatter: '{value}次/分'
+                                            }
+                                        }
+                                    ],
+                                    series : [{
+                                        name:'血压高压',
+                                        type:'line',
+                                        data:data.highPressureList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }, {
+                                        name:'血压低压',
+                                        type:'line',
+                                        data:data.lowPressureList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }, {
+                                        name:'心率',
+                                        type:'line',
+                                        yAxisIndex: 1,
+                                        data:data.heartRateList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }
+                                    ]
+                                };
+                                // 为echarts对象加载数据
+                                bloodPressureChart.setOption(option2);
+                                bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
+                                var option3 = {
+                                    title : {
+                                        text: '血氧实时监测曲线'
+                                        // subtext: '次标题'
+                                    },
+                                    tooltip : {
+                                        trigger: 'axis'
+                                    },
+                                    legend: {
+                                        data:['血氧饱和度(spo2)']
+                                    },
+                                    toolbox: {
+                                        show : true,
+                                        feature : {
+                                            mark : {show: true},
+                                            dataView : {show: true, readOnly: false},
+                                            magicType : {show: true, type: ['bar','line']},
+                                            restore : {show: true},
+                                            saveAsImage : {show: true}
+                                        }
+                                    },
+                                    calculable : true,
+                                    xAxis : [
+                                        {
+                                            type : 'category',
+                                            name : '时间',
+                                            boundaryGap : false,
+                                            data : data.bloodOxygenTimeList
+                                        }
+                                    ],
+                                    yAxis : [
+                                        {
+                                            type : 'value',
+                                            axisLabel : {
+                                                formatter: '{value}%'
+                                            }
+                                        }
+                                    ],
+                                    series : [{
+                                        name:'血氧饱和度',
+                                        type:'line',
+                                        data:data.spo2List,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }
+                                    ]
+                                };
+                                // 为echarts对象加载数据
+                                bloodOxygenChart.setOption(option3);
+                            
+                            
+                                mattressChart = ec.init(document.getElementById('Mattress01'));
+                                var option4 = {
+                                    title : {
+                                        text: '床垫设备实时监测曲线'
+                                        // subtext: '次标题'
+                                    },
+                                    tooltip : {
+                                        trigger: 'axis'
+                                    },
+                                    legend: {
+                                        data:['呼吸','是否在床',]
+                                    },
+                                    toolbox: {
+                                        show : true,
+                                        feature : {
+                                            mark : {show: true},
+                                            dataView : {show: true, readOnly: false},
+                                            magicType : {show: true, type: ['bar','line']},
+                                            restore : {show: true},
+                                            saveAsImage : {show: true}
+                                        }
+                                    },
+                                    calculable : true,
+                                    xAxis : [{
+                                        type : 'category',
+                                        name : '时间',
+                                        boundaryGap : false,
+                                        data : data.mattressTimeList
+                                    }
+                                    ],
+                                    yAxis : [
+                                        {
+                                            type : 'value',
+                                            axisLabel : {
+                                                formatter: '{value}次/分'
+                                            }
+                                        },
+                                        {
+                                            type : 'value',
+                                            axisLabel : {
+                                                formatter: '{value}1-在/0-不在'
+                                            }
+                                        }
+                                    ],
+                                    series : [{
+                                        name:'呼吸',
+                                        type:'line',
+                                        data:data.breathList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }, {
+                                        name:'是否在床',
+                                        type:'line',
+                                        data:data.actList,
+                                        markPoint : {
+                                            data : [
+                                                {type : 'max', name: '最大值'},
+                                                {type : 'min', name: '最小值'}
+                                            ]
+                                        },
+                                        markLine : {
+                                            data : [
+                                                {type : 'average', name: '平均值'}
+                                            ]
+                                        }
+                                    }
+                                    ]
+                                };
+                                // 为echarts对象加载数据
+                                mattressChart.setOption(option4);
+                            
+                            }
+                        );//require end
+                    }
+                    else {
+                        //console.log("the return message is " + data.msg);
+                    }
+                },
+                error:function(a,b,c) {
+                    console.log("[function:send:ajax]the error return message is " + data.msg);
+                    console.log(a.status+"::"+a.readyState+"::"+b)
+                }
+            })
+        });
+        
+        
+        
+        
+        
+        
         
         $(".show-below-div").click(function () {
             console.log('<display>: ' + $(this).next().css('display'));
@@ -597,6 +974,9 @@
                 $(this).next().css('display', 'none')
             }
         })
+        
+        
+        
     })
 </script>
 

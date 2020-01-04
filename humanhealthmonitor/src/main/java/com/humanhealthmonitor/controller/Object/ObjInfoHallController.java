@@ -4,10 +4,7 @@ import com.humanhealthmonitor.InfluxDBConnector;
 import com.humanhealthmonitor.mapper.DataMapper;
 import com.humanhealthmonitor.pojo.*;
 import com.humanhealthmonitor.pojo.Object;
-import com.humanhealthmonitor.service.DataService;
-import com.humanhealthmonitor.service.EquipmentService;
-import com.humanhealthmonitor.service.ObjectService;
-import com.humanhealthmonitor.service.UserNetmaskService;
+import com.humanhealthmonitor.service.*;
 import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,10 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.humanhealthmonitor.MsgQueue.protocolState;
 import static com.humanhealthmonitor.MsgQueue.sendAMQPQueue;
@@ -40,6 +34,8 @@ public class ObjInfoHallController {
     private UserNetmaskService userNetmaskService;
     @Autowired
     private DataService dataService;
+    @Autowired
+    private EquipmentTypeService equipmentTypeService;
 
     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private InfluxDBConnector influxDBConnector;//创建influxDB连接实例
@@ -548,6 +544,10 @@ public class ObjInfoHallController {
         endTime = endTime.replace(" ","T");
         request.setAttribute("startTime",startTime);
         request.setAttribute("endTime",endTime);
+        List<EquipmentType> eqpTypeList = equipmentTypeService.queryAllEquipmentType();
+        Collections.reverse(eqpTypeList);
+        request.setAttribute("eqpTypeList", eqpTypeList);
+
 
         return "healthCenter/objInfoHallHistory";
     }
