@@ -229,7 +229,7 @@ public class UserEquipmentRestController {
             }
         } else if (eqp.getObjectId() != null) {
             System.out.print("Return message: \"failed!\"3");
-            res.put("msg","failed");
+            res.put("msg","hadbind");
         } else {
             //eqp不为null且没有绑定的监测对象
             eqp.setObjectId(objectId);
@@ -237,7 +237,7 @@ public class UserEquipmentRestController {
             equipmentService.updateEquipmentObject(eqp);
 
             System.out.print("Return message: \"failed!\"4");
-            res.put("msg","failed");
+            res.put("msg","success");
         }
         List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
         request.setAttribute("objectList", objectList);
