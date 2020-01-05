@@ -337,7 +337,7 @@
             console.log("send start");
             console.log(tosenddata.objectSelect+" "+tosenddata.startTime+" "+tosenddata.endTime);
             $.ajax({
-                url:'http://'+ipAddressLocal+':8081/rest/monitorCenter/searchHistoryData',
+                url:'http://'+ipAddressServer+':8081/rest/monitorCenter/searchHistoryData',
                 type:"POST",
                 contentType: 'application/json; charset=UTF-8',
                 data:JSON.stringify(tosenddata),

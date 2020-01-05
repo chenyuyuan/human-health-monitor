@@ -609,7 +609,7 @@
             console.log("send start");
             console.log(tosenddata.startTime+" "+tosenddata.endTime);
             $.ajax({
-                url:'http://'+ipAddressLocal+':8081/rest/monitorCenter/objsearchHistoryData',
+                url:'http://'+ipAddressServer+':8081/rest/monitorCenter/objsearchHistoryData',
                 type:"POST",
                 contentType: 'application/json; charset=UTF-8',
                 data:JSON.stringify(tosenddata),

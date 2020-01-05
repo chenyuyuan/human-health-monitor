@@ -366,10 +366,13 @@
             success:function (data) {
                 console.log("[function:send:ajax]the success return message is " + data.msg);
                 if(data.msg === "success"){
-                    //console.log("the return message is " + data.msg);
+                    alert("绑定成功！");
+                }
+                else if(data.msg === "hadbind") {
+                    alert("已绑定！");
                 }
                 else {
-                    //console.log("the return message is " + data.msg);
+                    alert("失败！");
                 }
             },
             error:function(a,b,c) {
