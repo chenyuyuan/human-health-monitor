@@ -296,7 +296,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['呼吸','是否在床',]
+                        data:['呼吸','心率']
                     },
                     toolbox: {
                         show : true,
@@ -327,7 +327,7 @@
                         {
                             type : 'value',
                             axisLabel : {
-                                formatter: '{value}1-在/0-不在'
+                                formatter: '{value}次/分'
                             }
                         }
                     ],
@@ -347,7 +347,7 @@
                             ]
                         }
                     }, {
-                        name:'是否在床',
+                        name:'心率',
                         type:'line',
                         data:[[${actList}]],
                         markPoint : {

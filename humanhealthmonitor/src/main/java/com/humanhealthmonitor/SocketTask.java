@@ -467,7 +467,7 @@ public class SocketTask implements Runnable {
 
             ArrayList<Double> dataToInsert = new ArrayList<>();
             dataToInsert.add((double)sensorDataArray[6]);
-            dataToInsert.add((double)sensorDataArray[7]);
+            dataToInsert.add((double)sensorDataArray[2]);
             socketTask.dataService.insertData("Mattress", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
             System.out.println("SocketTask: 床垫数据已插入数据库, 数据采集时间" + timestamp);
 

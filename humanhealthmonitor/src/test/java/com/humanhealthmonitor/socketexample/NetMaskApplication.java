@@ -89,9 +89,9 @@ public class NetMaskApplication implements Runnable {
 
         try {
             //socket = new Socket("140.143.232.52", 14900);
-            //socket = new Socket("101.132.105.38", 14900);
+            socket = new Socket("101.132.105.38", 14900);
 //            socket = new Socket("39.98.66.7", 14900);
-            socket = new Socket("127.0.0.1", 14900);
+//            socket = new Socket("127.0.0.1", 14900);
             System.out.println("Connected!");
             din = socket.getInputStream();
             dout = socket.getOutputStream();
