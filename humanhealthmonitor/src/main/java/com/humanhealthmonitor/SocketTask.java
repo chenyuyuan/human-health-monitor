@@ -525,7 +525,7 @@ public class SocketTask implements Runnable {
 //            influxDBConnector.insertData("bloodOxygen", tags, fields);
 
             ArrayList<Double> dataToInsert = new ArrayList<>();
-            dataToInsert.add((double)sensorDataArray[5]/100);
+            dataToInsert.add((double)sensorDataArray[5]);
             socketTask.dataService.insertData("BloodOxygen", dataToInsert, this.taskNum,objectId,deviceID,timeinformat);
             System.out.println("SocketTask: 血氧数据已插入数据库, 数据采集时间" + timestamp);
 

@@ -154,7 +154,7 @@ public class UserEquipmentRestController {
 
                     response.setContentType("text/html;charset=utf-8");
                     System.out.println("数据库Equipment更新成功！");
-                    res.put("msg", "binded success");
+                    res.put("msg", "success");
 
                     //发送7号指令，将设备名称，绑定用户名，和绑定时间发给网关
 
@@ -231,12 +231,14 @@ public class UserEquipmentRestController {
             System.out.print("Return message: \"failed!\"3");
             res.put("msg","hadbind");
         } else {
-            //eqp不为null且没有绑定的监测对象
+            // 绑定的传感器已存在数据库
+            // eqp不为null且没有绑定的监测对象
             eqp.setObjectId(objectId);
             eqp.setEqpName(eqpName);
+            eqp.setEqpType(eqpType);
             equipmentService.updateEquipmentObject(eqp);
 
-            System.out.print("Return message: \"failed!\"4");
+            System.out.print("Return message: 绑定的传感器已存在数据库");
             res.put("msg","success");
         }
         List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
