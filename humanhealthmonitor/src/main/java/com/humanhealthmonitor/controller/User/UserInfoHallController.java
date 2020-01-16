@@ -903,7 +903,7 @@ UserInfoHallController {
         request.setAttribute("startTime",startTime);
         request.setAttribute("endTime",endTime);
         List<EquipmentType> eqpTypeList = equipmentTypeService.queryAllEquipmentType();
-        Collections.reverse(eqpTypeList);
+        Collections.reverse(eqpTypeList);//没什么意义，就是把四个类型换一下位置
         request.setAttribute("eqpTypeList", eqpTypeList);
 
         return "monitorCenter/infoHallHistory";

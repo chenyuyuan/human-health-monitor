@@ -147,6 +147,97 @@ public class UserInfoHallRestController {
     }
 
 
+
+
+    @CrossOrigin
+    @RequestMapping(value = "/monitorCenter/infoHallOnTime", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public HashMap infoHallOnTime(@RequestBody JSONObject params, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, NullPointerException, InterruptedException {
+        System.out.println("<<<<infoHallOnTime>>>>");
+        HashMap res = new HashMap();
+
+        User user = (User) request.getSession().getAttribute("user");
+        request.setAttribute("user", user);
+
+        String objectId = params.getString("objectId");
+        System.out.println("objectId" + objectId);
+
+        if(objectId==null||objectId.equals("")) {
+            res.put("msg", "objectnull");
+            return res;
+        }
+
+        long timestamp = System.currentTimeMillis() / 1000 - 10;
+        SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
+        String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
+
+
+        ArrayList<Temperature> temperatureArrayList = dataService.queryTemperature(objectId,1,limitTimeinformat);
+
+        if(temperatureArrayList==null||temperatureArrayList.size()==0) {
+//            res.put("msg", "tmepalnull");
+//            return res;
+        }
+
+
+
+        //Temperature temperature = temperatureArrayList.get(0);
+        Temperature temperature = new Temperature();
+        temperature.setBodyTemp((float) 37.8);
+        temperature.setEnvTemp((float) 20.5);
+
+        BloodPressure bloodPressure = new BloodPressure();
+        bloodPressure.setHighPressure(120);
+        bloodPressure.setLowPressure(80);
+        bloodPressure.setHeartRate(60);
+
+        BloodOxygen bloodOxygen = new BloodOxygen();
+        bloodOxygen.setSpo2(98);
+
+        Mattress mattress = new Mattress();
+        mattress.setBreath(50);
+        mattress.setAct(76);
+
+
+        ArrayList<BloodOxygen> bloodOxygenArrayList;
+        ArrayList<BloodPressure> bloodPressureArrayList;
+        ArrayList<Mattress> mattressArrayList;
+
+        ArrayList<Double> bodyTempList = new ArrayList<>();
+        ArrayList<Double> envTempList = new ArrayList<>();
+        ArrayList<String> tempTimeList = new ArrayList<>();
+
+        ArrayList<Double> lowPressureList = new ArrayList<>();
+        ArrayList<Double> highPressureList = new ArrayList<>();
+        ArrayList<Double> heartRateList = new ArrayList<>();
+        ArrayList<String> bloodPressureTimeList = new ArrayList<>();
+
+        ArrayList<Double> spo2List = new ArrayList<>();
+        ArrayList<String> bloodOxygenTimeList = new ArrayList<>();
+
+        ArrayList<Double> breathList=new ArrayList<>();
+        ArrayList<Double> actList = new ArrayList<>();
+        ArrayList<String> mattressTimeList=new ArrayList<>();
+
+
+
+
+        res.putIfAbsent("temperature", temperature);
+        res.putIfAbsent("bloodPressure", bloodPressure);
+        res.putIfAbsent("bloodOxygen", bloodOxygen);
+        res.putIfAbsent("mattress", mattress);
+
+
+        res.putIfAbsent("msg", "success");
+
+        return res;
+    }
+
+
+
+
+
     public String dateTimeLocalToTimeStampString(String dateTimeLocal) {
         dateTimeLocal = dateTimeLocal.replace("T"," ");
         dateTimeLocal = dateTimeLocal+":00";//加上秒值00

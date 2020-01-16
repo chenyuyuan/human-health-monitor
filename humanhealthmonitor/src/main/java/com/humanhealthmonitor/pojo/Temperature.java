@@ -16,8 +16,7 @@ public class Temperature {
     public void setTime(String time) { this.time=time;}
     public String getTime() {return this.time;}
 
-    public String getSendTime()
-    {
+    public String getSendTime(String s) {
         return this.sendTime;
     }
 
