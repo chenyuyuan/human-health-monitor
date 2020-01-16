@@ -737,7 +737,7 @@
         $(".choose-object").click(function () {
             urlnow=window.location.href;
             //alert(urlnow+"/"+$(this).attr("name"))
-            window.location.href="http://localhost:8081/infoHallOnTime/"+$(this).attr("name");
+            window.location.href="http://101.132.105.38:8081/infoHallOnTime/"+$(this).attr("name");
 
             
 	        //alert($(this).attr("name"));
@@ -760,7 +760,7 @@
 
     function ajaxRefresh() {
         $.ajax({
-            url:'http://'+ipAddressLocal+':8081/rest/monitorCenter/infoHallOnTime',
+            url:'http://'+ipAddressServer+':8081/rest/monitorCenter/infoHallOnTime',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify({"objectId":objectId}),
