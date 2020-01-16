@@ -7,7 +7,6 @@ import com.humanhealthmonitor.service.*;
 import com.humanhealthmonitor.MsgQueue;
 import com.humanhealthmonitor.pojo.Equipment;
 import com.humanhealthmonitor.pojo.User;
-import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +40,29 @@ public class UserInfoHallNewController {
     private ArrayList<String> bloodPressure01TimeStampList = new ArrayList<>();
     private ArrayList<String> bloodOxygen01TimeStampList = new ArrayList<>();
     //监测中心-实时信息
-    @GetMapping(value = "/infoHallOnTimeNew/{objectId}")
-    public String infoHallOnTime(HttpServletRequest request, HttpServletResponse response, @PathVariable String objectId) {
+    @GetMapping(value = "/infoHallOnTime")
+    public String infoHallOnTime(HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) request.getSession().getAttribute("user");
+        request.setAttribute("user", user);
+
+
+        //从数据库中获取所有该用户关联的监测对象并传到前台
+        List<Object> objectList = objectService.queryAllObjectByUserId(user.getUserId());
+        request.setAttribute("objectList", objectList);
+
+        //获取第一个对象的id并把他所绑定的监测设备信息传到前台
+        List<Equipment> equipmentList = equipmentService.queryAllEquipmentByObjectId(objectList.get(0).getObjectId());
+        request.setAttribute("equipmentList", equipmentList);
+        request.setAttribute("objectNameSelected", objectList.get(0).getObjectName());
+        List<EquipmentType> eqpTypeList = equipmentTypeService.queryAllEquipmentType();
+        Collections.reverse(eqpTypeList);//没什么意义，就是把四个类型换一下位置
+        request.setAttribute("eqpTypeList", eqpTypeList);
+
+
+        return "monitorCenter/infoHallOnTime";
+    }
+    @GetMapping(value = "/infoHallOnTime/{objectId}")
+    public String infoHallOnTimeChoose(HttpServletRequest request, HttpServletResponse response, @PathVariable String objectId) {
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
 
@@ -61,7 +81,7 @@ public class UserInfoHallNewController {
         request.setAttribute("eqpTypeList", eqpTypeList);
 
 
-        return "monitorCenter/infoHallOnTimeNew";
+        return "monitorCenter/infoHallOnTime";
     }
 
 

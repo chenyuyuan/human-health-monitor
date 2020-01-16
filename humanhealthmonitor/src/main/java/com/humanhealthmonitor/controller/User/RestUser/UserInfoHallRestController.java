@@ -174,51 +174,49 @@ public class UserInfoHallRestController {
 
 
         ArrayList<Temperature> temperatureArrayList = dataService.queryTemperature(objectId,1,limitTimeinformat);
+        ArrayList<BloodPressure> bloodPressureArrayList = dataService.queryBloodPressure(objectId,1,limitTimeinformat);
+        ArrayList<BloodOxygen> bloodOxygenArrayList = dataService.queryBloodOxygen(objectId,1,limitTimeinformat);
+        ArrayList<Mattress> mattressArrayList = dataService.queryMattress(objectId,1,limitTimeinformat);
+
+        Temperature temperature = new Temperature();
+        BloodPressure bloodPressure = new BloodPressure();
+        BloodOxygen bloodOxygen = new BloodOxygen();
+        Mattress mattress = new Mattress();
+
 
         if(temperatureArrayList==null||temperatureArrayList.size()==0) {
-//            res.put("msg", "tmepalnull");
-//            return res;
+            temperature.setBodyTemp((float) 0);
+            temperature.setEnvTemp((float) 0);
+        }
+        else {
+            temperature = temperatureArrayList.get(0);
+        }
+        if(bloodPressureArrayList==null||bloodPressureArrayList.size()==0) {
+            bloodPressure.setHighPressure(0);
+            bloodPressure.setLowPressure(0);
+            bloodPressure.setHeartRate(0);
+        }
+        else {
+            bloodPressure = bloodPressureArrayList.get(0);
+        }
+        if(bloodOxygenArrayList==null||bloodOxygenArrayList.size()==0) {
+            bloodOxygen.setSpo2(0);
+        }
+        else {
+            bloodOxygen = bloodOxygenArrayList.get(0);
+        }
+        if(mattressArrayList==null||mattressArrayList.size()==0) {
+            mattress.setBreath(0);
+            mattress.setAct(0);
+        }
+        else {
+            mattress = mattressArrayList.get(0);
         }
 
 
 
-        //Temperature temperature = temperatureArrayList.get(0);
-        Temperature temperature = new Temperature();
-        temperature.setBodyTemp((float) 37.8);
-        temperature.setEnvTemp((float) 20.5);
-
-        BloodPressure bloodPressure = new BloodPressure();
-        bloodPressure.setHighPressure(120);
-        bloodPressure.setLowPressure(80);
-        bloodPressure.setHeartRate(60);
-
-        BloodOxygen bloodOxygen = new BloodOxygen();
-        bloodOxygen.setSpo2(98);
-
-        Mattress mattress = new Mattress();
-        mattress.setBreath(50);
-        mattress.setAct(76);
 
 
-        ArrayList<BloodOxygen> bloodOxygenArrayList;
-        ArrayList<BloodPressure> bloodPressureArrayList;
-        ArrayList<Mattress> mattressArrayList;
-
-        ArrayList<Double> bodyTempList = new ArrayList<>();
-        ArrayList<Double> envTempList = new ArrayList<>();
-        ArrayList<String> tempTimeList = new ArrayList<>();
-
-        ArrayList<Double> lowPressureList = new ArrayList<>();
-        ArrayList<Double> highPressureList = new ArrayList<>();
-        ArrayList<Double> heartRateList = new ArrayList<>();
-        ArrayList<String> bloodPressureTimeList = new ArrayList<>();
-
-        ArrayList<Double> spo2List = new ArrayList<>();
-        ArrayList<String> bloodOxygenTimeList = new ArrayList<>();
-
-        ArrayList<Double> breathList=new ArrayList<>();
-        ArrayList<Double> actList = new ArrayList<>();
-        ArrayList<String> mattressTimeList=new ArrayList<>();
 
 
 
