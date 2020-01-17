@@ -340,39 +340,44 @@
                             <p align="center" th:text="${objectNameSelected}"
                                style="color: black;font-size: 20px;border: 0;text-align: center"></p>
                             <form class="shadow-5" id="objectModifyForm" name="objectModifyFrom" action="/monitorCenter/objectInfoModify"
-                                  accept-charset="utf-8" method="post" style="text-align:center;height:auto;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin-left: 0;padding: 10%" onsubmit="checkObjectModify()">
+                                  accept-charset="utf-8" method="post" style="text-align:center;height:auto;background-color:white;width:500px;border-radius: 8px;border: 1px solid lightgrey;margin-left: 0;padding: 5%" onsubmit="checkObjectModify()">
                                 <div class="d" style="">
                                     <br/>
                                     <p style="font-size: 20px;text-align: center;color: #4673df">&nbsp基本信息</p>
-                                    <p class="form-inline" style="text-align: left;text-indent: 2em">
-                                        <span class="objectModifyReminder" style="text-align: left;font-size: 18px">账号:&nbsp;&nbsp;</span>
-                                        <span th:text="${object.objectId}" th:value="${object.objectId}" style="text-align: left;font-size: 18px"></span>
+                                    <div class="form-inline" style="text-align: left;">
+                                        <span class="objectModifyReminder" style="text-align: right;font-size: 18px;width: 20%">账号:&nbsp;&nbsp;</span>
+                                        <span th:text="${object.objectId}" th:value="${object.objectId}" style="text-align: left;font-size: 18px;width:60%"></span>
                                         <input class="form-control bg-light border-0 small" type="hidden" id="objectIdInfo" name="objectIdInfo" th:value="${object.objectId}"/>
-                                    </p>
-                                    <p class="form-inline" style="text-align: left;text-indent: 2em;margin-top: 15px">
-                                        <span class="objectModifyReminder" style="text-align: left;font-size: 18px">昵称:&nbsp;&nbsp;</span>
-                                        <input type="text" id="objectName2" name="objectName" th:value="${object.objectName}"
+                                    </div>
+                                    <div class="form-inline" style="text-align: left;margin-top: 15px">
+                                        <span class="objectModifyReminder" style="text-align: right;font-size: 18px;width: 20%">昵称:&nbsp;&nbsp;</span>
+                                        <input type="text" id="objectName2" name="objectName" th:value="${object.objectName}" style="width: 60%"
                                                onfocus="this.ready()" onmouseout="this.blur()" class="form-control bg-light border-0 small"/>
-                                    </p>
-                                    <p class="form-inline" style="text-align: left;text-indent: 2em;margin-top: 15px">
-                                        <span class="objectModifyReminder" style="text-align: left;font-size: 18px">性别:&nbsp;&nbsp;</span>
-                                        <select id="sex" name="sex" class="form-control bg-light border-0 small" style="font-size: 18px;height: 36px;width: 60%;text-indent: 0.5em;">
+                                    </div>
+                                    <div class="form-inline" style="text-align: left;margin-top: 15px">
+                                        <span class="objectModifyReminder" style="text-align: right;font-size: 18px;width: 20%">性别:&nbsp;&nbsp;</span>
+                                        <select id="sex" name="sex" class="form-control bg-light border-0 small" style="width: 60%;font-size: 18px;height: 36px;width: 60%;text-indent: 0.5em;">
                                             <option th:value="${female}" th:selected="${object.sex eq female}">女</option>
                                             <option th:value="${male}" th:selected="${object.sex eq male}">男</option>
                                         </select>
-                                    </p>
-                                    <p class="form-inline" style="text-align: left;text-indent: 0em;margin-top: 15px">
-                                        <span class="objectModifyReminder" style="text-align: left;font-size: 18px">出生日期:&nbsp;&nbsp;</span>
-                                        <input type="date" id="birthday" name="birthday" th:value="${object.birthDate}" class="form-control bg-light border-0 small"/>
-                                    </p>
-                                    <p class="form-inline" style="text-align: left;text-indent: 0em;margin-top: 15px">
-                                        <span class="objectModifyReminder" style="text-align: left;font-size: 18px">手机号码:&nbsp;&nbsp;</span>
-                                        <input type="text" id="telephone" name="telephone" th:value="${object.objectTel}"
+                                    </div>
+                                    <div class="form-inline" style="text-align: left;margin-top: 15px">
+                                        <span class="objectModifyReminder" style="text-align: right;font-size: 18px;width: 20%">出生日期:&nbsp;&nbsp;</span>
+                                        <input type="date" id="birthday" name="birthday" th:value="${object.birthDate}" style="width: 60%" class="form-control bg-light border-0 small"/>
+                                    </div>
+                                    <div class="form-inline" style="text-align: left;margin-top: 15px">
+                                        <span class="objectModifyReminder" style="text-align: right;font-size: 18px;width: 20%">手机号码:&nbsp;&nbsp;</span>
+                                        <input type="text" id="telephone" name="telephone" th:value="${object.objectTel}" style="width: 60%"
                                                class="form-control bg-light border-0 small" onfocus="this.ready()" onmouseout="this.blur()"/>
-                                    </p>
-                                    <input type="submit" id="objectModifySubmit" name="objectModifySubmit"
-                                           style="font-size: 18px;height: 50px;width: 40%;background-color: #4673df;border-radius: 4px;border: none;color: white"
-                                           value="保存修改" onmouseover="submitOnMouseUpObjectModify()" onmouseleave="submitOnMouseLeaveObjectModify()"/>
+                                    </div>
+                                    <div style="margin-top: 20px">
+                                        <input type="submit" id="objectModifySubmit" name="objectModifySubmit"
+                                               style="font-size: 18px;height: 50px;margin-left:25%;width: 40%;background-color: #007BFF;border-radius: 4px;border: none;color: white"
+                                               value="保存修改"/>
+                                        <span style="display: none" th:text="${object.objectId}"></span>
+                                        <span id="delete-object">&nbsp注销监测对象</span>
+                                    </div>
+
                                 </div>
                             </form>
                         </div>
@@ -384,6 +389,8 @@
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->
+        
+        <br>
         
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
@@ -429,5 +436,51 @@
 <script type="text/javascript" th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
 <!-- Custom scripts for all pages-->
 <script type="text/javascript" th:src="@{/js/sb-admin-2.min.js}"></script>
+
+<script type = "text/javascript">
+    ipAddressServer = "101.132.105.38";
+    ipAddressLocal = "localhost";
+    $(document).ready(function () {
+        $("#delete-object").hover(function(){
+            $(this).css("color","red");
+        },function(){
+            $(this).css("color","black");
+        });
+        $("#delete-object").click(function(){
+            $(this).css("color","blue");
+            console.log("[function: send]: start delete");
+            tosenddata = {
+                "netmask_id": $(this).prev().text()
+            };
+            console.log("send start");
+            console.log("id" + $(this).prev().text());
+            $.ajax({
+                url: 'http://' + ipAddressLocal + ':8081/rest/monitorCenter/deleteObject',
+                type: "POST",
+                contentType: 'application/json; charset=UTF-8',
+                data: JSON.stringify(tosenddata),
+                dataType: 'json',
+                success: function (data) {
+                    console.log("[function:send:ajax]the success return message is " + data.msg);
+                    if (data.msg === "success") {
+                        window.location.reload()
+                    } else {
+                        window.location.reload()
+                    }
+                },
+                error: function (a, b, c) {
+                    console.log("[function:send:ajax]the error return message is " + data.msg);
+                    console.log(a.status + "::" + a.readyState + "::" + b)
+                }
+            });
+        });
+    })
+</script>
+
+
+
+
+
+
 </body>
 </html>

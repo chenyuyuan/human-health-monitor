@@ -4,7 +4,6 @@ package com.humanhealthmonitor.controller.User.RestUser;
 import com.alibaba.fastjson.JSONObject;
 import com.humanhealthmonitor.MsgQueue;
 import com.humanhealthmonitor.pojo.*;
-import com.humanhealthmonitor.pojo.Object;
 import com.humanhealthmonitor.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,17 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
-import static com.humanhealthmonitor.util.ByteUtils.stringToByteArray;
 
 @RestController
 @RequestMapping("/rest")
@@ -56,7 +50,7 @@ public class UserInfoHallRestController {
         //String content = params.getString("content");
         HashMap res = new HashMap();
 
-        User user = (User) request.getSession().getAttribute("user");
+        UserObjectRestController user = (UserObjectRestController) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
 
 
@@ -157,7 +151,7 @@ public class UserInfoHallRestController {
         System.out.println("<<<<infoHallOnTime>>>>");
         HashMap res = new HashMap();
 
-        User user = (User) request.getSession().getAttribute("user");
+        UserObjectRestController user = (UserObjectRestController) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
 
         String objectId = params.getString("objectId");
