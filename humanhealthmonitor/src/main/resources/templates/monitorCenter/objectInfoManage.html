@@ -455,7 +455,7 @@
             console.log("send start");
             console.log("id" + $(this).prev().text());
             $.ajax({
-                url: 'http://' + ipAddressLocal + ':8081/rest/monitorCenter/deleteObject',
+                url: 'http://' + ipAddressServer + ':8081/rest/monitorCenter/deleteObject',
                 type: "POST",
                 contentType: 'application/json; charset=UTF-8',
                 data: JSON.stringify(tosenddata),
