@@ -61,4 +61,15 @@ public interface ObjectMapper {
     //监测对象退出登录修改登录状态并写入最后离线时间
     @Update("update object set lastLogoutTime=#{lastLogoutTime},loginState=#{loginState} where objectId=#{objectId}")
     int updateLogoutState(Object object);
+
+    @Select("SELECT * FROM object WHERE objectId = #{objectId} and userId=#{userId}")
+    Object queryObjectAndUser(@Param("objectId") String objectId,@Param("userId") String userId);
+
+
+
+    @Delete("DELETE FROM object where objectId = #{objectId} and userId=#{userId}")
+    int deleteObject(@Param("objectId") String objectId, @Param("userId") String userId);
+
+    @Delete("DELETE FROM equipment where objectId = #{objectId}")
+    int deleteEquipment(@Param("objectId") String objectId);
 }

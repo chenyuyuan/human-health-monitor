@@ -133,4 +133,24 @@ public class ObjectService {
         return objectMapper.updateLogoutState(object);
     }
 
+
+
+
+    public int queryObjectAndUser(String objectId, String userId) {
+        if (objectMapper.queryObjectAndUser(objectId, userId)==null){
+            return -1;
+        }
+        else {
+            return 1;
+        }
+    }
+
+
+
+
+    public void deleteObjectAndEquipment(String objectId, String userId) {
+        objectMapper.deleteObject(objectId,userId);
+        objectMapper.deleteEquipment(objectId);
+    }
+
 }

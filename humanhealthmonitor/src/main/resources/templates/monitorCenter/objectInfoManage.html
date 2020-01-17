@@ -450,7 +450,7 @@
             $(this).css("color","blue");
             console.log("[function: send]: start delete");
             tosenddata = {
-                "netmask_id": $(this).prev().text()
+                "objectId": $(this).prev().text()
             };
             console.log("send start");
             console.log("id" + $(this).prev().text());
@@ -463,9 +463,10 @@
                 success: function (data) {
                     console.log("[function:send:ajax]the success return message is " + data.msg);
                     if (data.msg === "success") {
-                        window.location.reload()
-                    } else {
-                        window.location.reload()
+                        alert("注销成功！")
+                        window.location.href="/monitorCenter/objectInfoManage"
+                    } else if(data.msg === "fail") {
+                        alert("注销失败！")
                     }
                 },
                 error: function (a, b, c) {
