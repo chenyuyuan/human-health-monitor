@@ -179,6 +179,8 @@ public class UserInfoHallRestController {
         ArrayList<BloodOxygen> bloodOxygenArrayList = dataService.queryBloodOxygen(objectId,1,limitTimeinformat);
         ArrayList<Mattress> mattressArrayList = dataService.queryMattress(objectId,1,limitTimeinformat);
 
+        System.out.println("");
+
         Temperature temperature = new Temperature();
         BloodPressure bloodPressure = new BloodPressure();
         BloodOxygen bloodOxygen = new BloodOxygen();
