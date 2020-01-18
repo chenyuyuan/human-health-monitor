@@ -392,7 +392,6 @@
 
     var bodyTempList=[0,0,0,0,0,0,0,0,0,0,0];
     var envTempList=[0,0,0,0,0,0,0,0,0,0,0];
-    
     var highPressureList=[0,0,0,0,0,0,0,0,0,0,0];
     var lowPressureList=[0,0,0,0,0,0,0,0,0,0,0];
     var heartRateList=[0,0,0,0,0,0,0,0,0,0,0];
@@ -400,6 +399,17 @@
     var breathList=[0,0,0,0,0,0,0,0,0,0,0];
     var actList=[0,0,0,0,0,0,0,0,0,0,0];
 
+    var bodyTempMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var envTempMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var highPressureMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var lowPressureMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var heartRateMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var spo2MarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var breathMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+    var actMarkList=[0,0,0,0,0,0,0,0,0,0,0];
+
+    var pos = [-1,-1,-1,-1,-1,-1,-1,-1];
+    
     // 路径配置
     require.config({
         paths: {
@@ -441,8 +451,8 @@
                     type : 'category',
                     name : '时间',
                     boundaryGap : false,
-                    data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                        '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                    data : ['200秒前','180秒前','160秒前','140秒前','120秒前',
+                        '100秒前','80秒前','60秒前','40秒前','20秒前','现在']
                 }
                 ],
                 yAxis : [{
@@ -514,8 +524,8 @@
                     type : 'category',
                     name : '时间',
                     boundaryGap : false,
-                    data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                        '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                    data : ['200秒前','180秒前','160秒前','140秒前','120秒前',
+                        '100秒前','80秒前','60秒前','40秒前','20秒前','现在']
                 }
                 ],
                 yAxis : [
@@ -611,8 +621,8 @@
                         type : 'category',
                         name : '时间',
                         boundaryGap : false,
-                        data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                            '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        data : ['200秒前','180秒前','160秒前','140秒前','120秒前',
+                            '100秒前','80秒前','60秒前','40秒前','20秒前','现在']
                     }
                 ],
                 yAxis : [
@@ -672,8 +682,8 @@
                     type : 'category',
                     name : '时间',
                     boundaryGap : false,
-                    data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
-                        '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                    data : ['200秒前','180秒前','160秒前','140秒前','120秒前',
+                        '100秒前','80秒前','60秒前','40秒前','20秒前','现在']
                 }
                 ],
                 yAxis : [
@@ -732,7 +742,7 @@
 
     $(document).ready(function () {
 
-        setInterval('ajaxRefresh()',10000);
+        setInterval('ajaxRefresh()',20000);
 
         $(".choose-object").click(function () {
             urlnow=window.location.href;
@@ -778,7 +788,42 @@
                         spo2List[i]=spo2List[i+1];
                         breathList[i]=breathList[i+1];
                         actList[i]=actList[i+1];
+
+                        bodyTempMarkList[i]=bodyTempMarkList[i+1];
+                        envTempMarkList[i]=envTempMarkList[i+1];
+                        highPressureMarkList[i]=highPressureMarkList[i+1];
+                        lowPressureMarkList[i]=lowPressureMarkList[i+1];
+                        heartRateMarkList[i]=heartRateMarkList[i+1];
+                        spo2MarkList[i]=spo2MarkList[i+1];
+                        breathMarkList[i]=breathMarkList[i+1];
+                        actMarkList[i]=actMarkList[i+1];
                     }
+
+                    for(i = 9;i>=0;--i) if(bodyTempMarkList[i]===1) pos[0] = i;
+                    for(i = 9;i>=0;--i) if(envTempMarkList[i]===1) pos[1] = i;
+                    for(i = 9;i>=0;--i) if(highPressureMarkList[i]===1) pos[2] = i;
+                    for(i = 9;i>=0;--i) if(lowPressureMarkList[i]===1) pos[3] = i;
+                    
+                    for(i = 9;i>=0;--i) if(heartRateMarkList[i]===1) pos[4] = i;
+                    for(i = 9;i>=0;--i) if(spo2MarkList[i]===1) pos[5] = i;
+                    for(i = 9;i>=0;--i) if(breathMarkList[i]===1) pos[6] = i;
+                    for(i = 9;i>=0;--i) if(actMarkList[i]===1) pos[7] = i;
+
+                    console.log(pos)
+	                //alert(pos)
+
+                    bodyTempMarkList[10]=data.temperature.bodyTemp===0?0:1;
+                    envTempMarkList[10]=data.temperature.envTemp===0?0:1;
+                    highPressureMarkList[10]=data.bloodPressure.highPressure===0?0:1;
+                    lowPressureMarkList[10]=data.bloodPressure.lowPressure===0?0:1;
+                    heartRateMarkList[10]=data.bloodPressure.heartRate===0?0:1;
+                    spo2MarkList[10]=data.bloodOxygen.spo2===0?0:1;
+                    breathMarkList[10]=data.mattress.breath===0?0:1;
+                    actMarkList[10]=data.mattress.act===0?0:1;
+
+
+
+
                     bodyTempList[10]=data.temperature.bodyTemp;
                     envTempList[10]=data.temperature.envTemp;
                     var option = temperatureChart.getOption();

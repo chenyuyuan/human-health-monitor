@@ -162,7 +162,7 @@ public class UserInfoHallRestController {
             return res;
         }
 
-        long timestamp = System.currentTimeMillis() / 1000 - 20;
+        long timestamp = System.currentTimeMillis() / 1000 - 30;
         SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
         String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
 
@@ -186,8 +186,8 @@ public class UserInfoHallRestController {
 
 
         if(temperatureArrayList==null||temperatureArrayList.size()==0) {
-            temperature.setBodyTemp((float) 0);
-            temperature.setEnvTemp((float) 0);
+            temperature.setBodyTemp((float) -1);
+            temperature.setEnvTemp((float) -1);
         }
         else {
             temperature = temperatureArrayList.get(0);
