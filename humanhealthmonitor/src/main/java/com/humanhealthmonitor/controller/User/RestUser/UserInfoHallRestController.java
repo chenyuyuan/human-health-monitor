@@ -162,7 +162,7 @@ public class UserInfoHallRestController {
             return res;
         }
 
-        long timestamp = System.currentTimeMillis() / 1000 - 10;
+        long timestamp = System.currentTimeMillis() / 1000 - 20;
         SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
         String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
 
