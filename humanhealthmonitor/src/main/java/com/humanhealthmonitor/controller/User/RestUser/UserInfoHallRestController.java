@@ -50,7 +50,7 @@ public class UserInfoHallRestController {
         //String content = params.getString("content");
         HashMap res = new HashMap();
 
-        UserObjectRestController user = (UserObjectRestController) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
 
 
@@ -151,7 +151,7 @@ public class UserInfoHallRestController {
         System.out.println("<<<<infoHallOnTime>>>>");
         HashMap res = new HashMap();
 
-        UserObjectRestController user = (UserObjectRestController) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("user", user);
 
         String objectId = params.getString("objectId");
