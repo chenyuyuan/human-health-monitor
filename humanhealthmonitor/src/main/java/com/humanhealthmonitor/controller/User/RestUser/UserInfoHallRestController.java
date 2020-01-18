@@ -166,6 +166,13 @@ public class UserInfoHallRestController {
         SimpleDateFormat format =  new SimpleDateFormat("yyyyMMddHHmmss"); //设置格式
         String limitTimeinformat = format.format(Long.parseLong(timestamp + "000"));
 
+        String netmaskIdStr=userNetmaskService.queryUserRelatedNetmask(user.getUserId());
+        int netmask=Integer.parseInt(netmaskIdStr);
+
+        String order = "FEFE020404AABB";
+        sendMessage(netmask, order);
+
+
 
         ArrayList<Temperature> temperatureArrayList = dataService.queryTemperature(objectId,1,limitTimeinformat);
         ArrayList<BloodPressure> bloodPressureArrayList = dataService.queryBloodPressure(objectId,1,limitTimeinformat);
