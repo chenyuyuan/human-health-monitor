@@ -186,8 +186,8 @@ public class UserInfoHallRestController {
 
 
         if(temperatureArrayList==null||temperatureArrayList.size()==0) {
-            temperature.setBodyTemp((float) -1);
-            temperature.setEnvTemp((float) -1);
+            temperature.setBodyTemp((float) 0);
+            temperature.setEnvTemp((float) 0);
         }
         else {
             temperature = temperatureArrayList.get(0);
