@@ -49,7 +49,7 @@ public class ObjInfoHallController {
     private ArrayList<String> bloodOxygen01TimeStampList = new ArrayList<>();
 
     //健康中心-实时信息
-    @RequestMapping("/objInfoHallOnTime")
+    @RequestMapping("/objInfoHallOnTimeNo")
     public String objInfoHallOnTime(HttpServletRequest request, HttpServletResponse response) {
         Object object = (Object) request.getSession().getAttribute("object");
         request.setAttribute("object", object);

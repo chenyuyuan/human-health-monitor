@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>HumanHealthMonitor - 主页</title>
+    
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normal.css}"/>
+    
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    
+    <script>
+        var temperatureChart;
+        var bloodPressureChart;
+        var bloodOxygenChart;
+        var mattressChart;
+
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/line', //加载line模块，折线图
+                'echarts/chart/bar' // 加载bar模块，柱状图
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                temperatureChart = ec.init(document.getElementById('Temperature01'));
+                var option = {
+                    title : {
+                        text: '体温、环境温度实时监测曲线'
+                        // subtext: '次标题'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['体温','环境温度']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['bar','line']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            name : '时间',
+                            boundaryGap : false,
+                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value} ℃'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'体温',
+                            type:'line',
+                            data:[[${bodyTempList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name:'环境温度',
+                            type:'line',
+                            data:[[${envTempList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                // 为echarts对象加载数据
+                temperatureChart.setOption(option);
+                
+                
+                bloodPressureChart = ec.init(document.getElementById('BloodPressure01'));
+                var option2 = {
+                    title : {
+                        text: '血压、心率实时监测曲线'
+                        // subtext: '次标题'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['血压高压','血压低压','心率']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['bar','line']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            name : '时间',
+                            boundaryGap : false,
+                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}mmHg'
+                            }
+                        },
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}次/分'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'血压高压',
+                            type:'line',
+                            data:[[${highPressureList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name:'血压低压',
+                            type:'line',
+                            data:[[${lowPressureList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name:'心率',
+                            type:'line',
+                            yAxisIndex: 1,
+                            data:[[${heartRateList}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                // 为echarts对象加载数据
+                bloodPressureChart.setOption(option2);
+                
+                
+                bloodOxygenChart = ec.init(document.getElementById('BloodOxygen01'));
+                var option3 = {
+                    title : {
+                        text: '血氧实时监测曲线'
+                        // subtext: '次标题'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['血氧饱和度(spo2)']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['bar','line']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            name : '时间',
+                            boundaryGap : false,
+                            data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                                '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}%'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'血氧饱和度',
+                            type:'line',
+                            data:[[${spo2List}]],
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                // 为echarts对象加载数据
+                bloodOxygenChart.setOption(option3);
+
+
+                mattressChart = ec.init(document.getElementById('Mattress01'));
+                var option4 = {
+                    title : {
+                        text: '床垫设备实时监测曲线'
+                        // subtext: '次标题'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['呼吸','心率']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['bar','line']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [{
+                        type : 'category',
+                        name : '时间',
+                        boundaryGap : false,
+                        data : ['100秒前','90秒前','80秒前','70秒前','60秒前',
+                            '50秒前','40秒前','30秒前','20秒前','10秒前','现在']
+                    }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}次/分'
+                            }
+                        },
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}次/分'
+                            }
+                        }
+                    ],
+                    series : [{
+                        name:'呼吸',
+                        type:'line',
+                        data:[[${breathList}]],
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        }
+                    }, {
+                        name:'心率',
+                        type:'line',
+                        data:[[${actList}]],
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        }
+                    }
+                    ]
+                };
+                // 为echarts对象加载数据
+                mattressChart.setOption(option4);
+            }
+        );//require end
+        
+        
+        function ajaxRefresh() {
+            var url = "/objInfoHallOnTime/AutoRefresh";
+            // var alarmMessageCountList = [[${alarmMessageCountList}]];
+            // var onlineCountList = [[${onlineCountList}]];
+            // var objectIdSelected = [[${objectIdSelected}]];
+            var array = [];
+            array[0] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[1] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[2] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[3] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[4] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[5] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[6] = [0,0,0,0,0,0,0,0,0,0,0];
+            array[7] = [0,0,0,0,0,0,0,0,0,0,0];
+    
+            if(document.getElementById('Temperature01')!==null && temperatureChart!==undefined) {
+                var option = temperatureChart.getOption();
+                var bodyTempList = option.series[0].data;
+                var envTempList = option.series[1].data;
+                array[0] = bodyTempList;
+                array[1] = envTempList;
+                console.log("<array>: " + array)
+                console.log("<array[0]>: " + array[0])
+                console.log("<array[1]>: " + array[1])
+            }
+    
+            if(document.getElementById('BloodPressure01')!==null && bloodPressureChart!==undefined) {
+                var option2 = bloodPressureChart.getOption();
+                var highPressureList = option2.series[0].data;
+                var lowPressureList = option2.series[1].data;
+                var heartRateList = option2.series[2].data;
+                array[2] = highPressureList;
+                array[3] = lowPressureList;
+                array[4] = heartRateList;
+            }
+    
+            if(document.getElementById('BloodOxygen01')!==null && bloodOxygenChart!==undefined) {
+                var option3 = bloodOxygenChart.getOption();
+                var spo2List = option3.series[0].data;
+                array[5] = spo2List;
+            }
+    
+            if(document.getElementById('Mattress01')!==null && mattressChart!==undefined) {
+                var option4 = bloodPressureChart.getOption();
+                var breathList = option4.series[0].data;//////////////////////////////????????????
+                var actList = option4.series[1].data;
+                array[6] = breathList;
+                array[7] = actList;
+            }
+            
+            $.ajax({
+                url: url,
+                type: 'POST',
+                cache: 'false',
+                data: JSON.stringify(array),
+                dataType: 'json',
+                headers : {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/json;charset=utf-8'
+                    // contentType : 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                success: function (data) {
+                    // console.log(result);
+                    var bodyTempList = data.bodyTempList;
+                    var envTempList = data.envTempList;
+                    var highPressureList = data.highPressureList;
+                    var lowPressureList = data.lowPressureList;
+                    var heartRateList = data.heartRateList;
+                    var spo2List = data.spo2List;
+                    //
+                    var breathList = data.breathList;
+                    var actList = data.actList;
+                    option.series[0].data = bodyTempList;
+                    option.series[1].data = envTempList;
+                    temperatureChart.setOption(option);
+                    option2.series[0].data = highPressureList;
+                    option2.series[1].data = lowPressureList;
+                    option2.series[2].data = heartRateList;
+                    bloodPressureChart.setOption(option2);
+                    option3.series[0].data = spo2List;
+                    bloodOxygenChart.setOption(option3);
+                    //
+                    option4.series[0].data = breathList;
+                    option4.series[1].data = actList;
+                    mattressChart.setOption(option4);
+                },
+                error: function(data){
+                    //alert("操作异常");
+                }
+            });
+        }//end function
+        setInterval('ajaxRefresh()',10000);//向后台请求最新数据
+        
+        function test() {
+            var ppp = document.getElementById("buttonTest");
+            ppp.value = "测试完毕";
+        }
+    
+    </script>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+        style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/indexObject">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-laugh-wink"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">HumanHealth</div>
+        </a>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+        
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/indexObject">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>首&nbsp&nbsp&nbsp&nbsp页</span></a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/objInfoHallOnTime">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>实时监测信息</span></a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/objInfoHallHistory">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>历史监测信息</span></a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/healthCenter/objAccountBasicInfo">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>基本信息管理</span></a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/healthCenter/objAccountPwdModify">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>密码服务</span></a>
+        </li>
+        
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+    
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        
+        <!-- Main Content -->
+        <div id="content">
+            
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                
+                <h4 style="font-family: 宋体;text-align: center;">&nbsp;人体健康监测平台</h4>
+    
+    
+    
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    
+                    
+                    
+                    
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle show-below-div" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">我的</span>
+                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="/healthCenter/objAccountBasicInfo">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                基本信息
+                            </a>
+                            <a class="dropdown-item" href="/healthCenter/objAccountPwdModify">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                修改密码
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/objectLogout" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                退出登陆
+                            </a>
+                        </div>
+                    </li>
+                
+                </ul>
+            
+            </nav>
+            <!-- End of Topbar -->
+            
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800"></h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-0">
+                    
+                    </div>
+                    <div class="col-lg-12">
+                        <div style="width: 100%">
+                            <h4 style="text-align: center;color: blue;">您的实时健康监测信息</h4>
+                        </div>
+                        <div style="width: 100%;min-height: 80%">
+                            <table id="equipmentTable" style="width: 100%">
+                                <tr th:each="equipment:${equipmentList}">
+                                    <td>
+                                        <div th:id="${equipment.eqpType}" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
+                                            <!--<p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>-->
+                                            <!--在此绘制实时监测折线图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+    
+                        <div style="width: 100%;min-height: 80%;display: none">
+                            <table id="noEquipmentTable" style="width: 100%">
+                                <tr th:each="noEquipment:${noEquipmentList}">
+                                    <td>
+                                        <div th:id="${noEquipment.eqpType}" style="height:500px;background-color:white;width:1300px;border: 1px solid lightgrey;margin: auto;">
+                                            <!--<p style="font-size: 20px;text-align: left" th:text="${equipment.eqpName}"></p>-->
+                                            <!--在此绘制实时监测折线图-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-0">
+                    
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        
+        </div>
+        <!-- End of Main Content -->
+        
+        <br/>
+        
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright © 2019 哈尔滨工业大学（威海）计算机科学与技术学院  嵌入式研发中心</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+    
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">确定要离开吗？</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">若要退出登录，选择下面的“确定”按钮</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
+                <a class="btn btn-primary" href="/userLogout">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+<script type = "text/javascript">
+    
+    
+    $(document).ready(function () {
+        console.log('the documnt is ready!')
+        
+        $(".show-below-div").click(function () {
+            console.log('<display>: ' + $(this).next().css('display'));
+            console.log($(this).next().css('display') === 'none')
+            if ($(this).next().css('display') === 'none') {
+                $(this).next().css('display', 'block')
+            }
+            else {
+                $(this).next().css('display', 'none')
+            }
+        })
+    })
+</script>
+
+</body>
+</html>
