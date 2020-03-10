@@ -27,56 +27,7 @@
 <div id="wrapper">
     
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-        style="font-family: 'Microsoft JhengHei Light'" id="accordionSidebar">
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/indexObject">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">HumanHealth</div>
-        </a>
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-        
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/indexObject">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>首&nbsp&nbsp&nbsp&nbsp页</span></a>
-        </li>
-        
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/objInfoHallOnTime">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>实时监测信息</span></a>
-        </li>
-        
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/objInfoHallHistory">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>历史监测信息</span></a>
-        </li>
-        
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/healthCenter/objAccountBasicInfo">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>基本信息管理</span></a>
-        </li>
-        
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/healthCenter/objAccountPwdModify">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>密码服务</span></a>
-        </li>
-        
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-    </ul>
+    <div th:replace="common::sidebar-object"></div>
     <!-- End of Sidebar -->
     
     <!-- Content Wrapper -->
