@@ -25,4 +25,9 @@ public interface AdminMapper {
     @Update("update admin set pwd=#{pwd}")
     int updateAdminPassword(Admin admin);
 
+
+
+
+    @Insert("INSERT INTO admin ( adminId, pwd,adminGroup,loginState ) VALUES ( #{adminId}, #{pwd},\"no_root\",FALSE );")
+    int insertAdminIfAbsent(Admin admin);
 }

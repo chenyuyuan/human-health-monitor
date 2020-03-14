@@ -50,4 +50,16 @@ public class AdminService {
         return adminMapper.updateAdminPassword(admin);
     }
 
+
+
+    public int insertAdminIfAbsent(Admin admin) {
+        if(adminMapper.queryAdminByAdminId(admin.getAdminId())==null){
+            adminMapper.insertAdminIfAbsent(admin);
+            return 0;
+        }
+        else {
+            return -1;
+        }
+    }
+
 }
