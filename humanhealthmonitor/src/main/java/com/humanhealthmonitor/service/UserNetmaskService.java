@@ -49,10 +49,19 @@ public class UserNetmaskService {
         return userNetmaskMapper.queryUserIdByObjectId(objectId);
     }
 
-
-
     public void updateNetmaskIpPort(String ip, int port, int netmask_id) {
         userNetmaskMapper.updateNetmaskIpPort(ip, port, netmask_id);
+    }
+
+
+    public int insertNetmaskIfAbsent(int id, String netmask_name) {
+        if (userNetmaskMapper.queryNetmaskId(id)!=null) {
+            userNetmaskMapper.updateNetmaskName(id,netmask_name);
+        }
+        else {
+            userNetmaskMapper.insertNetmask(id,netmask_name);
+        }
+        return 0;
     }
 
 

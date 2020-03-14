@@ -1,6 +1,7 @@
 package com.humanhealthmonitor.mapper;
 
 import com.humanhealthmonitor.pojo.Netmask;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -36,5 +37,16 @@ public interface UserNetmaskMapper {
 
     @Select("SELECT userId FROM object where objectId = #{objectId}")
     String queryUserIdByObjectId(@Param("objectId") String objectId);
+
+
+
+    @Select("Select * from netmask where id = #{id}")
+    Netmask queryNetmaskId(@Param("id") int id);
+
+    @Update("Update netmask set netmask_name = #{netmask_name} where id=#{id}")
+    int updateNetmaskName(@Param("id") int id, @Param("netmask_name") String netmask);
+
+    @Insert("Insert into netmask (id,netmask_name) value (#{id},#{netmask_name})")
+    int insertNetmask(@Param("id") int id, @Param("netmask_name") String netmask);
 
 }
