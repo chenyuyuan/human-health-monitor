@@ -140,4 +140,14 @@ public class UserService {
     public int deleteUserByUserId(String userId) {
         return userMapper.deleteUserByUserId(userId);
     }
+
+
+
+
+    public int insertUserIfAbsent(User user) {
+
+
+
+        return 0;
+    }
 }

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,19 +23,11 @@ import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
 public class Main{
     public static void main(String[] args) throws Exception {
 
-        cutImage("C:\\Users\\Cyuyuan\\Desktop\\totoro1.jpg",0,0,200,100);
+        long timestamp = System.currentTimeMillis() / 1000;
+        SimpleDateFormat format =  new SimpleDateFormat("yyyyMMdd"); //设置格式
+        String timeinformat = format.format(Long.parseLong(timestamp + "000"));
 
+        System.out.println(java.sql.Date.valueOf(timeinformat));
     }
-    private static void cutImage(String filePath, int x, int y, int w, int h)
-            throws Exception {
-        ImageInputStream iis = ImageIO.createImageInputStream(new FileInputStream(filePath));
-        @SuppressWarnings("rawtypes")
-        Iterator it = ImageIO.getImageReaders(iis);
-        ImageReader imagereader = (ImageReader) it.next();
-        imagereader.setInput(iis);
-        ImageReadParam par = imagereader.getDefaultReadParam();
-        par.setSourceRegion(new Rectangle(x, y, w, h));
-        BufferedImage bi = imagereader.read(0, par);
-        ImageIO.write(bi, "jpg", new File(filePath));
-    }
+
 }
