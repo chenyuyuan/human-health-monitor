@@ -23,11 +23,16 @@ import static com.humanhealthmonitor.util.ByteUtils.byteArrayToString;
 public class Main{
     public static void main(String[] args) throws Exception {
 
-        long timestamp = System.currentTimeMillis() / 1000;
-        SimpleDateFormat format =  new SimpleDateFormat("yyyyMMdd"); //设置格式
-        String timeinformat = format.format(Long.parseLong(timestamp + "000"));
+//        long timestamp = System.currentTimeMillis() / 1000;
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd"); //设置格式
+//        String timeinformat = format.format(Long.parseLong(timestamp + "000"));
 
-        System.out.println(java.sql.Date.valueOf(timeinformat));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
+        java.sql.Date.valueOf(registerDate);
+        String time = dateFormat.format("1998-11-29 12:12:12");
+        System.out.println(registerDate);
+        System.out.println(time);
     }
 
 }

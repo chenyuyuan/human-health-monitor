@@ -63,4 +63,10 @@ public interface UserMapper {
     //删除用户，用于多步骤操作信息错误回溯处理
     @Delete("delete from user where userId=#{userId}")
     int deleteUserByUserId(String userId);
+
+
+
+
+    @Update("update user set userName=#{userName},pwd=#{pwd},sex=#{sex},birthDate=#{birthDate},userTel=#{userTel} where userId=#{userId}")
+    void updateUserImport(User user);
 }

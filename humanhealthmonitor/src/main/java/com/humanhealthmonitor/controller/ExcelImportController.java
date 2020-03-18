@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Controller
@@ -61,6 +62,7 @@ public class ExcelImportController {
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
 //获取每一行数据
                 row = sheet.getRow(i);
+                if(row ==null) continue;
                 Admin data = new Admin();
                 String adminId = row.getCell(0).getStringCellValue();
                 data.setAdminId(adminId);
@@ -101,6 +103,7 @@ public class ExcelImportController {
             XSSFRow row = null;
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                 row = sheet.getRow(i);
+                if(row ==null) continue;
                 Netmask data = new Netmask();
                 sheet.getRow(i).getCell(0).setCellType(CellType.STRING);
                 sheet.getRow(i).getCell(1).setCellType(CellType.STRING);
@@ -137,31 +140,35 @@ public class ExcelImportController {
             List<User> importDatas = new ArrayList<>();
             XSSFRow row = null;
 
-            long timestamp = System.currentTimeMillis() / 1000;
-            SimpleDateFormat format =  new SimpleDateFormat("yyyyMMdd"); //设置格式
-            String currentDate = format.format(Long.parseLong(timestamp + "000"));
+//            long timestamp = System.currentTimeMillis() / 1000;
+//            SimpleDateFormat format =  new SimpleDateFormat("yyyyMMdd"); //设置格式
+//            String currentDate = format.format(Long.parseLong(timestamp + "000"));
 
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            String registerDate = dateFormat.format(System.currentTimeMillis()).substring(0, 10);
-//            newEquipment.setRegisterDate(java.sql.Date.valueOf(registerDate));
+            Calendar calendar = Calendar.getInstance();
+            String registerDate = String.valueOf(calendar.get(Calendar.YEAR)) + "-" +
+                    String.valueOf(calendar.get(Calendar.MONTH) + 1) + "-" +
+                    String.valueOf(calendar.get(Calendar.DATE) + 1);
 
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                 row = sheet.getRow(i);
+                if(row ==null) continue;
                 User data = new User();
-                sheet.getRow(i).getCell(0).setCellType(CellType.STRING);
-                sheet.getRow(i).getCell(1).setCellType(CellType.STRING);
-                sheet.getRow(i).getCell(2).setCellType(CellType.STRING);
-                sheet.getRow(i).getCell(3).setCellType(CellType.STRING);
-                sheet.getRow(i).getCell(4).setCellType(CellType.STRING);
-                sheet.getRow(i).getCell(5).setCellType(CellType.STRING);
+
+                System.out.println(i);
+                row.getCell(0).setCellType(CellType.STRING);
+                row.getCell(1).setCellType(CellType.STRING);
+                row.getCell(2).setCellType(CellType.STRING);
+                row.getCell(3).setCellType(CellType.STRING);
+                row.getCell(4).setCellType(CellType.STRING);
+                row.getCell(5).setCellType(CellType.STRING);
 
                 data.setUserId(row.getCell(0).getStringCellValue());
                 data.setUserName(row.getCell(1).getStringCellValue());
                 data.setPwd(row.getCell(2).getStringCellValue());
                 data.setSex(row.getCell(3).getStringCellValue());
-                //data.setRegisterDate(currentDate);
+                data.setRegisterDate(java.sql.Date.valueOf(registerDate));
 
-                //data.setBirthDate(row.getCell(4).getStringCellValue());
+                data.setBirthDate(java.sql.Date.valueOf(row.getCell(4).getStringCellValue()));
                 data.setUserTel(row.getCell(5).getStringCellValue());
                 data.setUserGroup("个人");
 
@@ -174,7 +181,9 @@ public class ExcelImportController {
             }
             for (User imdata : importDatas) {
                 //SimpleDateFormat df = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
-                System.out.println("userid:"+imdata.getUserId()+" userName:"+imdata.getUserName());
+                System.out.println("userid:"+imdata.getUserId()+" userName:"+imdata.getUserName()
+                        +" pwd:"+imdata.getPwd()+" sex:"+imdata.getSex()
+                        +" registerDate:"+imdata.getRegisterDate()+" telephone:"+imdata.getUserTel());
             }
         } catch (Exception e) {
             e.printStackTrace();

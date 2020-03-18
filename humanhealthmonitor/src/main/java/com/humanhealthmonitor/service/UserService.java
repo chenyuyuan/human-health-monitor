@@ -145,7 +145,12 @@ public class UserService {
 
 
     public int insertUserIfAbsent(User user) {
-
+        if(userMapper.queryUserByUserId(user.getUserId())!=null){
+            userMapper.updateUserImport(user);
+        }
+        else {
+            userMapper.insertUser(user);
+        }
 
 
         return 0;
