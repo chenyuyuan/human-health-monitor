@@ -3,8 +3,10 @@ package com.humanhealthmonitor.controller;
 //import com.example.excelimport.excel.ImportData;
 import com.humanhealthmonitor.pojo.Admin;
 import com.humanhealthmonitor.pojo.Netmask;
+import com.humanhealthmonitor.pojo.Object;
 import com.humanhealthmonitor.pojo.User;
 import com.humanhealthmonitor.service.AdminService;
+import com.humanhealthmonitor.service.ObjectService;
 import com.humanhealthmonitor.service.UserNetmaskService;
 import com.humanhealthmonitor.service.UserService;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -34,6 +36,8 @@ public class ExcelImportController {
     private UserNetmaskService userNetmaskService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ObjectService objectService;
 
     @GetMapping("/excelimport")
     String test(HttpServletRequest request) {
@@ -170,6 +174,7 @@ public class ExcelImportController {
 
                 data.setBirthDate(java.sql.Date.valueOf(row.getCell(4).getStringCellValue()));
                 data.setUserTel(row.getCell(5).getStringCellValue());
+                data.setLoginState(false);
                 data.setUserGroup("个人");
 
 
@@ -184,6 +189,68 @@ public class ExcelImportController {
                 System.out.println("userid:"+imdata.getUserId()+" userName:"+imdata.getUserName()
                         +" pwd:"+imdata.getPwd()+" sex:"+imdata.getSex()
                         +" registerDate:"+imdata.getRegisterDate()+" telephone:"+imdata.getUserTel());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "导入成功!";
+    }
+
+    //处理文件上传
+    @ResponseBody//返回json数据
+    @RequestMapping(value = "/importObject", method = RequestMethod.POST)
+    public String uploadObject(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+        if (file.isEmpty()) {
+            return "文件为空！";
+        }
+        try {
+            XSSFWorkbook wb = new XSSFWorkbook(file.getInputStream());            //根据页面index 获取sheet页
+            XSSFSheet sheet = wb.getSheetAt(0);
+            List<Object> importDatas = new ArrayList<>();
+            XSSFRow row = null;
+
+            Calendar calendar = Calendar.getInstance();
+            String registerDate = String.valueOf(calendar.get(Calendar.YEAR)) + "-" +
+                    String.valueOf(calendar.get(Calendar.MONTH) + 1) + "-" +
+                    String.valueOf(calendar.get(Calendar.DATE) + 1);
+
+            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                row = sheet.getRow(i);
+                if(row ==null) continue;
+                Object data = new Object();
+
+                row.getCell(0).setCellType(CellType.STRING);
+                row.getCell(1).setCellType(CellType.STRING);
+                row.getCell(2).setCellType(CellType.STRING);
+                row.getCell(3).setCellType(CellType.STRING);
+                row.getCell(4).setCellType(CellType.STRING);
+                row.getCell(5).setCellType(CellType.STRING);
+                row.getCell(6).setCellType(CellType.STRING);
+
+                data.setObjectId(row.getCell(0).getStringCellValue());
+                data.setUserId(row.getCell(1).getStringCellValue());
+                data.setObjectName(row.getCell(2).getStringCellValue());
+                data.setPwd(row.getCell(3).getStringCellValue());
+                data.setSex(row.getCell(4).getStringCellValue());
+                data.setBirthDate(java.sql.Date.valueOf(row.getCell(5).getStringCellValue()));
+                data.setRegisterDate(java.sql.Date.valueOf(registerDate));
+                data.setObjectTel(row.getCell(6).getStringCellValue());
+                data.setLoginState(false);
+                objectService.insertObjectIfAbsent(data);
+//                SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+//                data.setCreateDate(df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(2).getNumericCellValue()))));
+//                data.setAge(Integer.valueOf((int) row.getCell(3).getNumericCellValue()));
+                importDatas.add(data);
+
+            }
+//循环展示导入的数据，实际应用中应该校验并存入数据库
+            for (Object imdata : importDatas) {
+                //SimpleDateFormat df = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
+                System.out.println("objectId:"+imdata.getObjectId()+" userId:"+imdata.getUserId()+
+                        " objectName:"+imdata.getObjectName()+" pwd:"+imdata.getPwd()+
+                " sex:"+imdata.getSex()+" birthDate:"+imdata.getBirthDate()+" objectTel:"+imdata.getObjectTel());
             }
         } catch (Exception e) {
             e.printStackTrace();

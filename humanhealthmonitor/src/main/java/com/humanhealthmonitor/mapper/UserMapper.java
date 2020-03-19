@@ -67,6 +67,6 @@ public interface UserMapper {
 
 
 
-    @Update("update user set userName=#{userName},pwd=#{pwd},sex=#{sex},birthDate=#{birthDate},userTel=#{userTel} where userId=#{userId}")
+    @Update("update user set userName=#{userName},pwd=#{pwd},sex=#{sex},birthDate=#{birthDate},userTel=#{userTel},loginState=false where userId=#{userId}")
     void updateUserImport(User user);
 }

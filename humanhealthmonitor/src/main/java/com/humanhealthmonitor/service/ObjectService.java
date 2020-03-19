@@ -146,11 +146,21 @@ public class ObjectService {
     }
 
 
-
-
     public void deleteObjectAndEquipment(String objectId, String userId) {
         objectMapper.deleteObject(objectId,userId);
         objectMapper.deleteEquipment(objectId);
+    }
+
+
+
+
+    public void insertObjectIfAbsent(Object object) {
+        if(objectMapper.queryObjectByObjectId(object.getObjectId()) !=null) {
+            objectMapper.updateObject(object);
+        }
+        else {
+            objectMapper.insertObject(object);
+        }
     }
 
 }
