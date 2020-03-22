@@ -1,7 +1,9 @@
 package com.humanhealthmonitor.controller;
 
+import com.humanhealthmonitor.ServerConfig;
 import org.mybatis.logging.Logger;
 import org.mybatis.logging.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class TestPageController {
+    @Autowired
+    private ServerConfig serverConfig;
+
     private static final Logger log = LoggerFactory.getLogger(TestPageController.class);
 
     @RequestMapping("/sendorder")
@@ -18,6 +23,7 @@ public class TestPageController {
 
     @RequestMapping("/test")
     public String login(HttpServletRequest request) throws InterruptedException {
+        System.out.println("the ip address is "+ serverConfig.getUrl());
         return "test";
     }
     @RequestMapping("/hhm-login.html")

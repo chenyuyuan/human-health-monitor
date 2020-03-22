@@ -19,8 +19,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class HumanhealthmonitorApplication {
     // public static ServerSocket serverSocket;//
 
+
+
+
     public static void main(String[] args) {
         SpringApplication.run(HumanhealthmonitorApplication.class, args);
+
 
         //added0525
         MsgQueue.inetAddressArray = new ArrayList<>();
