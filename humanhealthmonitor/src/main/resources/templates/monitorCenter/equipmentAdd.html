@@ -145,6 +145,9 @@
 <script type = "text/javascript">
     ipAddressServer = "101.132.105.38";
     ipAddressLocal = "localhost";
+    pathNow = window.document.location.href;
+    var array = pathNow.split("/")
+    ipaddress0 = "http:" + array[2]
     checkEquipmentAdd = function () {
         var form = document.getElementById("");
         if ($("#eqpId").val() == "" || $("#eqpName").val() == "") {
@@ -169,7 +172,7 @@
         console.log("send start")
         console.log($("#eqpTypeSelected").val() + " " + $("#eqpId").val() + " " + $("#eqpName").val()+ " " + $("#objectSelected").val())
         $.ajax({
-            url:'http://'+ipAddressLocal+':8081/rest/monitorCenter/equipmentAddResult',
+            url:'http://'+ipaddress0+':8081/rest/monitorCenter/equipmentAddResult',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),
@@ -192,7 +195,7 @@
             }
         })
         $.ajax({
-            url:'http://'+ipAddressServer+':8081/rest/monitorCenter/equipmentAddResult',
+            url:'http://'+ipaddress0+':8081/rest/monitorCenter/equipmentAddResult',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),

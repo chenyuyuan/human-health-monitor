@@ -275,6 +275,11 @@
 <script type = "text/javascript">
     ipAddressServer = "101.132.105.38";
     ipAddressLocal = "localhost";
+    pathNow = window.document.location.href;
+    var array = pathNow.split("/")
+    ipaddress0 = "http:" + array[2]
+    ipAddressServer = ipaddress0
+
     $(document).ready(function () {
         $("#delete-object").hover(function(){
             $(this).css("color","red");

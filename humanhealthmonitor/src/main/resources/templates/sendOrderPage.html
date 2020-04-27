@@ -394,6 +394,10 @@
 <script type = "text/javascript">
     ipAddressServer = "101.132.105.38"
     ipAddressLocal = "localhost"
+    pathNow = window.document.location.href;
+    var array = pathNow.split("/")
+    ipaddress0 = "http:" + array[2]
+    ipAddressServer = ipaddress0
     send = function (){
         console.log("[function: send]: start");
         tosenddata={
@@ -403,7 +407,7 @@
         };
         console.log("send start")
         $.ajax({
-            url:'http://'+ipAddressLocal+':8081/rest/sendorder7',
+            url:'http://'+ipAddressServer+':8081/rest/sendorder7',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),
