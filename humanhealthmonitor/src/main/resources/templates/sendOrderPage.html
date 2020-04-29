@@ -407,7 +407,7 @@
         };
         console.log("send start")
         $.ajax({
-            url:'http://'+ipAddressServer+':8081/rest/sendorder7',
+            url:'/rest/sendorder7',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),
@@ -427,7 +427,7 @@
             }
         })
         $.ajax({
-            url:'http://'+ipAddressServer+':8081/rest/sendorder7',
+            url:'/rest/sendorder7',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify(tosenddata),

@@ -768,7 +768,7 @@
 
     function ajaxRefresh() {
         $.ajax({
-            url:'http://'+ipAddressServer+':8081/rest/monitorCenter/infoHallOnTime',
+            url:'/rest/monitorCenter/infoHallOnTime',
             type:"POST",
             contentType: 'application/json; charset=UTF-8',
             data:JSON.stringify({"objectId":objectId}),
