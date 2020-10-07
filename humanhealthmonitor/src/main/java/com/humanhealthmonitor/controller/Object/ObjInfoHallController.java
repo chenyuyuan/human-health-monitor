@@ -49,7 +49,7 @@ public class ObjInfoHallController {
     private ArrayList<String> bloodOxygen01TimeStampList = new ArrayList<>();
 
     //健康中心-实时信息
-    @RequestMapping("/objInfoHallOnTimeNo")
+    @RequestMapping("/objInfoHallOnTime")
     public String objInfoHallOnTime(HttpServletRequest request, HttpServletResponse response) {
         Object object = (Object) request.getSession().getAttribute("object");
         request.setAttribute("object", object);
@@ -153,9 +153,9 @@ public class ObjInfoHallController {
             List<Equipment> noEquipmentList = new ArrayList<>();
             Equipment noNewEquipment = new Equipment();//zy
 
-            //连接InfluxDB
-            influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
-            influxDBConnector.connectToDatabase();
+//            //连接InfluxDB
+//            influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
+//            influxDBConnector.connectToDatabase();
             if (flagTemperature01 == 1) {
                 sendMessage(netmask, order);//added0526
                 for (int i = 0;i < 10;i++) {
@@ -496,9 +496,9 @@ public class ObjInfoHallController {
             }
         }
         System.out.println("ObjInfoHallController: flagBloodOxygen01: "+flagBloodOxygen01+" flagBloodPressure01: "+flagBloodPressure01+" flagTemperature01: "+flagTemperature01);
-        //连接InfluxDB
-        influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
-        influxDBConnector.connectToDatabase();
+//        //连接InfluxDB
+//        influxDBConnector = new InfluxDBConnector("Andy","123456","http://140.143.232.52:8086","health_data");
+//        influxDBConnector.connectToDatabase();
         if (flagTemperature01 == 1) {
 //            sendMsgQueue.get(netMaskIdTemperature01-1).offer(temperature01Order);////
             sendMessage(netmask,order);//added0526

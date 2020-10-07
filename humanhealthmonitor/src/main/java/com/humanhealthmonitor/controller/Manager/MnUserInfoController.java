@@ -69,8 +69,8 @@ public class MnUserInfoController {
         request.setAttribute("onlineCountList",onlineCountList);
 
         //时序数据传输量
-        ArrayList<Integer> influxCountList = getInfluxCountList();
-        request.setAttribute("influxCountList",influxCountList);
+        //ArrayList<Integer> influxCountList = getInfluxCountList();
+        //request.setAttribute("influxCountList",influxCountList);
 
         return "manageCenter/userInfoHallGroupData";
     }
@@ -87,12 +87,12 @@ public class MnUserInfoController {
         onlineCountList.remove(0);
         onlineCountList.add(10,userService.queryAllOnlineUsersCount()+objectService.queryAllOnlineObjectCount());
         //时序数据量更新
-        ArrayList<Integer> influxCountList = getInfluxCountList();
+        //ArrayList<Integer> influxCountList = getInfluxCountList();
 
         Map<String,ArrayList<Integer>> map = new HashMap<>();
         map.put("alarmMessageCountList",alarmMessageCountList);
         map.put("onlineCountList",onlineCountList);
-        map.put("influxCountList",influxCountList);
+        //map.put("influxCountList",influxCountList);
 
         return map;
     }
